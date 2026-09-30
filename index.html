@@ -252,54 +252,78 @@
     border-radius: 6px; padding: 3.5px 6px; box-shadow: 0 1px 3px rgba(8,16,33,.10);
     font-size: 8.5px; font-weight: 700; letter-spacing: .5px; color: var(--black); }
 
-  /* ---------- 低价品卡(.dcard):商品卡 + 一块「证据」---------- */
-  /* 骨架还是商品卡,多两样东西:
-       红标签  名称下、价格上的一枚实心红标(用户给的 Shopee 参考:扇边对勾 + 白字),一句话说"低在哪"
-       证据    价格下面一张 160 宽的内联 SVG(折线 / 卖家刻度 / 阶梯线 / 目标线)+ 一行 10px 脚注交代基准
+  /* ---------- 低价标签 + 低价品卡(.dcard)的证据 ---------- */
+  /* 这一页的商品卡全是低价品,所以每张商品卡在名称下、价格上都有一枚低价标签。标签有两款:
+       实心红标 .dtag       扇边对勾 + 白字(用户给的 Shopee 参考)。只给带证据图的四张 .dcard,一句话说"低在哪"
+       箭头标签 .dtag.lt    浅红底 + 红描边,左端一枚红方块里是向下的折线箭头(参考天猫「低于常卖价」
+                            和同组的 Best Price feed demo)。给其余商品卡,说法两类:Below usual price / Lowest in N days
+     .dcard 在价格下面另有证据:一张 160 宽的内联 SVG(折线 / 阶梯线 / 目标线)+ 一行 10px 脚注交代基准;
+     "同款多卖家最低"那张不画图,写明在哪一家买(.sup),再用推荐理由那行蓝字说比下一家便宜多少。
      红(--deal)是全页唯一的"低价"色:标签、最低点、差额都用它;价格本身不染色,
      划线价仍是标价 —— 基准价写在脚注里,同一个位置不混两种含义。 */
-  .dtag { display: inline-flex; align-items: center; gap: 3px; max-width: 100%; height: 20px; margin-top: 4px;
+  .dtag { display: flex; align-items: center; gap: 3px; width: fit-content; max-width: 100%; height: 20px; margin-top: 4px;
     padding: 0 6px 0 3px; border-radius: 4px; background: var(--deal); color: #fff;
-    font-size: 12px; line-height: 20px; font-weight: 600; letter-spacing: 0; white-space: nowrap; vertical-align: top; }
+    font-size: 12px; line-height: 20px; font-weight: 600; letter-spacing: 0; white-space: nowrap; }
   .dtag svg { flex-shrink: 0; }
   .dtag span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-  /* 问句卡里的小号红标:没有图标,只标出"哪一件在低点" */
-  .dtag.sm { height: 16px; margin-top: 0; padding: 0 5px; border-radius: 3px; font-size: 10px; line-height: 16px; }
+  .dtag.lt { height: 16px; padding: 0 5px 0 0; overflow: hidden; border: .5px solid rgba(238,77,45,.35);
+    background: #FFF1EF; color: var(--deal); font-size: 11px; line-height: 16px; font-weight: 500; }
+  .dtag.lt svg { width: 16px; height: 16px; margin: -.5px 0 -.5px -.5px; }
+  /* 问句卡里的价格状态 chip:灰 = 常规价(没有优惠),红 = 在低点。没有图标,比商品卡上的标签轻一档 */
+  .qst { display: inline-flex; align-items: center; height: 16px; padding: 0 5px; border-radius: 4px;
+    border: .5px solid rgba(0,0,0,.08); background: rgba(0,0,0,.05); color: rgba(0,0,0,.55);
+    font-size: 11px; line-height: 16px; font-weight: 500; white-space: nowrap; }
+  .qst.red { border-color: rgba(238,77,45,.35); background: #FFF1EF; color: var(--deal); }
   .evd { margin-top: 6px; }
   .evd-c { display: block; }
   .evd-c text { font-family: var(--sf); font-size: 10px; fill: rgba(0,0,0,.4); letter-spacing: 0; }
   .evd-c .dl { font-size: 11px; font-weight: 600; fill: var(--deal); }
-  .evd-c .tg { fill: #004894; font-weight: 500; }
-  .evd-c .nw { fill: var(--deal); font-weight: 500; }
+  .evd-c .tg { fill: #C8601F; font-weight: 500; }
   .evd-x { display: flex; justify-content: space-between; margin-top: 2px; font-size: 10px; line-height: 12px;
     color: rgba(0,0,0,.4); white-space: nowrap; }
+  /* 同款多卖家最低(用户给的布局):价格下两行字,不画图 ——
+       卖家行  20px 圆形 logo + Buy from {卖家}
+       差价行  比下一家便宜多少 —— 它就是这张卡的推荐理由,用 .why 那行蓝字,金额加粗 */
+  .sup { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; line-height: 20px;
+    color: rgba(0,0,0,.4); white-space: nowrap; }
+  .sup .lg { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: #fff;
+    border: .5px solid rgba(0,0,0,.09); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .sup .lg img { width: 14px; height: 14px; object-fit: contain; display: block; }
+  .why b { font-weight: 600; }
 
-  /* ---------- 价格类问句卡的附件 ---------- */
-  /* 单商品 + 一条价格线(参考图:缩略图 + 名称 + Now $… + 90 天折线):白底小卡,左右各探出 8px */
+  /* ---------- 问句卡里的商品 ---------- */
+  /* 问句卡问的都是具体的商品,所以商品要站得出来:大图 + 大号现价 + 一枚价格状态。
+     单商品 = 白底小卡(左右各探出 8px):48 图 + 现价 17/600 + 状态(箭头标签 / 灰 chip);"到最低了"那张下面再带一条价格线。
+     动作(设价格提醒)不住在商品小卡里 —— 它是对这句话的另一种回应,单独一枚按钮放在小卡下面。 */
   .qcard.qev { padding-bottom: 8px; }
-  .qatt.evc { margin: 12px -8px 0; background: #fff; border: .5px solid rgba(34,0,254,.08); border-radius: 10px; padding: 8px; }
+  .qatt.evc { margin: 12px -8px 0; background: #fff; border: .5px solid rgba(34,0,254,.08); border-radius: 10px; padding: 6px; }
   .evp { display: flex; align-items: center; gap: 8px; }
-  .evp img { width: 36px; height: 36px; flex-shrink: 0; border-radius: 8px; object-fit: cover; background: #F3F4F6; display: block; }
+  .evp img { width: 48px; height: 48px; flex-shrink: 0; border-radius: 8px; object-fit: cover; background: #F3F4F6; display: block; }
   .evp .tx { flex: 1; min-width: 0; }
-  .evp .nm { font-size: 12px; line-height: 16px; font-weight: 600; color: var(--text-87);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .evp .sb { font-size: 12px; line-height: 16px; color: rgba(0,0,0,.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .evp .sb b { font-weight: 600; color: var(--text-87); }
-  .qatt.evc svg { display: block; margin-top: 6px; }
-  .qatt.evc svg text { font-family: var(--sf); font-size: 10px; fill: rgba(0,0,0,.4); letter-spacing: 0; }
-  /* 价格提醒 CTA:和商品卡的 Buy Now 同形(32 高、圆角 8、浅蓝底品牌蓝字),前面一枚铃铛。
+  .evp .pz { font-size: 17px; line-height: 22px; font-weight: 600; color: #212121; letter-spacing: -.2px; }
+  /* 小卡里的标签是手写的短词,不做省略:1x 屏上半像素描边会取整,省略号会把 "90-day low" 截掉一个字母 */
+  .evp .dtag { margin-top: 3px; max-width: none; }
+  .evp .qst { margin-top: 3px; }
+  .qatt.evc svg.ln { display: block; margin: 6px 2px 0; }
+  .qatt.evc svg.ln text { font-family: var(--sf); font-size: 10px; fill: rgba(0,0,0,.4); letter-spacing: 0; }
+  /* 价格提醒 CTA:商品小卡下面单独一枚,和小卡同宽(32 高、圆角 8、半透明白底品牌蓝字)。
      文案说的是用户要的那件事(到价提醒),不说系统里的名词 Auto-task。
-     设好之后按钮退成一条灰色状态(.on),不再是一个待做的动作。 */
-  .atcta { display: flex; align-items: center; justify-content: center; gap: 5px; width: 100%; height: 32px; margin-top: 8px;
-    border: none; border-radius: 8px; background: #F5FAFF; color: var(--brand); font-family: var(--sf);
+     设好之后变成状态(.on,浅蓝底),不再是一个待做的动作。 */
+  .atcta { display: flex; align-items: center; justify-content: center; width: calc(100% + 16px); height: 32px; margin: 8px -8px 0;
+    border: none; border-radius: 8px; background: rgba(255,255,255,.75); color: var(--brand); font-family: var(--sf);
     font-size: 14px; font-weight: 600; letter-spacing: 0; cursor: pointer; white-space: nowrap; }
-  .atcta svg { width: 13px; height: 13.5px; flex-shrink: 0; }
   .atcta:active { background: rgba(0,122,255,.18); }
-  .atcta.on { background: #F3F4F6; color: var(--text-65); }
-  /* 两件对撞 + 价格:图下各一行现价、一行价格事实;VS 胶囊钉在图片中线上(图被压到约 68 高) */
+  .atcta.on { background: rgba(0,122,255,.12); }
+  /* 两件对撞 + 价格:图下各一行现价、一枚价格状态 chip;VS 胶囊钉在图片中线上(图被压到约 68 高) */
   .qatt.pk.wpr .cside .cp { margin-top: 6px; font-size: 14px; line-height: 17px; font-weight: 600; color: #212121; text-align: center; }
-  .qatt.pk.wpr .cside .cl { margin-top: 2px; height: 16px; font-size: 10px; line-height: 16px; color: rgba(0,0,0,.4); text-align: center; white-space: nowrap; }
+  .qatt.pk.wpr .cside .cl { margin-top: 3px; height: 16px; display: flex; justify-content: center; }
+  .qatt.pk.wpr .qst { padding: 0 4px; font-size: 10px; }
   .qatt.pk.wpr .vs { top: 34px; }
+  /* 几件一排 + 价格:方图,图下各一行现价 */
+  .qatt.row.wpr { align-items: flex-start; }
+  .qatt.row.wpr .ri { flex: 1; min-width: 0; }
+  .qatt.row.wpr .ri img { width: 100%; height: auto; aspect-ratio: 1/1; }
+  .qatt.row.wpr .cp { margin-top: 4px; font-size: 12px; line-height: 16px; font-weight: 600; color: #212121; text-align: center; }
 
   /* Likes 常驻角标入口 */
   .screen-body { position: relative; }
@@ -1669,6 +1693,8 @@ function setDemoState(s) {
 let sheetId = null;
 
 /* ---------- PDP data(价格与卡片对齐) ---------- */
+/* 约定:流里、会话里能点到的每一件商品都要有一条;offers 第一条是现价,
+   其余报价一律不低于现价 —— 这一页叫 Best Price,详情里不能冒出更便宜的第三方报价。 */
 const PDPD = {
   sneaker: { hero:'prod-sneaker.jpg', gallery:9, price:'89.00', sub:'12% off · Authenticated · Free Shipping',
     bullets:['Breathable one-piece knit upper wraps the foot with almost no break-in','Responsive foam midsole tuned for daily runs and all-day wear','Lightweight at ~250g with a grippy rubber outsole for wet pavement'],
@@ -1680,21 +1706,21 @@ const PDPD = {
   watch: { hero:'prod-watch.jpg', gallery:8, price:'329.00', sub:'7% off · Authenticated · Free Shipping',
     bullets:['Always-on LTPO display hits 2000 nits — readable in direct sunlight','Built-in GPS plus ECG, blood-oxygen and skin-temperature sensing','All-day 18-hour battery, water-resistant to 50 m, 0→80% in 30 minutes'],
     variants:[{label:'Case: Midnight',options:[{t:'Midnight',sel:1},{t:'Starlight'},{t:'Silver'},{t:'RED'}]},{label:'Band: Sport',options:[{t:'Sport',sel:1},{t:'Braided'},{t:'Milanese'}]}],
-    offers:[{price:'329.00',src:'Amazon',rating:'4.7'},{price:'339.00',src:'Walmart',rating:'4.6'},{price:'309.00',src:'Ebay',rating:'4.5'}], buy:{src:'Amazon',price:'329'},
+    offers:[{price:'329.00',src:'Amazon',rating:'4.7'},{price:'339.00',src:'Walmart',rating:'4.6'},{price:'345.00',src:'Ebay',rating:'4.5'}], buy:{src:'Amazon',price:'329'},
     reviews:[{name:'Sam W',src:'Amazon',full:5,text:'Sleep and workout tracking are accurate and the screen is gorgeous outdoors. Charges fast enough that the short battery never bothers me.',media:[{src:'prod-watch.jpg'}]},{name:'Ava M',src:'Ebay',full:4,half:true,text:'Comfortable band and the always-on display still gets me through a full day with room to spare.'}],
     details:[['Case size','45 mm aluminum'],['Display','LTPO OLED · 2000 nits'],['Battery','~18 h'],['Water resist','50 m (5 ATM)']],
     desc:'A full health-and-fitness tracker on your wrist — bright always-on screen, GPS, and serious sensors.' },
   phones: { hero:'prod-headphones.jpg', gallery:10, price:'449.00', sub:'Save $100 · Authenticated · Free Shipping',
     bullets:['Adaptive ANC cuts ~95% of cabin and office noise across the day','40-hour battery with ANC on — a 5-minute charge returns ~4 hours of playback','Lossless USB-C audio plus multipoint Bluetooth to two devices at once'],
     variants:[{label:'Color: Silver',options:[{t:'Silver',sel:1},{t:'Space Black'},{t:'Sky Blue'},{t:'Pink'}]}],
-    offers:[{price:'449.00',src:'Amazon',rating:'4.8'},{price:'469.00',src:'Walmart',rating:'4.7'},{price:'429.00',src:'Ebay',rating:'4.6'}], buy:{src:'Amazon',price:'449'},
+    offers:[{price:'449.00',src:'Amazon',rating:'4.8'},{price:'469.00',src:'Walmart',rating:'4.7'},{price:'479.00',src:'Ebay',rating:'4.6'}], buy:{src:'Amazon',price:'449'},
     reviews:[{name:'Jordan P',src:'Amazon',full:5,text:'ANC is shockingly good for the price — flights feel silent and the call mics are clear. Best value headphones I have owned.',media:[{src:'prod-headphones.jpg'}]},{name:'Lena R',src:'Walmart',full:4,half:true,text:'Plush earcups, light enough for all-day wear, and the battery genuinely lasts a full week of commuting.'}],
     details:[['Driver','40 mm dynamic'],['Battery','40 h (ANC on)'],['Weight','268 g'],['Connectivity','BT 5.3 · USB-C']],
     desc:'Studio-grade sound with adaptive noise cancelling and a battery that lasts the whole trip.' },
   tote: { hero:'table-prod1a.png', gallery:9, price:'178.00', sub:'Authenticated · Free Shipping',
     bullets:['Full-grain cowhide that patinas richly — it wears in, not out','Fits a 14" laptop plus everyday carry, with a secure interior zip pocket','Hand-finished edges, solid brass hardware, and a reinforced base'],
     variants:[{label:'Color: Tan',options:[{t:'Tan',sel:1},{t:'Black'},{t:'Espresso'},{t:'Burgundy'}]}],
-    offers:[{price:'178.00',src:'Amazon',rating:'4.9'},{price:'188.00',src:'Walmart',rating:'4.7'},{price:'165.00',src:'Ebay',rating:'4.6'}], buy:{src:'Amazon',price:'178'},
+    offers:[{price:'178.00',src:'Amazon',rating:'4.9'},{price:'188.00',src:'Walmart',rating:'4.7'},{price:'195.00',src:'Ebay',rating:'4.6'}], buy:{src:'Amazon',price:'178'},
     reviews:[{name:'Maya L',src:'Amazon',full:5,text:'The leather is gorgeous and softens beautifully after a few weeks. Goes with literally everything and the finish looks premium far beyond the price.',media:[{src:'table-prod1a.png'}]},{name:'Selissa M',src:'Walmart',full:4,half:true,text:'Holds its shape well and the brass hardware feels solid. A genuine everyday workhorse.'}],
     details:[['Dimensions','35 × 28 × 12 cm'],['Material','Full-grain cowhide'],['Hardware','Solid brass'],['Origin','Made in Spain']],
     desc:'A daily-carry leather tote that only looks better with age — full-grain cowhide, brass hardware, and room for your laptop.' },
@@ -1771,7 +1797,7 @@ const PDPD = {
   sunglasses: { hero:'prod-sunglasses.jpg', gallery:6, price:'188.00', sub:'Polarized · Authenticated · Free Shipping',
     bullets:['Polarized G-15 lenses cut glare without shifting color','Acetate frame, softer square than the original Wayfarer','100% UVA/UVB protection'],
     variants:[{label:'Lens: Polarized',options:[{t:'Polarized',sel:1},{t:'Standard'}]},{label:'Size: 55mm',options:[{t:'52mm'},{t:'55mm',sel:1}]}],
-    offers:[{price:'188.00',src:'Amazon',rating:'4.8'},{price:'172.00',src:'Ebay',rating:'4.6'}], buy:{src:'Amazon',price:'188'},
+    offers:[{price:'188.00',src:'Amazon',rating:'4.8'},{price:'199.00',src:'Ebay',rating:'4.6'}], buy:{src:'Amazon',price:'188'},
     reviews:[{name:'Miguel A',src:'Amazon',full:5,text:'Driving glare is gone. The classic shape works with literally everything.'},{name:'Beth C',src:'Amazon',full:4,half:true,text:'Hinges feel sturdy. Case is bulkier than expected — good protection though.'}],
     details:[['Lens','Polarized G-15'],['Frame','Acetate'],['Width','55 mm'],['Includes','Case + cloth']],
     desc:'The sunglasses you stop thinking about — which is the point.' },
@@ -1803,13 +1829,13 @@ const PDPD = {
     reviews:[{name:'Grace L',src:'Amazon',full:5,text:'Bought four for the dining table and they double as desk chairs. Legs feel solid.'},{name:'Owen S',src:'Amazon',full:4,text:'Seat pad is firmer than expected but comfortable. Assembly took eight minutes.'}],
     details:[['Seat height','18"'],['Legs','Solid beech'],['Max load','250 lb'],['Assembly','~10 min']],
     desc:'A clean shell chair that works at the table or the desk.' },
-  chair2: { hero:'prod-chair2.jpg', gallery:4, price:'89.00', sub:'Authenticated · Free Shipping',
-    bullets:['Counter height (24") — fits most kitchen islands','Solid birch, whitewashed finish','Stackable: two fit in a closet corner'],
+  chair2: { hero:'prod-chair2.jpg', gallery:5, price:'89.00', sub:'Authenticated · Free Shipping',
+    bullets:['Bar height (29" seat) — pairs with 40–42" bar tables and high counters','Solid birch, whitewashed finish','Low backrest and footrest for comfortable sitting'],
     variants:[{label:'Color: White',options:[{t:'White',sel:1},{t:'Natural'},{t:'Black'}]}],
     offers:[{price:'89.00',src:'Amazon',rating:'4.4'},{price:'95.00',src:'Walmart',rating:'4.3'}], buy:{src:'Amazon',price:'89'},
-    reviews:[{name:'Tara B',src:'Amazon',full:4,half:true,text:'Sturdy for the price and the whitewash hides marks. Seat is hard — add a cushion if you sit long.'}],
-    details:[['Height','24" counter'],['Material','Solid birch'],['Max load','220 lb'],['Stackable','Yes']],
-    desc:'A plain, honest counter stool that disappears into the room.' },
+    reviews:[{name:'Tara B',src:'Amazon',full:4,half:true,text:'Sturdy for the price and the whitewash hides marks. Seat is hard — add a cushion if you sit long.'},{name:'Ben C',src:'Walmart',full:5,text:'Feels solid once the bolts are tightened, no wobble after three months. Assembly took about 20 minutes with the included Allen key.'}],
+    details:[['Seat height','29" (bar height)'],['Material','Solid birch'],['Max load','220 lb'],['Backrest','Low']],
+    desc:'A plain solid-birch bar stool that disappears into the room.' },
   chair3: { hero:'prod-chair3.jpg', gallery:5, price:'149.00', sub:'Authenticated · Free Shipping',
     bullets:['Tufted velvet seat — the comfortable one of the three','Turned solid-wood legs, no assembly beyond four screws','Works as a desk chair or a corner reading chair'],
     variants:[{label:'Color: Ivory',options:[{t:'Ivory',sel:1},{t:'Sage'},{t:'Charcoal'}]}],
@@ -1817,13 +1843,63 @@ const PDPD = {
     reviews:[{name:'Elena R',src:'Amazon',full:5,text:'Prettier in person and genuinely comfortable — I read in it for hours. Velvet cleans up fine.'},{name:'Josh P',src:'Amazon',full:4,text:'Solid build. Slightly smaller than expected, which actually suits a small apartment.'}],
     details:[['Seat height','18"'],['Upholstery','Velvet'],['Legs','Solid wood'],['Assembly','4 screws']],
     desc:'The comfortable one — a small tufted chair that works at a desk or in a corner.' },
-  keyboard: { hero:'prod-keyboard.jpg', gallery:4, price:'99.00', sub:'Authenticated · Free Shipping',
+  keyboard: { hero:'prod-keyboard.jpg', gallery:5, price:'99.00', sub:'Authenticated · Free Shipping',
     bullets:['Scissor keys — quiet, stable, fast to type on','A month of battery per charge','Pairs instantly with Mac and iPad'],
-    variants:[{label:'Color: White',options:[{t:'White',sel:1}]}],
-    offers:[{price:'99.00',src:'Amazon',rating:'4.8'}], buy:{src:'Amazon',price:'99'},
-    reviews:[{name:'Priya N',src:'Amazon',full:5,text:'Typing feel is unmatched for low-profile boards. Battery lasted five weeks.'}],
+    variants:[{label:'Color: White',options:[{t:'White',sel:1}]},{label:'Layout: US English',options:[{t:'US English',sel:1},{t:'British English'},{t:'Japanese'}]}],
+    offers:[{price:'99.00',src:'Amazon',rating:'4.8'},{price:'109.00',src:'Walmart',rating:'4.7'},{price:'119.00',src:'Ebay',rating:'4.6'}], buy:{src:'Amazon',price:'99'},
+    reviews:[{name:'Priya N',src:'Amazon',full:5,text:'Typing feel is unmatched for low-profile boards. Battery lasted five weeks.'},{name:'Tom R',src:'Walmart',full:4,text:'Pairs with my iPad in seconds and stays quiet on calls. No backlight though, which I miss at night.'}],
     details:[['Switch','Scissor'],['Battery','~1 month'],['Connect','Bluetooth'],['Layout','US English']],
     desc:'The quiet default for a clean desk setup.' },
+  /* —— 2026-09-30 补齐:此前这 7 件没有详情数据,点进去只有图、价、名(pdpFallback)—— */
+  moka: { hero:'prod-moka.jpg', gallery:6, price:'42.00', sub:'Authenticated · Free Shipping',
+    bullets:['Makes about 270 ml of rich stovetop coffee in roughly 5 minutes','Cast aluminum octagonal body — the original 1933 design','Works on gas, electric and ceramic stovetops; induction needs an adapter plate'],
+    variants:[{label:'Size: 6 Cup',options:[{t:'3 Cup'},{t:'6 Cup',sel:1},{t:'9 Cup'}]}],
+    offers:[{price:'42.00',src:'Walmart',rating:'4.7'},{price:'46.00',src:'Amazon',rating:'4.6'},{price:'49.00',src:'Ebay',rating:'4.5'}], buy:{src:'Walmart',price:'42'},
+    reviews:[{name:'Marco T',src:'Amazon',full:5,text:'Medium-fine grind, low flame, lid open, and pull it off the heat when it starts to gurgle. It has slowed my weekend mornings down in the best way.'},{name:'Nina S',src:'Walmart',full:4,half:true,text:'Coffee is great, but "6 cup" means six espresso-size cups — in practice that\'s one big mug or two small ones. Hand wash only, no dishwasher.'}],
+    details:[['Capacity','270 ml (6 espresso cups)'],['Material','Aluminum'],['Stovetop','Gas, electric, ceramic'],['Care','Hand wash, no detergent']],
+    desc:'The classic Italian stovetop pot — strong coffee and a slower start to the morning.' },
+  vase: { hero:'prod-vase.jpg', gallery:5, price:'68.00', sub:'Authenticated · Free Shipping',
+    bullets:['Hourglass silhouette reads as sculpture even with no flowers in it','Glazed ceramic in a warm cream that sits well with wood and linen','Sized for a shelf or sideboard — a few tall stems are all it needs'],
+    variants:[{label:'Color: Cream',options:[{t:'Cream',sel:1},{t:'Dark Grey'},{t:'Rust',dis:1}]}],
+    offers:[{price:'68.00',src:'Amazon',rating:'4.6'},{price:'74.00',src:'Walmart',rating:'4.5'}], buy:{src:'Amazon',price:'68'},
+    reviews:[{name:'Hanna L',src:'Amazon',full:5,text:'Put it on a bare shelf with three dried stems and the whole corner finally looks finished. The cream is warm, not stark white.'},{name:'Daniel K',src:'Walmart',full:4,text:'Lovely shape and a solid weight. The narrow waist limits you to a few stems, so skip it for big bouquets.'}],
+    details:[['Material','Glazed ceramic'],['Finish','Cream glaze'],['Use','Fresh or dried stems'],['Care','Wipe with damp cloth']],
+    desc:'A sculptural cream vase that fills an empty shelf on its own, stems optional.' },
+  throwbl: { hero:'prod-throw.jpg', gallery:6, price:'98.00', sub:'Authenticated · Free Shipping',
+    bullets:['100% virgin wool — warm without the weight of a heavy blanket','Machine washable wool — no dry cleaning needed','Throw-sized for a lap or shoulders at a desk or on the sofa'],
+    variants:[{label:'Color: Mustard',options:[{t:'Mustard',sel:1},{t:'Grey'},{t:'Navy'}]}],
+    offers:[{price:'98.00',src:'Amazon',rating:'4.8'},{price:'109.00',src:'Walmart',rating:'4.7'},{price:'115.00',src:'Ebay',rating:'4.6'}], buy:{src:'Amazon',price:'98'},
+    reviews:[{name:'Rachel M',src:'Amazon',full:5,text:'It lives on my desk chair now. Over my knees on late work nights, it keeps me from reaching for the heater. Washed it once on cold and it came out fine.'},{name:'Greg B',src:'Walmart',full:4,half:true,text:'Properly warm, and the mustard is deeper in person than in the photos. It is real wool though, so it\'s a little scratchy on bare skin at first.'}],
+    details:[['Material','100% virgin wool'],['Care','Machine washable'],['Edge','Fringed'],['Origin','Made in USA']],
+    desc:'A washable pure-wool throw that keeps a cold desk comfortable past midnight.' },
+  trench: { hero:'prod-trench.jpg', gallery:6, price:'190.00', sub:'Authenticated · Free Shipping',
+    bullets:['Wool-blend outer with a tie belt you can cinch or leave open','Relaxed cut leaves room for a chunky knit underneath','Camel shade works with denim, black tailoring and knitwear'],
+    variants:[{label:'Color: Camel',options:[{t:'Camel',sel:1},{t:'Black'},{t:'Navy'}]},{label:'Size: S',options:[{t:'XS',dis:1},{t:'S',sel:1},{t:'M'},{t:'L'}]}],
+    offers:[{price:'190.00',src:'Amazon',rating:'4.6'},{price:'199.00',src:'Ebay',rating:'4.4'},{price:'205.00',src:'Walmart',rating:'4.5'}], buy:{src:'Amazon',price:'190'},
+    reviews:[{name:'Maya L',src:'Amazon',full:5,text:'The camel leans warm and goes with nearly everything I own, and the belt stays tied when I walk. Fits over a thick sweater without pulling at the shoulders.'},{name:'Elena R',src:'Walmart',full:4,half:true,text:'Runs roomy — I sized down to S and the sleeves are still a bit long. It handles a mild winter, but I\'d want something heavier below freezing.'}],
+    details:[['Material','Wool blend'],['Closure','Tie belt'],['Fit','Relaxed'],['Care','Dry clean only']],
+    desc:'A belted camel wool-blend coat cut to layer over heavy knits.' },
+  hat: { hero:'prod-hat.jpg', gallery:5, price:'68.00', sub:'Authenticated · Free Shipping',
+    bullets:['Six-panel cotton twill cap with embroidered STILL HERE NY lettering','Adjustable back strap — one size fits most adults','Off-white tone and curved brim, easy with denim and tees'],
+    variants:[{label:'Color: Off White',options:[{t:'Off White',sel:1},{t:'Black',dis:1},{t:'Navy'}]},{label:'Size: One Size',options:[{t:'One Size',sel:1}]}],
+    offers:[{price:'68.00',src:'Amazon',rating:'4.6'},{price:'74.00',src:'Ebay',rating:'4.4'}], buy:{src:'Amazon',price:'68'},
+    reviews:[{name:'Owen P',src:'Amazon',full:5,text:'Embroidery is clean and the crown sits low, not boxy. I wore it straight out of the box without reshaping the brim.'},{name:'Lena M',src:'Ebay',full:4,text:'Nice shape and the strap adjusts easily. Off-white shows marks fast, so I end up spot cleaning it most weeks.'}],
+    details:[['Material','Cotton twill'],['Closure','Adjustable strap'],['Size','One size'],['Care','Spot clean']],
+    desc:'A low-profile off-white logo cap, adjustable and easy to wear every day.' },
+  chair4: { hero:'prod-chair4.jpg', gallery:6, price:'139.00', sub:'Authenticated · Free Shipping',
+    bullets:['Solid oak frame and seat with a natural matte finish','Slim 17.5" width — four fit around a 32" table without bumping','Stacks up to 4 high when you need the floor space back'],
+    variants:[{label:'Color: Natural',options:[{t:'Natural',sel:1},{t:'Smoked Oak'},{t:'Black'}]}],
+    offers:[{price:'139.00',src:'Amazon',rating:'4.7'},{price:'149.00',src:'Walmart',rating:'4.6'}], buy:{src:'Amazon',price:'139'},
+    reviews:[{name:'Marcus L',src:'Amazon',full:5,text:'Four of these fit around our 32" round table with elbow room to spare. Assembly was eight bolts and about ten minutes.'},{name:'Irene K',src:'Walmart',full:4,text:'Oak grain looks great in person. Stacking scuffs the seat finish a little, so I put felt pads between them.'}],
+    details:[['Material','Solid oak'],['Seat width','17.5"'],['Seat height','18"'],['Stackable','Up to 4']],
+    desc:'A slim, stackable solid-oak chair sized for 32" tables and small dining nooks.' },
+  chair5: { hero:'prod-chair5.jpg', gallery:6, price:'145.00', sub:'Authenticated · Free Shipping',
+    bullets:['Padded seat and back in stain-resistant olive performance fabric','Compact 19" x 21" footprint — four fit around a 32" table','Tool-free assembly: legs screw on by hand in about 5 minutes'],
+    variants:[{label:'Color: Olive',options:[{t:'Olive',sel:1},{t:'Oat'},{t:'Charcoal'}]},{label:'Legs: Oak',options:[{t:'Oak',sel:1},{t:'Walnut'}]}],
+    offers:[{price:'145.00',src:'Amazon',rating:'4.5'},{price:'149.00',src:'Walmart',rating:'4.4'}], buy:{src:'Amazon',price:'145'},
+    reviews:[{name:'Dana W',src:'Amazon',full:5,text:'Finally a padded chair that fits our tiny dining corner. The legs went on by hand in a few minutes.'},{name:'Leo M',src:'Walmart',full:4,text:'Comfortable for long dinners, and the olive is more muted than it looks online. It doesn\'t stack, so plan where the extras live.'}],
+    details:[['Upholstery','Performance fabric'],['Seat width','18"'],['Footprint','19" x 21"'],['Stackable','No']],
+    desc:'A compact padded chair that makes a 32" table comfortable for long dinners.' },
 };
 
 const IC = {
@@ -1865,6 +1941,8 @@ const IC = {
   tagClock: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><g><path d="M6.99967 1.16667C10.2212 1.16667 12.8335 3.77816 12.8337 6.99967L12.8258 7.30046C12.6695 10.3825 10.1206 12.8337 6.99967 12.8337L6.69987 12.8258C3.61769 12.6696 1.16667 10.1207 1.16667 6.99967C1.16684 3.77827 3.77827 1.16684 6.99967 1.16667ZM6.99967 2.33366C4.4226 2.33384 2.33384 4.4226 2.33366 6.99967C2.33366 9.57689 4.4225 11.6665 6.99967 11.6667C9.577 11.6667 11.6667 9.577 11.6667 6.99967C11.6665 4.4225 9.57689 2.33366 6.99967 2.33366ZM6.99967 3.62272C7.32184 3.62273 7.58268 3.88357 7.58268 4.20573L7.58366 6.72038L9.56217 8.31999C9.81265 8.52231 9.85309 8.88969 9.65104 9.1403C9.44865 9.39087 9.08037 9.43047 8.82975 9.22819L6.85026 7.62858C6.57617 7.40709 6.41666 7.07278 6.41667 6.72038L6.41764 4.20573C6.41765 3.88367 6.67766 3.6229 6.99967 3.62272Z" fill="#212121"/></g></svg>',
   tagHeart: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><g><path d="M8.03579 1.91602C9.70884 1.91602 10.833 3.49914 10.833 4.97602C10.833 7.96695 6.16745 10.416 6.08301 10.416C5.99856 10.416 1.33301 7.96695 1.33301 4.97602C1.33301 3.49914 2.45717 1.91602 4.13023 1.91602C5.09079 1.91602 5.71884 2.39945 6.08301 2.82445C6.44717 2.39945 7.07523 1.91602 8.03579 1.91602Z" stroke="black" stroke-linecap="round" stroke-linejoin="round"/></g></svg>',
   tagEye: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1.1 6S2.9 2.6 6 2.6 10.9 6 10.9 6 9.1 9.4 6 9.4 1.1 6 1.1 6Z" stroke="#000" stroke-linejoin="round"/><circle cx="6" cy="6" r="1.5" stroke="#000"/></svg>',
+  /* 箭头标签左端的红方块:左侧圆角跟着标签走,里面一枚向下的折线箭头 */
+  dealArrow: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 0H16V16H4A4 4 0 0 1 0 12V4A4 4 0 0 1 4 0Z" fill="#EE4D2D"/><path d="M3.5 5l3.2 3.2 2-2L12.5 10" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.3 10.4h3.4V7" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   /* 红标签里的扇边对勾(Lucide badge-check 的外形):白底红勾 */
   dealBadge: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" fill="#fff"/><path d="m8.6 12.2 2.3 2.3 4.5-4.7" stroke="#EE4D2D" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   /* Ask 按钮图标:路径与渐变放在 body 顶部的全局 <defs> 里,每张卡只引用 —— 两层叠出"蓝→紫 + 左下粉" */
@@ -1884,9 +1962,17 @@ const IC = {
 
 const statusbar = (clear) => `<div class="statusbar${clear ? ' clear' : ''}"><span class="time">9:41</span><span class="icons">${IC.sig}${IC.wifi}${IC.batt}</span></div>`;
 
+/* 低价标签的说法。值是天数 = "近 N 天最低";'usual' = "低于常卖价"。
+   没登记的商品也给一枚(低于常卖价)—— 这一页不存在没有低价理由的商品卡。
+   带证据图的四张走 DEALS(实心红标),不在这张表里。 */
+const LOWTAG = { tote:'usual', phones:90, watch:'usual', speaker:30, plant:'usual', wallet:14, bottle:'usual',
+  candle:30, perfume:'usual', sunglasses:60, mug:'usual', vase:30, backpack:14 };
+const lowTag = (id) => { const v = LOWTAG[id];
+  return `<div class="dtag lt">${IC.dealArrow}<span>${typeof v === 'number' ? `Lowest in ${v} days` : 'Below usual price'}</span></div>`; };
 const cap = (id, showWhy) => { const p=P[id]; return `
   <div class="cap">
     <div class="ttl">${p.brand} ${p.nm}</div>
+    ${lowTag(id)}
     <div class="pr"><span class="cur">$</span>${p.pr}<s>$${origPr(p.pr)}</s></div>
     ${/* 理由行是这张卡唯一解释"为什么是它"的地方。
          没有别的理由但你收藏过时,那就是理由 —— 一句话,不是一个角标。 */''}
@@ -1928,6 +2014,7 @@ const scard = (id) => { const p=P[id], u=SAVED_UPDATES[id];
   <div class="gcard scard" onclick="openPDP('${id}')">${imgw(id, LIKE_SPLIT ? (u.at ? true : 'like') : true)}
     <div class="cap">
       <div class="ttl">${p.brand} ${p.nm}</div>
+      ${lowTag(id)}
       <div class="pr"><span class="cur">$</span>${p.pr}<s>$${origPr(p.pr)}</s></div>
       <div class="why ev">${u.ev}</div>
       ${u.buy ? `<button class="buynow" onclick="event.stopPropagation();buyNow('${id}')">Buy Now</button>` : ''}
@@ -1938,10 +2025,11 @@ const scard = (id) => { const p=P[id], u=SAVED_UPDATES[id];
    低价品卡(dcard)—— 商品卡 + 一块「证据」,回答"凭什么说它便宜"。
    四种证据对应四种来路,各用一种图,不会读成同一件事:
      low7     降价趋势上的近 7 天最低       → 折线 + 末端红点 + 本周降了多少
-     same     同款比过一圈,这家最低         → 卖家价格刻度,最左的红点是这一家
+     same     同款比过一圈,这家最低         → 不画图:哪一家最低(logo + Buy from …)、比下一家便宜多少
      watched  你看过 → Migoo 替你盯 → 现在最低 → 从你看的那天起的阶梯线(起点空心圆)
      target   你自己设的监控到价             → 阶梯线穿过目标虚线
-   四种都在名称下挂一枚红标签(label),一句话说"低在哪";证据图在价格下面。
+   四种都在名称下挂一枚实心红标签(label),一句话说"低在哪";证据图在价格下面。
+   (其余商品卡挂的是箭头款的浅红标签,见 LOWTAG —— 实心的留给有证据图的这四张。)
    前两种是纯推荐:图上不挂角标,不放 Buy Now。
    后两种和你有关系:图上角标说身份(Watched for you / Auto-task),给 Buy Now。
    数字只有一个出处:现价取 P[id].pr,目标取 ALERTS[id],hist 是今天之前的价;
@@ -1949,15 +2037,17 @@ const scard = (id) => { const p=P[id], u=SAVED_UPDATES[id];
    ============================================================ */
 const DEALS = {
   /* 前两张选的是你没收藏、也没设过任务的商品:有关系的低价归收藏更新卡和后两种证据 */
-  throwbl:  { kind:'low7',    label:'7-day low · 3 drops',
+  throwbl:  { kind:'low7',    label:'Lowest in 7 days',
               hist:[115,115,109,109,103,103], from:'Sep 23' },
   moka:     { kind:'same',    label:'Lowest of 5 sellers',
-              others:[46,49,53,58], foot:['Same item','Checked today'] },
+              seller:'Walmart', others:[46,49,53,58] },
   camera:   { kind:'watched', label:'Lowest since Sep 12',
               hist:[119,119,115,115,109,109,105], from:'Sep 12', buy:true },
   sneaker:  { kind:'target',  hist:[109,109,104,106,99,96], from:'Jul 18', buy:true },
 };
-/* 价格线上的"现在这个低点":与红标签同一个红 */
+/* 价格线一律暖橙(和低价红同一个色系):线、线下的淡面、起点圆;目标虚线与标签用深一档的橙。
+   只有终点 —— "现在这个低点" —— 用红标签的那个红 */
+const EV_LINE = '#F28C38';
 const evDot = (x, y, r = 3.25) => `<circle cx="${x}" cy="${y}" r="${r + 2.75}" fill="#EE4D2D" fill-opacity=".16"/><circle cx="${x}" cy="${y}" r="${r}" fill="#EE4D2D" stroke="#fff" stroke-width="1.5"/>`;
 /* 价格线:160 宽,按数据等比。step = 阶梯(价格是跳变的);start = 起点空心圆;
    target = 目标虚线(标签写在线下,那一侧没有价格线);delta = 右上角写总降幅 */
@@ -1969,24 +2059,14 @@ const evLine = (pts, o = {}) => {
   pts.forEach((v, i) => { d += i ? (o.step ? `H${X(i)}V${Y(v)}` : `L${X(i)} ${Y(v)}`) : `M${x0} ${Y(v)}`; });
   const ex = X(pts.length - 1), ey = Y(pts[pts.length - 1]);
   return `<svg class="evd-c" width="160" height="${H}" viewBox="0 0 160 ${H}" fill="none">
-      <path d="${d}V${H - 1}H${x0}Z" fill="#004894" fill-opacity=".06"/>
+      <path d="${d}V${H - 1}H${x0}Z" fill="${EV_LINE}" fill-opacity=".1"/>
       ${o.target !== undefined
-        ? `<path d="M${x0} ${Y(o.target)}H158" stroke="#004894" stroke-opacity=".55" stroke-dasharray="3 3"/><text class="tg" x="${x0 + 4}" y="${f(Y(o.target) + 10.5)}">Target $${o.target}</text>`
+        ? `<path d="M${x0} ${Y(o.target)}H158" stroke="#C8601F" stroke-opacity=".6" stroke-dasharray="3 3"/><text class="tg" x="${x0 + 4}" y="${f(Y(o.target) + 10.5)}">Target $${o.target}</text>`
         : `<path d="M${x0} ${ey}H${f(ex - 10)}" stroke="#EE4D2D" stroke-opacity=".5" stroke-dasharray="2 3"/>`}
-      <path d="${d}" stroke="#004894" stroke-opacity=".6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      ${o.start ? `<circle cx="${x0}" cy="${Y(pts[0])}" r="2.75" fill="#fff" stroke="#004894" stroke-width="1.5"/>` : ''}
+      <path d="${d}" stroke="${EV_LINE}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      ${o.start ? `<circle cx="${x0}" cy="${Y(pts[0])}" r="2.75" fill="#fff" stroke="${EV_LINE}" stroke-width="1.5"/>` : ''}
       ${evDot(ex, ey)}
       ${o.delta ? `<text class="dl" x="157" y="12" text-anchor="end">−$${pts[0] - pts[pts.length - 1]}</text>` : ''}
-    </svg>`; };
-/* 卖家刻度:一条价格轴,最左的红点是这一家,其余卖家按价格落点并标价 */
-const evScale = (now, others) => {
-  const hi = Math.max(...others), x0 = 6, x1 = 154, X = v => +(x0 + (x1 - x0) * (v - now) / (hi - now)).toFixed(1);
-  return `<svg class="evd-c" width="160" height="38" viewBox="0 0 160 38" fill="none">
-      <text class="nw" x="0" y="9">This one</text><text x="160" y="9" text-anchor="end">${others.length} other sellers</text>
-      <path d="M${x0} 20H${x1}" stroke="#000" stroke-opacity=".09" stroke-width="2" stroke-linecap="round"/>
-      ${others.map(v => `<circle cx="${X(v)}" cy="20" r="3" fill="#fff" stroke="#000" stroke-opacity=".3" stroke-width="1.5"/>`).join('')}
-      ${evDot(x0, 20)}
-      ${others.map((v, i) => `<text x="${i === others.length - 1 ? 158 : X(v)}" y="34" text-anchor="${i === others.length - 1 ? 'end' : 'middle'}">$${v}</text>`).join('')}
     </svg>`; };
 const dcard = (id) => { const p = P[id], d = DEALS[id];
   /* 后两种证据建立在"Migoo 认识你"之上,绑定前和收藏更新卡一样退回普通推荐卡 */
@@ -1995,11 +2075,18 @@ const dcard = (id) => { const p = P[id], d = DEALS[id];
   const tag = d.kind === 'watched' ? `<div class="ltag">${IC.tagEye}<span>Watched for you</span></div>`
             : d.kind === 'target'  ? `<div class="ltag">${IC.tagClock}<span>Auto-task</span></div>` : '';
   const label = d.kind === 'target' ? `$${ALERTS[id] - p.pr} under target` : d.label;
-  const chart = d.kind === 'low7'    ? evLine(pts, { delta:true })
-              : d.kind === 'same'    ? evScale(p.pr, d.others)
+  const chart = d.kind === 'same'    ? ''
+              : d.kind === 'low7'    ? evLine(pts, { delta:true })
               : d.kind === 'watched' ? evLine(pts, { step:true, start:true, delta:true })
               :                        evLine(pts, { step:true, start:true, target:ALERTS[id], h:56 });
-  const foot = d.foot || [`${d.kind === 'watched' ? 'Viewed ' : d.kind === 'target' ? 'Set ' : ''}${d.from} · $${d.hist[0]}`, 'Today'];
+  /* 证据:同款最低 = 卖家行 + 差价行(差价 = 下一家的价 − 现价);其余 = 价格线 + 脚注(基准日 · 基准价) */
+  const ev = d.kind === 'same'
+    ? `<div class="sup"><span class="lg"><img src="${asset(BRAND[d.seller])}" alt=""></span><span>Buy from ${d.seller}</span></div>
+      <div class="why"><b>$${Math.min(...d.others) - p.pr} less</b> than next supplier</div>`
+    : `<div class="evd">
+        ${chart}
+        <div class="evd-x"><span>${d.kind === 'watched' ? 'Viewed ' : d.kind === 'target' ? 'Set ' : ''}${d.from} · $${d.hist[0]}</span><span>Today</span></div>
+      </div>`;
   return `
   <div class="gcard dcard${d.buy ? ' scard' : ''}" onclick="openPDP('${id}')">
     <div class="imgw">
@@ -2011,10 +2098,7 @@ const dcard = (id) => { const p = P[id], d = DEALS[id];
       <div class="ttl">${p.brand} ${p.nm}</div>
       <div class="dtag">${IC.dealBadge}<span>${label}</span></div>
       <div class="pr"><span class="cur">$</span>${p.pr}<s>$${origPr(p.pr)}</s></div>
-      <div class="evd">
-        ${chart}
-        <div class="evd-x"><span>${foot[0]}</span><span>${foot[1]}</span></div>
-      </div>
+      ${ev}
       ${d.buy ? `<button class="buynow" onclick="event.stopPropagation();buyNow('${id}')">Buy Now</button>` : ''}
     </div>
   </div>`; };
@@ -2046,16 +2130,17 @@ const QCARDS = {
        watchprice  老来看、价格一直不动 → 要不要盯价(发出去就建一条到价提醒;卡上另给一枚 CTA 直接建)
        deal        看过的两件哪个更划算(便宜的那件在常规价,贵的那件在低点 —— 卡上不自答)
        buywait     已经到最低了,现在买还是再等
-     ev.hist 是今天之前的价,今天的价取 P[id].pr;deal 的 pr 是图下那行价格事实,low 指哪一件在低点(那一行用小红标) */
-  watchprice: { q:'I keep checking these. Tell me when the price drops.', ids:['sneaker2'], cta:'Set price alert',
-              ev:{ kind:'usual', nm:'AF1 × Carhartt', sub:'Viewed 5 times', span:'30d',
-                   hist:[140,140,142,140,140,138,140] } },
+     商品在卡上要站得出来:大图 + 大号现价 + 一枚价格状态(灰 = 常规价,红 = 在低点);商品名由问句自己带。
+     ev.kind:'usual' 常规价 / 'low' 在低点(hist 是今天之前的价,今天的价取 P[id].pr,画成价格线);
+     deal 的 pr 是图下那枚状态,low 指哪一件在低点;prices 给一排缩略图各标现价 */
+  watchprice: { q:'I keep checking these AF1s. Tell me when the price drops.', ids:['sneaker2'], cta:'Set price alert',
+              ev:{ kind:'usual' } },
   deal:     { q:'I looked at both. Which is the better deal?', pk:['keenz','doona'],
               pr:{ keenz:'Usual price', doona:'90-day low' }, low:'doona' },
   buywait:  { q:'Magic Keyboard hit its 90-day low. Should I buy it?', ids:['keyboard'],
-              ev:{ kind:'low', nm:'Magic Keyboard', span:'90d', hist:[129,129,119,119,109,109] } },
+              ev:{ kind:'low', label:'90-day low', span:'90d', hist:[129,129,119,119,109,109] } },
   chairs:   { q:'Keep looking for dining chairs for a small apartment under $150?',
-              ids:['chair','chair2','chair3'] },
+              ids:['chair','chair2','chair3'], prices:true },
   /* 图搜:attachment 是用户看到的原图,Migoo 从图里认出单品再给可买的同款。
      与"名人同款"形态的区别就在这里 —— 那种做法卡上直接放商品(已识别的结果),
      这种放原照片,把"从图里找"这个动作留在卡上,才接得住图搜的预期。
@@ -2063,43 +2148,45 @@ const QCARDS = {
      内部评审可用;对外发布前须换图或取得授权。 */
   hat:      { q:"Where can I get Taylor Swift's hat?", img:'ref-taylor.jpg' },
 };
-/* 问句卡的价格线:142 宽的阶梯线,起点标一个基准价,右侧写时间跨度。
-   基本持平的序列不把几块钱的波动放大成锯齿(纵向跨度至少按价格的 12% 算);
-   只有"到了最低点"才用红点,"一直这个价"用线本身的紫。 */
+/* 问句卡的价格线("到最低了"那张用):142 宽的阶梯线,起点标基准价,终点红点,右侧写时间跨度 */
 const qEvLine = (pts, e) => {
   const x0 = 2, x1 = 112, top = 13, bot = 24, hi = Math.max(...pts), lo = Math.min(...pts);
   const span = Math.max(hi - lo, hi * 0.12), f = n => +n.toFixed(1);
   const X = i => f(x0 + (x1 - x0) * i / (pts.length - 1)), Y = v => f(top + (bot - top) * (hi - v) / span);
   let d = '';
   pts.forEach((v, i) => { d += i ? `H${X(i)}V${Y(v)}` : `M${x0} ${Y(v)}`; });
-  const ex = X(pts.length - 1), ey = Y(pts[pts.length - 1]);
-  return `<svg width="142" height="30" viewBox="0 0 142 30" fill="none">
-        <path d="${d}" stroke="#8A77FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        ${e.kind === 'low' ? evDot(ex, ey, 3) : `<circle cx="${ex}" cy="${ey}" r="3" fill="#8A77FF" stroke="#fff" stroke-width="1.5"/>`}
-        <text x="${x0}" y="8">${e.kind === 'low' ? '$' + pts[0] : 'Usually $' + pts[pts.length - 1]}</text><text x="142" y="27.5" text-anchor="end">${e.span}</text>
+  return `<svg class="ln" width="142" height="30" viewBox="0 0 142 30" fill="none">
+        <path d="${d}" stroke="${EV_LINE}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        ${evDot(X(pts.length - 1), Y(pts[pts.length - 1]), 3)}
+        <text x="${x0}" y="8">$${pts[0]}</text><text x="142" y="27.5" text-anchor="end">${e.span}</text>
       </svg>`; };
 /* 问句卡上的价格提醒 CTA。整卡点击 = 把这句话放进输入框(还能改);CTA = 不改了,直接设。
    设好之后按钮变成状态,再点去任务页看这一条 */
 const alertOn = (key) => SESSION_TASKS.some(t => t.pid === QCARDS[key].ids[0] && t.name === 'Price alert');
-const atCta = (key) => `<button class="atcta${alertOn(key) ? ' on' : ''}" data-k="${key}" onclick="event.stopPropagation();atCtaGo('${key}')">${IC.bellSm}<span>${alertOn(key) ? 'Price alert on' : QCARDS[key].cta}</span></button>`;
+const atCta = (key) => `<button class="atcta${alertOn(key) ? ' on' : ''}" data-k="${key}" onclick="event.stopPropagation();atCtaGo('${key}')">${alertOn(key) ? 'Price alert on' : QCARDS[key].cta}</button>`;
 function atCtaGo(key){
   if (alertOn(key)) { closeChat(); openLikes(); lkSetTab('tasks'); return; }
   runQ(key);
 }
-const qEvid = (c, key) => { const e = c.ev, p = P[c.ids[0]]; return `
+const qEvid = (c) => { const e = c.ev, p = P[c.ids[0]], low = e.kind === 'low'; return `
     <div class="qatt evc">
-      <div class="evp"><img src="${p.img}" alt=""><div class="tx"><div class="nm">${e.nm}</div><div class="sb">${e.kind === 'low' ? `Now <b>$${p.pr}</b>` : e.sub}</div></div></div>
-      ${qEvLine(e.hist.concat(p.pr), e)}
-      ${c.cta ? atCta(key) : ''}
+      <div class="evp"><img src="${p.img}" alt=""><div class="tx">
+        <div class="pz">$${p.pr}</div>
+        ${low ? `<div class="dtag lt">${IC.dealArrow}<span>${e.label}</span></div>` : '<span class="qst">Usual price</span>'}
+      </div></div>
+      ${low ? qEvLine(e.hist.concat(p.pr), e) : ''}
     </div>`; };
 const qcard = (key) => { const c = QCARDS[key]; return `
   <div class="qcard${(c.pk||c.ids||c.img) ? '' : ' bare'}${c.ev ? ' qev' : ''}" onclick="askQ('${key}')">
     <div class="q">${c.q}</div>
     ${c.pk ? `<div class="qatt pk${c.pr ? ' wpr' : ''}">
-      ${c.pk.map(id=>`<div class="cside"><img src="${P[id].img}"><div class="cn">${SHORTNM[id]}</div>${c.pr ? `<div class="cp">$${P[id].pr}</div><div class="cl">${c.low === id ? `<span class="dtag sm">${c.pr[id]}</span>` : c.pr[id]}</div>` : ''}</div>`).join('')}
+      ${c.pk.map(id=>`<div class="cside"><img src="${P[id].img}"><div class="cn">${SHORTNM[id]}</div>${c.pr ? `<div class="cp">$${P[id].pr}</div><div class="cl"><span class="qst${c.low === id ? ' red' : ''}">${c.pr[id]}</span></div>` : ''}</div>`).join('')}
       <span class="vs">VS</span>
     </div>` : ''}
-    ${c.ev ? qEvid(c, key) : (c.ids ? `<div class="qatt row">${c.ids.map(id=>`<img src="${P[id].img}">`).join('')}</div>` : '')}
+    ${c.ev ? qEvid(c) : (c.ids ? (c.prices
+        ? `<div class="qatt row wpr">${c.ids.map(id=>`<div class="ri"><img src="${P[id].img}"><div class="cp">$${P[id].pr}</div></div>`).join('')}</div>`
+        : `<div class="qatt row">${c.ids.map(id=>`<img src="${P[id].img}">`).join('')}</div>`) : '')}
+    ${c.cta ? atCta(key) : ''}
     ${c.img ? `<div class="qatt one"><img src="${asset(c.img)}">${c.tag ? `<span class="atag">${c.tag}</span>` : ''}</div>` : ''}
   </div>`; };
 /* 试穿(Try it on):服饰类能力,入口 = ✦ composer chip + PDP 动作 */
@@ -2493,12 +2580,14 @@ function varGroupHTML(v){
   </div>`;
 }
 const BRAND = { Walmart:'brand-walmart.png', Amazon:'brand-amazon.png', Ebay:'brand-ebay.svg' };
+/* src 是取 logo 的键;展示名单独给(eBay 的大小写) */
+const srcName = (src) => src === 'Ebay' ? 'eBay' : src;
 const brandBadge = (src) => `<div class="offer-logo">${BRAND[src]?`<img src="${asset(BRAND[src])}" alt="${src}">`:''}</div>`;
 function offerRow(o){
   return `<div class="offer-row">
     <div class="offer-left">${brandBadge(o.src)}
       <div><div class="offer-price">$${o.price}</div>
-        <div class="offer-sub"><span class="rating">${IC.star()} <span>${o.rating||'4.5'}</span></span><span class="vbar"></span><span>View in ${o.src} ${IC.arrowUR}</span></div>
+        <div class="offer-sub"><span class="rating">${IC.star()} <span>${o.rating||'4.5'}</span></span><span class="vbar"></span><span>View in ${srcName(o.src)} ${IC.arrowUR}</span></div>
       </div>
     </div>
     <div class="buy-btn">Buy</div>
@@ -2509,7 +2598,7 @@ function reviewItem(r){
   const media = (r.media&&r.media.length) ? `<div class="rev-media">${r.media.map(m=>`<img class="m" src="${asset(m.src)}" alt="">`).join('')}</div>` : '';
   return `<div class="rev-item">
     <div><div class="rev-name">${r.name}</div>
-      <div class="rev-stars">${stars(r.full!=null?r.full:5, r.half)}<span class="vbar"></span><span class="src">${r.src}</span></div></div>
+      <div class="rev-stars">${stars(r.full!=null?r.full:5, r.half)}<span class="vbar"></span><span class="src">${srcName(r.src)}</span></div></div>
     ${r.text?`<div class="rev-text">${r.text}</div>`:''}
     ${media}
   </div>`;
