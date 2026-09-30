@@ -26,6 +26,7 @@
     --ink:        #33507A;
     --lk-scarce:  #C77400;
     --lk-good:    #1E9E54;
+    --deal:       #EE4D2D;   /* 低价红标(Shopee 橙红):标签、价格线上的最低点、差额 */
     --grey-bd:    #BDBDBD;
     --section-gap:#F9FAFB;
     --serif: "New York", Georgia, "Times New Roman", serif;
@@ -223,7 +224,8 @@
   .qatt.pk .cside .cn { display: none; }
   .qatt.pk .cside img { width: 100%; aspect-ratio: 1/1; object-fit: cover;
     border-radius: 9px; background: #F3F4F6; display: block; }
-  /* 不放价格 —— 价格是决策信息,属于会话和 PDP;卡只负责把问题摆出来 */
+  /* 不放价格 —— 价格是决策信息,属于会话和 PDP;卡只负责把问题摆出来。
+     例外是问题本身在问价格的那张(.wpr,"哪个更划算"):没有价格,这个问题摆不出来 */
   .qatt.pk .cside .cn { font-size: 12px; font-weight: 500; line-height: 1.3; color: var(--black);
     margin-top: 7px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   /* 37% ≈ 图片垂直中心(图 1:1,其下还有商品名一行) */
@@ -249,6 +251,46 @@
     background: rgba(255,255,255,.94); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
     border-radius: 6px; padding: 3.5px 6px; box-shadow: 0 1px 3px rgba(8,16,33,.10);
     font-size: 8.5px; font-weight: 700; letter-spacing: .5px; color: var(--black); }
+
+  /* ---------- 低价品卡(.dcard):商品卡 + 一块「证据」---------- */
+  /* 骨架还是商品卡,多两样东西:
+       红标签  名称下、价格上的一枚实心红标(用户给的 Shopee 参考:扇边对勾 + 白字),一句话说"低在哪"
+       证据    价格下面一张 160 宽的内联 SVG(折线 / 卖家刻度 / 阶梯线 / 目标线)+ 一行 10px 脚注交代基准
+     红(--deal)是全页唯一的"低价"色:标签、最低点、差额都用它;价格本身不染色,
+     划线价仍是标价 —— 基准价写在脚注里,同一个位置不混两种含义。 */
+  .dtag { display: inline-flex; align-items: center; gap: 3px; max-width: 100%; height: 20px; margin-top: 4px;
+    padding: 0 6px 0 3px; border-radius: 4px; background: var(--deal); color: #fff;
+    font-size: 12px; line-height: 20px; font-weight: 600; letter-spacing: 0; white-space: nowrap; vertical-align: top; }
+  .dtag svg { flex-shrink: 0; }
+  .dtag span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  /* 问句卡里的小号红标:没有图标,只标出"哪一件在低点" */
+  .dtag.sm { height: 16px; margin-top: 0; padding: 0 5px; border-radius: 3px; font-size: 10px; line-height: 16px; }
+  .evd { margin-top: 6px; }
+  .evd-c { display: block; }
+  .evd-c text { font-family: var(--sf); font-size: 10px; fill: rgba(0,0,0,.4); letter-spacing: 0; }
+  .evd-c .dl { font-size: 11px; font-weight: 600; fill: var(--deal); }
+  .evd-c .tg { fill: #004894; font-weight: 500; }
+  .evd-c .nw { fill: var(--deal); font-weight: 500; }
+  .evd-x { display: flex; justify-content: space-between; margin-top: 2px; font-size: 10px; line-height: 12px;
+    color: rgba(0,0,0,.4); white-space: nowrap; }
+
+  /* ---------- 价格类问句卡的附件 ---------- */
+  /* 单商品 + 一条价格线(参考图:缩略图 + 名称 + Now $… + 90 天折线):白底小卡,左右各探出 8px */
+  .qcard.qev { padding-bottom: 8px; }
+  .qatt.evc { margin: 12px -8px 0; background: #fff; border: .5px solid rgba(34,0,254,.08); border-radius: 10px; padding: 8px; }
+  .evp { display: flex; align-items: center; gap: 8px; }
+  .evp img { width: 36px; height: 36px; flex-shrink: 0; border-radius: 8px; object-fit: cover; background: #F3F4F6; display: block; }
+  .evp .tx { flex: 1; min-width: 0; }
+  .evp .nm { font-size: 12px; line-height: 16px; font-weight: 600; color: var(--text-87);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .evp .sb { font-size: 12px; line-height: 16px; color: rgba(0,0,0,.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .evp .sb b { font-weight: 600; color: var(--text-87); }
+  .qatt.evc svg { display: block; margin-top: 6px; }
+  .qatt.evc svg text { font-family: var(--sf); font-size: 10px; fill: rgba(0,0,0,.4); letter-spacing: 0; }
+  /* 两件对撞 + 价格:图下各一行现价、一行价格事实;VS 胶囊钉在图片中线上(图被压到约 68 高) */
+  .qatt.pk.wpr .cside .cp { margin-top: 6px; font-size: 14px; line-height: 17px; font-weight: 600; color: #212121; text-align: center; }
+  .qatt.pk.wpr .cside .cl { margin-top: 2px; height: 16px; font-size: 10px; line-height: 16px; color: rgba(0,0,0,.4); text-align: center; white-space: nowrap; }
+  .qatt.pk.wpr .vs { top: 34px; }
 
   /* Likes 常驻角标入口 */
   .screen-body { position: relative; }
@@ -1458,7 +1500,7 @@ const SIMILAR = {
 };
 const saved = new Set(['sneaker','watch','phones','tote','backpack','sunglasses','bottle','sneaker2']);
 /* 收藏夹更新事件。三态:有事件=完整区 / 有收藏无事件=一行履约条 / 无收藏=整区隐藏 */
-const SAVE_EVENTS = { sneaker:'↓ to $89 — your target', phones:'↓$100 since you saved', watch:'Low stock · 4 left' };
+const SAVE_EVENTS = { sneaker:'↓ $6 under your target', phones:'↓$100 since you saved', watch:'Low stock · 4 left' };
 /* MIX_UPDATES 态:收藏更新不单独占一区,直接分发进双列流。
    事件行必须同时说清"变了什么"和"对你意味着什么" —— 只说降价是通知,说到目标价才是理由。
    buy 只在利益点足以支撑立即下单时为 true(到价/大幅降),让按钮的出现本身成为强度信号;
@@ -1479,7 +1521,7 @@ const SAVED_UPDATES = {
   /* at:true = 这条更新出自用户亲手设的 auto-task 条件,角标只给它 ——
      另外两条是 Migoo 自己在收藏上发现的变化("since you saved" / 库存),
      全部挂角标就成了"收藏=任务"的旧混淆,而且一屏三个铃铛,角标就不再是信号。 */
-  sneaker: { ev:'Hit $89 — the target you set', buy:true, at:true },
+  /* sneaker(你设的目标到价)不在这张表里了:它在流里是一张低价品卡,见 DEALS / dcard */
   phones:  { ev:'$100 off since you liked it', buy:true },
   watch:   { ev:'Only 4 left in your size',     buy:true },
 };
@@ -1810,6 +1852,9 @@ const IC = {
   bellHead: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g><path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4ZM12 6.20898C12.5523 6.20899 13 6.65671 13 7.20898V11.5225L16.3936 14.2627C16.823 14.6096 16.8905 15.2393 16.5439 15.6689C16.1969 16.0985 15.5664 16.1663 15.1367 15.8193L11.7432 13.0771C11.2734 12.6976 11.0002 12.1263 11 11.5225V7.20898C11 6.6567 11.4477 6.20898 12 6.20898Z" fill="#212121"/></g></svg>',
   tagClock: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><g><path d="M6.99967 1.16667C10.2212 1.16667 12.8335 3.77816 12.8337 6.99967L12.8258 7.30046C12.6695 10.3825 10.1206 12.8337 6.99967 12.8337L6.69987 12.8258C3.61769 12.6696 1.16667 10.1207 1.16667 6.99967C1.16684 3.77827 3.77827 1.16684 6.99967 1.16667ZM6.99967 2.33366C4.4226 2.33384 2.33384 4.4226 2.33366 6.99967C2.33366 9.57689 4.4225 11.6665 6.99967 11.6667C9.577 11.6667 11.6667 9.577 11.6667 6.99967C11.6665 4.4225 9.57689 2.33366 6.99967 2.33366ZM6.99967 3.62272C7.32184 3.62273 7.58268 3.88357 7.58268 4.20573L7.58366 6.72038L9.56217 8.31999C9.81265 8.52231 9.85309 8.88969 9.65104 9.1403C9.44865 9.39087 9.08037 9.43047 8.82975 9.22819L6.85026 7.62858C6.57617 7.40709 6.41666 7.07278 6.41667 6.72038L6.41764 4.20573C6.41765 3.88367 6.67766 3.6229 6.99967 3.62272Z" fill="#212121"/></g></svg>',
   tagHeart: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><g><path d="M8.03579 1.91602C9.70884 1.91602 10.833 3.49914 10.833 4.97602C10.833 7.96695 6.16745 10.416 6.08301 10.416C5.99856 10.416 1.33301 7.96695 1.33301 4.97602C1.33301 3.49914 2.45717 1.91602 4.13023 1.91602C5.09079 1.91602 5.71884 2.39945 6.08301 2.82445C6.44717 2.39945 7.07523 1.91602 8.03579 1.91602Z" stroke="black" stroke-linecap="round" stroke-linejoin="round"/></g></svg>',
+  tagEye: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1.1 6S2.9 2.6 6 2.6 10.9 6 10.9 6 9.1 9.4 6 9.4 1.1 6 1.1 6Z" stroke="#000" stroke-linejoin="round"/><circle cx="6" cy="6" r="1.5" stroke="#000"/></svg>',
+  /* 红标签里的扇边对勾(Lucide badge-check 的外形):白底红勾 */
+  dealBadge: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" fill="#fff"/><path d="m8.6 12.2 2.3 2.3 4.5-4.7" stroke="#EE4D2D" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   /* Ask 按钮图标:路径与渐变放在 body 顶部的全局 <defs> 里,每张卡只引用 —— 两层叠出"蓝→紫 + 左下粉" */
   askb: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><use href="#askbP" fill="url(#askbG1)"/><use href="#askbP" fill="url(#askbG2)"/></svg>',
   /* 卖点行三枚 14px 线条图标(Lucide:badge-percent / tag / shield-check) */
@@ -1877,6 +1922,91 @@ const scard = (id) => { const p=P[id], u=SAVED_UPDATES[id];
     </div>
   </div>`; };
 
+/* ============================================================
+   低价品卡(dcard)—— 商品卡 + 一块「证据」,回答"凭什么说它便宜"。
+   四种证据对应四种来路,各用一种图,不会读成同一件事:
+     low7     降价趋势上的近 7 天最低       → 折线 + 末端红点 + 本周降了多少
+     same     同款比过一圈,这家最低         → 卖家价格刻度,最左的红点是这一家
+     watched  你看过 → Migoo 替你盯 → 现在最低 → 从你看的那天起的阶梯线(起点空心圆)
+     target   你自己设的监控到价             → 阶梯线穿过目标虚线
+   四种都在名称下挂一枚红标签(label),一句话说"低在哪";证据图在价格下面。
+   前两种是纯推荐:图上不挂角标,不放 Buy Now。
+   后两种和你有关系:图上角标说身份(Watched for you / Auto-task),给 Buy Now。
+   数字只有一个出处:现价取 P[id].pr,目标取 ALERTS[id],hist 是今天之前的价;
+   卡上的降幅、差额、刻度位置全是算出来的,不手写。
+   ============================================================ */
+const DEALS = {
+  /* 前两张选的是你没收藏、也没设过任务的商品:有关系的低价归收藏更新卡和后两种证据 */
+  throwbl:  { kind:'low7',    label:'7-day low · 3 drops',
+              hist:[115,115,109,109,103,103], from:'Sep 23' },
+  moka:     { kind:'same',    label:'Lowest of 5 sellers',
+              others:[46,49,53,58], foot:['Same item','Checked today'] },
+  camera:   { kind:'watched', label:'Lowest since Sep 12',
+              hist:[119,119,115,115,109,109,105], from:'Sep 12', buy:true },
+  sneaker:  { kind:'target',  hist:[109,109,104,106,99,96], from:'Jul 18', buy:true },
+};
+/* 价格线上的"现在这个低点":与红标签同一个红 */
+const evDot = (x, y, r = 3.25) => `<circle cx="${x}" cy="${y}" r="${r + 2.75}" fill="#EE4D2D" fill-opacity=".16"/><circle cx="${x}" cy="${y}" r="${r}" fill="#EE4D2D" stroke="#fff" stroke-width="1.5"/>`;
+/* 价格线:160 宽,按数据等比。step = 阶梯(价格是跳变的);start = 起点空心圆;
+   target = 目标虚线(标签写在线下,那一侧没有价格线);delta = 右上角写总降幅 */
+const evLine = (pts, o = {}) => {
+  const H = o.h || 40, x0 = 5, x1 = 152, top = 8, bot = H - 8;
+  const hi = Math.max(...pts), lo = Math.min(...pts), f = n => +n.toFixed(1);
+  const X = i => f(x0 + (x1 - x0) * i / (pts.length - 1)), Y = v => f(top + (bot - top) * (hi - v) / (hi - lo));
+  let d = '';
+  pts.forEach((v, i) => { d += i ? (o.step ? `H${X(i)}V${Y(v)}` : `L${X(i)} ${Y(v)}`) : `M${x0} ${Y(v)}`; });
+  const ex = X(pts.length - 1), ey = Y(pts[pts.length - 1]);
+  return `<svg class="evd-c" width="160" height="${H}" viewBox="0 0 160 ${H}" fill="none">
+      <path d="${d}V${H - 1}H${x0}Z" fill="#004894" fill-opacity=".06"/>
+      ${o.target !== undefined
+        ? `<path d="M${x0} ${Y(o.target)}H158" stroke="#004894" stroke-opacity=".55" stroke-dasharray="3 3"/><text class="tg" x="${x0 + 4}" y="${f(Y(o.target) + 10.5)}">Target $${o.target}</text>`
+        : `<path d="M${x0} ${ey}H${f(ex - 10)}" stroke="#EE4D2D" stroke-opacity=".5" stroke-dasharray="2 3"/>`}
+      <path d="${d}" stroke="#004894" stroke-opacity=".6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      ${o.start ? `<circle cx="${x0}" cy="${Y(pts[0])}" r="2.75" fill="#fff" stroke="#004894" stroke-width="1.5"/>` : ''}
+      ${evDot(ex, ey)}
+      ${o.delta ? `<text class="dl" x="157" y="12" text-anchor="end">−$${pts[0] - pts[pts.length - 1]}</text>` : ''}
+    </svg>`; };
+/* 卖家刻度:一条价格轴,最左的红点是这一家,其余卖家按价格落点并标价 */
+const evScale = (now, others) => {
+  const hi = Math.max(...others), x0 = 6, x1 = 154, X = v => +(x0 + (x1 - x0) * (v - now) / (hi - now)).toFixed(1);
+  return `<svg class="evd-c" width="160" height="38" viewBox="0 0 160 38" fill="none">
+      <text class="nw" x="0" y="9">This one</text><text x="160" y="9" text-anchor="end">${others.length} other sellers</text>
+      <path d="M${x0} 20H${x1}" stroke="#000" stroke-opacity=".09" stroke-width="2" stroke-linecap="round"/>
+      ${others.map(v => `<circle cx="${X(v)}" cy="20" r="3" fill="#fff" stroke="#000" stroke-opacity=".3" stroke-width="1.5"/>`).join('')}
+      ${evDot(x0, 20)}
+      ${others.map((v, i) => `<text x="${i === others.length - 1 ? 158 : X(v)}" y="34" text-anchor="${i === others.length - 1 ? 'end' : 'middle'}">$${v}</text>`).join('')}
+    </svg>`; };
+const dcard = (id) => { const p = P[id], d = DEALS[id];
+  /* 后两种证据建立在"Migoo 认识你"之上,绑定前和收藏更新卡一样退回普通推荐卡 */
+  if (SHOPEE_SHELL && !shpBound && (d.kind === 'watched' || d.kind === 'target')) return gcard(id);
+  const pts = d.hist ? d.hist.concat(p.pr) : null;
+  const tag = d.kind === 'watched' ? `<div class="ltag">${IC.tagEye}<span>Watched for you</span></div>`
+            : d.kind === 'target'  ? `<div class="ltag">${IC.tagClock}<span>Auto-task</span></div>` : '';
+  const label = d.kind === 'target' ? `$${ALERTS[id] - p.pr} under target` : d.label;
+  const chart = d.kind === 'low7'    ? evLine(pts, { delta:true })
+              : d.kind === 'same'    ? evScale(p.pr, d.others)
+              : d.kind === 'watched' ? evLine(pts, { step:true, start:true, delta:true })
+              :                        evLine(pts, { step:true, start:true, target:ALERTS[id], h:44 });
+  const foot = d.foot || [`${d.kind === 'watched' ? 'Viewed ' : d.kind === 'target' ? 'Set ' : ''}${d.from} · $${d.hist[0]}`, 'Today'];
+  return `
+  <div class="gcard dcard${d.buy ? ' scard' : ''}" onclick="openPDP('${id}')">
+    <div class="imgw">
+      <img src="${p.img}" alt="">
+      ${tag}
+      <div class="askb" onclick="event.stopPropagation();openSheet('${id}')">${IC.askb}</div>
+    </div>
+    <div class="cap">
+      <div class="ttl">${p.brand} ${p.nm}</div>
+      <div class="dtag">${IC.dealBadge}<span>${label}</span></div>
+      <div class="pr"><span class="cur">$</span>${p.pr}<s>$${origPr(p.pr)}</s></div>
+      <div class="evd">
+        ${chart}
+        <div class="evd-x"><span>${foot[0]}</span><span>${foot[1]}</span></div>
+      </div>
+      ${d.buy ? `<button class="buynow" onclick="event.stopPropagation();buyNow('${id}')">Buy Now</button>` : ''}
+    </div>
+  </div>`; };
+
 const secHead = (t, s) => `
   <div class="sec-head" onclick="toast('Section landing — full flow (P1)')">
     <div><div class="t">${t}</div><div class="s">${s}</div></div>
@@ -1899,7 +2029,19 @@ const SHORTNM = { keenz:'Keenz Air', doona:'Doona Nitro' };
    所以一律第一人称视角("my October flight"),不能写成 Migoo 对用户说话的"your"。 */
 const QCARDS = {
   stroller: { q:'Which stroller for city + travel?' },
-  flight:   { q:'Which one for my October flight to Tokyo?', pk:['keenz','doona'] },
+  /* —— 价格类问句 —— 句子仍是用户口吻(一句事实 + 一句自己会问的话),
+     附件多带一条价格证据,问题才立得住:
+       watchprice  老来看、价格一直不动 → 要不要盯价(发出去就建一条到价提醒)
+       deal        看过的两件哪个更划算(便宜的那件在常规价,贵的那件在低点 —— 卡上不自答)
+       buywait     已经到最低了,现在买还是再等
+     ev.hist 是今天之前的价,今天的价取 P[id].pr;deal 的 pr 是图下那行价格事实,low 指哪一件在低点(那一行用小红标) */
+  watchprice: { q:'I keep checking these. Tell me when the price drops.', ids:['sneaker2'],
+              ev:{ kind:'usual', nm:'AF1 × Carhartt', sub:'Viewed 5 times', span:'30d',
+                   hist:[140,140,142,140,140,138,140] } },
+  deal:     { q:'I looked at both. Which is the better deal?', pk:['keenz','doona'],
+              pr:{ keenz:'Usual price', doona:'90-day low' }, low:'doona' },
+  buywait:  { q:'Magic Keyboard hit its 90-day low. Buy now or wait?', ids:['keyboard'],
+              ev:{ kind:'low', nm:'Magic Keyboard', span:'90d', hist:[129,129,119,119,109,109] } },
   chairs:   { q:'Keep looking for dining chairs for a small apartment under $150?',
               ids:['chair','chair2','chair3'] },
   /* 图搜:attachment 是用户看到的原图,Migoo 从图里认出单品再给可买的同款。
@@ -1909,14 +2051,34 @@ const QCARDS = {
      内部评审可用;对外发布前须换图或取得授权。 */
   hat:      { q:"Where can I get Taylor Swift's hat?", img:'ref-taylor.jpg' },
 };
+/* 问句卡的价格线:142 宽的阶梯线,起点标一个基准价,右侧写时间跨度。
+   基本持平的序列不把几块钱的波动放大成锯齿(纵向跨度至少按价格的 12% 算);
+   只有"到了最低点"才用红点,"一直这个价"用线本身的紫。 */
+const qEvLine = (pts, e) => {
+  const x0 = 2, x1 = 112, top = 13, bot = 24, hi = Math.max(...pts), lo = Math.min(...pts);
+  const span = Math.max(hi - lo, hi * 0.12), f = n => +n.toFixed(1);
+  const X = i => f(x0 + (x1 - x0) * i / (pts.length - 1)), Y = v => f(top + (bot - top) * (hi - v) / span);
+  let d = '';
+  pts.forEach((v, i) => { d += i ? `H${X(i)}V${Y(v)}` : `M${x0} ${Y(v)}`; });
+  const ex = X(pts.length - 1), ey = Y(pts[pts.length - 1]);
+  return `<svg width="142" height="30" viewBox="0 0 142 30" fill="none">
+        <path d="${d}" stroke="#8A77FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        ${e.kind === 'low' ? evDot(ex, ey, 3) : `<circle cx="${ex}" cy="${ey}" r="3" fill="#8A77FF" stroke="#fff" stroke-width="1.5"/>`}
+        <text x="${x0}" y="8">${e.kind === 'low' ? '$' + pts[0] : 'Usually $' + pts[pts.length - 1]}</text><text x="142" y="27.5" text-anchor="end">${e.span}</text>
+      </svg>`; };
+const qEvid = (c) => { const e = c.ev, p = P[c.ids[0]]; return `
+    <div class="qatt evc">
+      <div class="evp"><img src="${p.img}" alt=""><div class="tx"><div class="nm">${e.nm}</div><div class="sb">${e.kind === 'low' ? `Now <b>$${p.pr}</b>` : e.sub}</div></div></div>
+      ${qEvLine(e.hist.concat(p.pr), e)}
+    </div>`; };
 const qcard = (key) => { const c = QCARDS[key]; return `
-  <div class="qcard${(c.pk||c.ids||c.img) ? '' : ' bare'}" onclick="askQ('${key}')">
+  <div class="qcard${(c.pk||c.ids||c.img) ? '' : ' bare'}${c.ev ? ' qev' : ''}" onclick="askQ('${key}')">
     <div class="q">${c.q}</div>
-    ${c.pk ? `<div class="qatt pk">
-      ${c.pk.map(id=>`<div class="cside"><img src="${P[id].img}"><div class="cn">${SHORTNM[id]}</div></div>`).join('')}
+    ${c.pk ? `<div class="qatt pk${c.pr ? ' wpr' : ''}">
+      ${c.pk.map(id=>`<div class="cside"><img src="${P[id].img}"><div class="cn">${SHORTNM[id]}</div>${c.pr ? `<div class="cp">$${P[id].pr}</div><div class="cl">${c.low === id ? `<span class="dtag sm">${c.pr[id]}</span>` : c.pr[id]}</div>` : ''}</div>`).join('')}
       <span class="vs">VS</span>
     </div>` : ''}
-    ${c.ids ? `<div class="qatt row">${c.ids.map(id=>`<img src="${P[id].img}">`).join('')}</div>` : ''}
+    ${c.ev ? qEvid(c) : (c.ids ? `<div class="qatt row">${c.ids.map(id=>`<img src="${P[id].img}">`).join('')}</div>` : '')}
     ${c.img ? `<div class="qatt one"><img src="${asset(c.img)}">${c.tag ? `<span class="atag">${c.tag}</span>` : ''}</div>` : ''}
   </div>`; };
 /* 试穿(Try it on):服饰类能力,入口 = ✦ composer chip + PDP 动作 */
@@ -1924,20 +2086,19 @@ const qcard = (key) => { const c = QCARDS[key]; return `
 /* 划线原价:设计稿每张卡都带,demo 数据没有,按现价上浮约 28% 取整 */
 const origPr = (pr) => Math.ceil(pr * 1.28) + '.00';
 const home = () => {
-  /* 首页商品零重复;两列按设计稿的坑位直接写死,不再按高度贪心分列:
-       左列  商品 → 收藏更新(Buy Now) → 纯问句 → 商品 → 三图问句 → …
-       右列  对比问句 → Auto-task(Buy Now) → 商品 → You Liked → …
-     特殊卡(收藏更新 / 问句)在同一列里始终隔着商品卡。
-     左列多一张矮问句卡,所以把理由占两行的商品卡尽量排在左列,两列尾部差控制在半张卡以内。 */
+  /* 首页商品零重复;两列按设计稿的坑位直接写死,不再按高度贪心分列。流里现在混排五种卡:
+       gcard 普通推荐 · scard 收藏更新 · dcard 低价品 + 证据 · qcard 问句 · 价格类问句(带价格证据)
+     排法:首屏仍是设计稿的样子(左 商品 → You Liked,右 对比问句 → Auto-task 到价);
+     同一列里特殊卡之间尽量隔着普通商品卡,两张低价品卡不左右并排。 */
   const c1 = [
-    gcard('tote'),      scard('phones'),    qcard('stroller'),  gcard('backpack'),
-    qcard('chairs'),    gcard('speaker'),   gcard('sneaker2'),  gcard('moka'),
-    gcard('camera'),    gcard('plant'),     gcard('wallet'),
+    gcard('tote'),      scard('phones'),    qcard('stroller'),  dcard('throwbl'),
+    qcard('chairs'),    gcard('speaker'),   qcard('watchprice'),gcard('plant'),
+    dcard('camera'),    gcard('wallet'),    gcard('bottle'),    gcard('candle'),
   ];
   const c2 = [
-    qcard('flight'),    scard('sneaker'),   gcard('perfume'),   scard('watch'),
-    gcard('sunglasses'),gcard('bottle'),    qcard('hat'),       gcard('mug'),
-    gcard('candle'),    gcard('vase'),      gcard('throwbl'),
+    qcard('deal'),      dcard('sneaker'),   gcard('perfume'),   qcard('buywait'),
+    scard('watch'),     gcard('sunglasses'),dcard('moka'),      qcard('hat'),
+    gcard('mug'),       gcard('vase'),      gcard('backpack'),
   ];
   return `
   <div class="screen-body" id="sb">
@@ -2546,7 +2707,7 @@ function lkCard(tagCls, tagTxt, pid, priceHTML, noteHTML, btns){
    按上一版画的线,只有"到价直接帮我买"才配一个可撤销可审计的条目。 */
 /* 预置两条:sneaker 是 Updates 区那张 TARGET HIT 卡的来路;
    tote 用来展示"已设但还没触发"长什么样(价格后挂标签,按钮位空出来)。 */
-const ALERTS = { sneaker: 89, tote: 150 };
+const ALERTS = { sneaker: 95, tote: 150 };
 const alertLow = (pid) => Math.round(P[pid].pr * 0.91);
 const alertLow2 = (pid) => Math.round(P[pid].pr * 0.85);
 /* 已设的线跟在价格后面,不占按钮位 —— 它是这件东西的一个事实(和价格同类),
@@ -2918,8 +3079,9 @@ function goTask(i){
     const body = document.getElementById('lkBody');
     const card = body && body.querySelectorAll('.at-card')[i];
     if (!card) return;
-    const br = body.getBoundingClientRect(), cr = card.getBoundingClientRect();
-    const top = body.scrollTop + (cr.top - br.top) - Math.max(0, (br.height - cr.height) / 2);
+    /* 量到的是屏幕像素,scrollTop 是布局像素:整机被 fitPhone 缩小时要除回去 */
+    const br = body.getBoundingClientRect(), cr = card.getBoundingClientRect(), z = phoneZoom;
+    const top = body.scrollTop + (cr.top - br.top) / z - Math.max(0, (br.height - cr.height) / z / 2);
     body.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
     /* 入场动画(lk-reveal)结束后再闪,否则两条动画叠在一起谁都看不清 */
     setTimeout(() => {
@@ -3737,17 +3899,34 @@ QCARDS.stroller.reply = () => [
     rich: plist(['keenz','doona']) },
   { t: `If the flight is the hard part, I'd take the Keenz:`, rich: pbig('keenz') }
 ];
-QCARDS.flight.reply = () => [
-  { t: `Short version: <b>Keenz for the Tokyo flight, Doona if the car is daily life.</b>`,
+/* 三张价格类问句的回答。数字都从 P / QCARDS 里取,和卡上的证据是同一份 */
+QCARDS.watchprice.reply = () => {
+  /* 这句话发出去就是建一条到价提醒:落库(session 内),任务页和商品页的状态都跟着变 */
+  const p = P.sneaker2, line = Math.round(p.pr * 0.9 / 5) * 5;
+  if (!SESSION_TASKS.some(t => t.pid === 'sneaker2' && t.name === 'Price alert'))
+    SESSION_TASKS.push({ pid:'sneaker2', name:'Price alert', rule:`Below $${line} — tell me` });
+  return [
+    { tag:'Auto-task created',
+      t: `Done — I’m watching the AF1 × Carhartt for you. It has sat at <code>$${p.pr}</code> for the last 30 days, so I’ll tell you the moment it goes under <code>$${line}</code>.`,
+      rich: pbig('sneaker2') },
+    { t: `Want a different number? Just say it.` }
+  ]; };
+QCARDS.deal.reply = () => { const k = P.keenz, d = P.doona, off = 150; return [
+  { t: `Short version: <b>the Doona is the better deal, the Keenz is the cheaper stroller.</b>`,
     rich: `<table class="ctb">
           <tr><td class="k"></td><td><b>Keenz Air Plus</b></td><td><b>Doona</b></td></tr>
-          <tr class="bf"><td class="k">Best for</td><td><span class="bft">Flying</span></td><td><span class="bft">Car days</span></td></tr>
-          <tr><td class="k">Price</td><td><span class="w">$349</span></td><td>$549</td></tr>
-          <tr><td class="k">Weight</td><td><span class="w">13.6 lb</span></td><td>17.2 lb</td></tr>
-          <tr><td class="k">Fold</td><td><span class="w">Cabin size</span></td><td>Doesn't fold</td></tr>
-          <tr><td class="k">Car seat</td><td>Separate</td><td><span class="w">Built-in</span></td></tr>
-        </table>` + plist(['keenz','doona']) }
-];
+          <tr><td class="k">Now</td><td><span class="w">$${k.pr}</span></td><td>$${d.pr}</td></tr>
+          <tr><td class="k">Usual</td><td>$${k.pr}</td><td>$${d.pr + off}</td></tr>
+          <tr><td class="k">Saving</td><td>—</td><td><span class="w">$${off}</span></td></tr>
+          <tr><td class="k">90-day low</td><td>No</td><td><span class="w">Yes</span></td></tr>
+        </table>` + plist(['keenz','doona']) },
+  { t: `The Keenz almost never moves off <code>$${k.pr}</code>, so there’s no rush on it. The Doona is <code>$${off}</code> under its usual price — if it’s the one you want, this is the week.` }
+]; };
+QCARDS.buywait.reply = () => { const p = P.keyboard, h = QCARDS.buywait.ev.hist; return [
+  { t: `<b>Buy now.</b> <code>$${p.pr}</code> is the lowest I’ve seen in 90 days — it started at <code>$${h[0]}</code> and has stepped down three times.`,
+    rich: pbig('keyboard') },
+  { t: `The next likely dip is 11.11, and last year that only took it a few dollars lower. If you’d rather wait, I’ll watch it and tell you if it goes under <code>$${p.pr - 4}</code>.` }
+]; };
 QCARDS.chairs.reply = () => [
   { t: `Went back out for you. Two more under $150 that fit a 32" table — both new since you looked:`,
     rich: plist(['chair4','chair5']) },
@@ -4052,6 +4231,15 @@ function render() {
   watchAskDock();
 }
 setDemoState('opt111');  /* 首屏 = Migoo 壳的电商 tab */
+/* 窗口比手机矮时整机等比缩小。输入框和底栏都在手机最底部,被视口裁掉就等于入口没了 ——
+   而滚轮悬在手机上滚的是流不是页面,人到不了底。窗口够高时不缩放,像素与设计稿 1:1。 */
+let phoneZoom = 1;
+function fitPhone(){
+  phoneZoom = Math.max(0.6, Math.min(1, (window.innerHeight - 48) / 852));   /* 48 = 上边距 32 + 下方留 16 */
+  document.getElementById('phone').style.zoom = phoneZoom < 1 ? phoneZoom.toFixed(3) : '';
+}
+window.addEventListener('resize', fitPhone);
+fitPhone();
 </script>
 </body>
 </html>
