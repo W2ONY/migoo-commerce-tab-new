@@ -254,9 +254,11 @@
 
   /* ---------- 低价标签 + 低价品卡(.dcard)的证据 ---------- */
   /* 这一页的商品卡全是低价品,所以每张商品卡在名称下、价格上都有一枚低价标签。标签有两款:
-       实心红标 .dtag       扇边对勾 + 白字(用户给的 Shopee 参考)。只给带证据图的四张 .dcard,一句话说"低在哪"
        箭头标签 .dtag.lt    浅红底 + 红描边,左端一枚红方块里是向下的折线箭头(参考天猫「低于常卖价」
-                            和同组的 Best Price feed demo)。给其余商品卡,说法两类:Below usual price / Lowest in N days
+                            和同组的 Best Price feed demo)。说的是**时间上的低价**:低于常卖价、近 N 天最低、
+                            从你看过那天起最低(Below usual price / Lowest in N days / Lowest since …)
+       实心红标 .dtag       扇边对勾 + 白字(用户给的 Shopee 参考)。只给两种更硬的低价:
+                            你设的价格提醒命中了目标价($X under target)、多卖家里最低(Lowest of N sellers)
      .dcard 在价格下面另有证据:一张 160 宽的内联 SVG(折线 / 阶梯线 / 目标线)+ 一行 10px 脚注交代基准;
      "同款多卖家最低"那张不画图,写明在哪一家买(.sup),再用推荐理由那行蓝字说比下一家便宜多少。
      红(--deal)是全页唯一的"低价"色:标签、最低点、差额都用它;价格本身不染色,
@@ -1964,7 +1966,7 @@ const statusbar = (clear) => `<div class="statusbar${clear ? ' clear' : ''}"><sp
 
 /* 低价标签的说法。值是天数 = "近 N 天最低";'usual' = "低于常卖价"。
    没登记的商品也给一枚(低于常卖价)—— 这一页不存在没有低价理由的商品卡。
-   带证据图的四张走 DEALS(实心红标),不在这张表里。 */
+   带证据的四张走 DEALS(标签款式见 dcard),不在这张表里。 */
 const LOWTAG = { tote:'usual', phones:90, watch:'usual', speaker:30, plant:'usual', wallet:14, bottle:'usual',
   candle:30, perfume:'usual', sunglasses:60, mug:'usual', vase:30, backpack:14 };
 const lowTag = (id) => { const v = LOWTAG[id];
@@ -2028,8 +2030,9 @@ const scard = (id) => { const p=P[id], u=SAVED_UPDATES[id];
      same     同款比过一圈,这家最低         → 不画图:哪一家最低(logo + Buy from …)、比下一家便宜多少
      watched  你看过 → Migoo 替你盯 → 现在最低 → 从你看的那天起的阶梯线(起点空心圆)
      target   你自己设的监控到价             → 阶梯线穿过目标虚线
-   四种都在名称下挂一枚实心红标签(label),一句话说"低在哪";证据图在价格下面。
-   (其余商品卡挂的是箭头款的浅红标签,见 LOWTAG —— 实心的留给有证据图的这四张。)
+   四种都在名称下挂一枚标签(label),一句话说"低在哪";证据在价格下面。
+   标签款式按用户定的口径分:low7 / watched 是时间上的低点 → 浅色箭头标(和其余商品卡的 LOWTAG 同款);
+   target(提醒命中目标价)/ same(多卖家最低)→ 实心红标。
    前两种是纯推荐:图上不挂角标,不放 Buy Now。
    后两种和你有关系:图上角标说身份(Watched for you / Auto-task),给 Buy Now。
    数字只有一个出处:现价取 P[id].pr,目标取 ALERTS[id],hist 是今天之前的价;
@@ -2075,6 +2078,9 @@ const dcard = (id) => { const p = P[id], d = DEALS[id];
   const tag = d.kind === 'watched' ? `<div class="ltag">${IC.tagEye}<span>Watched for you</span></div>`
             : d.kind === 'target'  ? `<div class="ltag">${IC.tagClock}<span>Auto-task</span></div>` : '';
   const label = d.kind === 'target' ? `$${ALERTS[id] - p.pr} under target` : d.label;
+  /* 标签款式跟着"低在哪"走:时间上的低点(近 N 天 / 从你看过那天起)= 浅色箭头标;
+     到了你设的目标价、或者多卖家里最低 = 实心红标 */
+  const solid = d.kind === 'target' || d.kind === 'same';
   const chart = d.kind === 'same'    ? ''
               : d.kind === 'low7'    ? evLine(pts, { delta:true })
               : d.kind === 'watched' ? evLine(pts, { step:true, start:true, delta:true })
@@ -2096,7 +2102,7 @@ const dcard = (id) => { const p = P[id], d = DEALS[id];
     </div>
     <div class="cap">
       <div class="ttl">${p.brand} ${p.nm}</div>
-      <div class="dtag">${IC.dealBadge}<span>${label}</span></div>
+      ${solid ? `<div class="dtag">${IC.dealBadge}<span>${label}</span></div>` : `<div class="dtag lt">${IC.dealArrow}<span>${label}</span></div>`}
       <div class="pr"><span class="cur">$</span>${p.pr}<s>$${origPr(p.pr)}</s></div>
       ${ev}
       ${d.buy ? `<button class="buynow" onclick="event.stopPropagation();buyNow('${id}')">Buy Now</button>` : ''}
