@@ -287,6 +287,15 @@
   .evp .sb b { font-weight: 600; color: var(--text-87); }
   .qatt.evc svg { display: block; margin-top: 6px; }
   .qatt.evc svg text { font-family: var(--sf); font-size: 10px; fill: rgba(0,0,0,.4); letter-spacing: 0; }
+  /* 价格提醒 CTA:和商品卡的 Buy Now 同形(32 高、圆角 8、浅蓝底品牌蓝字),前面一枚铃铛。
+     文案说的是用户要的那件事(到价提醒),不说系统里的名词 Auto-task。
+     设好之后按钮退成一条灰色状态(.on),不再是一个待做的动作。 */
+  .atcta { display: flex; align-items: center; justify-content: center; gap: 5px; width: 100%; height: 32px; margin-top: 8px;
+    border: none; border-radius: 8px; background: #F5FAFF; color: var(--brand); font-family: var(--sf);
+    font-size: 14px; font-weight: 600; letter-spacing: 0; cursor: pointer; white-space: nowrap; }
+  .atcta svg { width: 13px; height: 13.5px; flex-shrink: 0; }
+  .atcta:active { background: rgba(0,122,255,.18); }
+  .atcta.on { background: #F3F4F6; color: var(--text-65); }
   /* 两件对撞 + 价格:图下各一行现价、一行价格事实;VS 胶囊钉在图片中线上(图被压到约 68 高) */
   .qatt.pk.wpr .cside .cp { margin-top: 6px; font-size: 14px; line-height: 17px; font-weight: 600; color: #212121; text-align: center; }
   .qatt.pk.wpr .cside .cl { margin-top: 2px; height: 16px; font-size: 10px; line-height: 16px; color: rgba(0,0,0,.4); text-align: center; white-space: nowrap; }
@@ -2034,16 +2043,16 @@ const QCARDS = {
   stroller: { q:'Which stroller for city + travel?' },
   /* —— 价格类问句 —— 句子仍是用户口吻(一句事实 + 一句自己会问的话),
      附件多带一条价格证据,问题才立得住:
-       watchprice  老来看、价格一直不动 → 要不要盯价(发出去就建一条到价提醒)
+       watchprice  老来看、价格一直不动 → 要不要盯价(发出去就建一条到价提醒;卡上另给一枚 CTA 直接建)
        deal        看过的两件哪个更划算(便宜的那件在常规价,贵的那件在低点 —— 卡上不自答)
        buywait     已经到最低了,现在买还是再等
      ev.hist 是今天之前的价,今天的价取 P[id].pr;deal 的 pr 是图下那行价格事实,low 指哪一件在低点(那一行用小红标) */
-  watchprice: { q:'I keep checking these. Tell me when the price drops.', ids:['sneaker2'],
+  watchprice: { q:'I keep checking these. Tell me when the price drops.', ids:['sneaker2'], cta:'Set price alert',
               ev:{ kind:'usual', nm:'AF1 × Carhartt', sub:'Viewed 5 times', span:'30d',
                    hist:[140,140,142,140,140,138,140] } },
   deal:     { q:'I looked at both. Which is the better deal?', pk:['keenz','doona'],
               pr:{ keenz:'Usual price', doona:'90-day low' }, low:'doona' },
-  buywait:  { q:'Magic Keyboard hit its 90-day low. Buy now or wait?', ids:['keyboard'],
+  buywait:  { q:'Magic Keyboard hit its 90-day low. Should I buy it?', ids:['keyboard'],
               ev:{ kind:'low', nm:'Magic Keyboard', span:'90d', hist:[129,129,119,119,109,109] } },
   chairs:   { q:'Keep looking for dining chairs for a small apartment under $150?',
               ids:['chair','chair2','chair3'] },
@@ -2069,10 +2078,19 @@ const qEvLine = (pts, e) => {
         ${e.kind === 'low' ? evDot(ex, ey, 3) : `<circle cx="${ex}" cy="${ey}" r="3" fill="#8A77FF" stroke="#fff" stroke-width="1.5"/>`}
         <text x="${x0}" y="8">${e.kind === 'low' ? '$' + pts[0] : 'Usually $' + pts[pts.length - 1]}</text><text x="142" y="27.5" text-anchor="end">${e.span}</text>
       </svg>`; };
-const qEvid = (c) => { const e = c.ev, p = P[c.ids[0]]; return `
+/* 问句卡上的价格提醒 CTA。整卡点击 = 把这句话放进输入框(还能改);CTA = 不改了,直接设。
+   设好之后按钮变成状态,再点去任务页看这一条 */
+const alertOn = (key) => SESSION_TASKS.some(t => t.pid === QCARDS[key].ids[0] && t.name === 'Price alert');
+const atCta = (key) => `<button class="atcta${alertOn(key) ? ' on' : ''}" data-k="${key}" onclick="event.stopPropagation();atCtaGo('${key}')">${IC.bellSm}<span>${alertOn(key) ? 'Price alert on' : QCARDS[key].cta}</span></button>`;
+function atCtaGo(key){
+  if (alertOn(key)) { closeChat(); openLikes(); lkSetTab('tasks'); return; }
+  runQ(key);
+}
+const qEvid = (c, key) => { const e = c.ev, p = P[c.ids[0]]; return `
     <div class="qatt evc">
       <div class="evp"><img src="${p.img}" alt=""><div class="tx"><div class="nm">${e.nm}</div><div class="sb">${e.kind === 'low' ? `Now <b>$${p.pr}</b>` : e.sub}</div></div></div>
       ${qEvLine(e.hist.concat(p.pr), e)}
+      ${c.cta ? atCta(key) : ''}
     </div>`; };
 const qcard = (key) => { const c = QCARDS[key]; return `
   <div class="qcard${(c.pk||c.ids||c.img) ? '' : ' bare'}${c.ev ? ' qev' : ''}" onclick="askQ('${key}')">
@@ -2081,7 +2099,7 @@ const qcard = (key) => { const c = QCARDS[key]; return `
       ${c.pk.map(id=>`<div class="cside"><img src="${P[id].img}"><div class="cn">${SHORTNM[id]}</div>${c.pr ? `<div class="cp">$${P[id].pr}</div><div class="cl">${c.low === id ? `<span class="dtag sm">${c.pr[id]}</span>` : c.pr[id]}</div>` : ''}</div>`).join('')}
       <span class="vs">VS</span>
     </div>` : ''}
-    ${c.ev ? qEvid(c) : (c.ids ? `<div class="qatt row">${c.ids.map(id=>`<img src="${P[id].img}">`).join('')}</div>` : '')}
+    ${c.ev ? qEvid(c, key) : (c.ids ? `<div class="qatt row">${c.ids.map(id=>`<img src="${P[id].img}">`).join('')}</div>` : '')}
     ${c.img ? `<div class="qatt one"><img src="${asset(c.img)}">${c.tag ? `<span class="atag">${c.tag}</span>` : ''}</div>` : ''}
   </div>`; };
 /* 试穿(Try it on):服饰类能力,入口 = ✦ composer chip + PDP 动作 */
@@ -3911,8 +3929,9 @@ QCARDS.watchprice.reply = () => {
   const p = P.sneaker2, line = Math.round(p.pr * 0.9 / 5) * 5;
   if (!SESSION_TASKS.some(t => t.pid === 'sneaker2' && t.name === 'Price alert'))
     SESSION_TASKS.push({ pid:'sneaker2', name:'Price alert', rule:`Below $${line} — tell me` });
+  document.querySelectorAll('.atcta[data-k="watchprice"]').forEach(b => { b.outerHTML = atCta('watchprice'); });
   return [
-    { tag:'Auto-task created',
+    { tag:'Price alert set',
       t: `Done — I’m watching the AF1 × Carhartt for you. It has sat at <code>$${p.pr}</code> for the last 30 days, so I’ll tell you the moment it goes under <code>$${line}</code>.`,
       rich: pbig('sneaker2') },
     { t: `Want a different number? Just say it.` }
@@ -3929,7 +3948,7 @@ QCARDS.deal.reply = () => { const k = P.keenz, d = P.doona, off = 150; return [
   { t: `The Keenz almost never moves off <code>$${k.pr}</code>, so there’s no rush on it. The Doona is <code>$${off}</code> under its usual price — if it’s the one you want, this is the week.` }
 ]; };
 QCARDS.buywait.reply = () => { const p = P.keyboard, h = QCARDS.buywait.ev.hist; return [
-  { t: `<b>Buy now.</b> <code>$${p.pr}</code> is the lowest I’ve seen in 90 days — it started at <code>$${h[0]}</code> and has stepped down three times.`,
+  { t: `<b>Yes — buy it now.</b> <code>$${p.pr}</code> is the lowest I’ve seen in 90 days — it started at <code>$${h[0]}</code> and has stepped down three times.`,
     rich: pbig('keyboard') },
   { t: `The next likely dip is 11.11, and last year that only took it a few dollars lower. If you’d rather wait, I’ll watch it and tell you if it goes under <code>$${p.pr - 4}</code>.` }
 ]; };
