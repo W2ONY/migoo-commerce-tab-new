@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Price feed · AI product card · unified blue</title>
+<style>
+  :root{
+    --sf:"SF Pro Text","SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --text:rgba(0,0,0,.87); --sub:rgba(0,0,0,.45); --line:rgba(0,0,0,.06); --ink:#212121;
+    /* one hue: brand blue and its tints */
+    --b:#1F6BFF; --b-soft:#6FA5FF; --b-tx:#1A56D6; --b-04:rgba(31,107,255,.04); --b-08:rgba(31,107,255,.08); --b-14:rgba(31,107,255,.14); --b-22:rgba(31,107,255,.22);
+    --btn-bg:#EEF4FF; --navy:#1B2A5C;
+    /* the single semantic exception: deal tag */
+    --tag:#E8482A; --tag-bg:#FFF3EF; --tag-line:rgba(232,72,42,.38);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+  body{font-family:var(--sf);background:#E9EBEF;color:var(--text);padding:34px 20px 70px}
+  .head{text-align:center}
+  .head h1{font-size:22px;font-weight:600;color:#081021}
+  .head p{font-size:13px;color:#6B7280;margin-top:6px}
+  /* phone left, options right — never stacked. In a window narrower than both, the page scrolls sideways. */
+  .stage{display:flex;gap:28px;justify-content:center;justify-content:safe center;align-items:flex-start;margin-top:26px;width:max-content;min-width:100%}
+  .fw{display:flex;flex-direction:column;align-items:center;gap:12px}
+  .flab{font-size:12.5px;font-weight:600;color:#374151;background:#fff;padding:5px 14px;border-radius:999px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+  .flab.on{background:#081021;color:#fff}
+
+  /* ---------- phone ---------- */
+  .phone{width:393px;height:852px;border-radius:44px;position:relative;overflow:hidden;background:#FAFBFD;box-shadow:0 24px 60px rgba(0,0,0,.16),0 0 0 1px rgba(0,0,0,.04);display:flex;flex-direction:column}
+  .sb{height:54px;flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 8px;font-size:16px;font-weight:600}
+  .scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding-bottom:120px}
+  .scroll::-webkit-scrollbar{display:none}
+  .nav{height:42px;display:flex;justify-content:flex-end;align-items:center;gap:16px;padding:0 18px}
+  .nav>svg{width:24px;height:24px}
+  .hero{text-align:center;padding:16px 16px 18px}
+  .hero h3{font-size:24px;font-weight:510;color:#081021;letter-spacing:-.3px}
+  .hero .sub{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:10px;font-size:13.5px;color:rgba(128,128,128,.7)}
+  .hero .sub i{width:1px;height:12px;background:rgba(0,0,0,.1)}
+  .abil{display:flex;gap:8px;padding:0 10px 14px;overflow-x:auto;scrollbar-width:none}
+  .abil::-webkit-scrollbar{display:none}
+  .abil div{flex:0 0 124px;height:80px;border-radius:12px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:12.5px;line-height:15px;text-align:center;padding:0 8px}
+  .abil div span{font-size:24px;line-height:26px}
+  /* S1 · one white panel, 2×2 cells split by hairlines */
+  .abil-panel{margin:0 10px 14px;background:#fff;border-radius:16px;box-shadow:0 1px 2px rgba(16,24,40,.04),0 6px 18px rgba(16,24,40,.04);display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+  .abil-panel div{height:52px;display:flex;align-items:center;gap:10px;padding:0 12px 0 14px;font-size:13.5px;line-height:17px;font-weight:510;letter-spacing:-.1px;color:#1B1F2A;cursor:pointer}
+  .abil-panel div:nth-child(odd){box-shadow:inset -.5px 0 0 rgba(0,0,0,.07)}
+  .abil-panel div:nth-child(-n+2){border-bottom:.5px solid rgba(0,0,0,.07)}
+  .abil-panel div svg{width:20px;height:20px;flex-shrink:0;color:var(--b)}
+  .abil-panel div:active{background:#F5F8FF}
+  /* S4 · four white cards, icon on a pale round */
+  .abil-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 10px 14px}
+  .abil-cards div{height:52px;border-radius:14px;background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.04);display:flex;align-items:center;gap:8px;padding:0 8px;font-size:13px;line-height:16px;font-weight:510;letter-spacing:-.1px;color:#1B1F2A;cursor:pointer}
+  .abil-cards div i{width:32px;height:32px;border-radius:50%;background:#EEF4FF;color:var(--b);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .abil-cards div i svg{width:18px;height:18px}
+  .abil-cards div:active{background:#F5F8FF}
+  /* S2 · two rows of content-width pills, centered */
+  .abil-3d{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 10px 14px}
+  .abil-3d div{height:56px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 10px 0 14px;font-size:13px;line-height:17px;font-weight:400;letter-spacing:-.1px;color:#14171F;cursor:pointer}
+  .abil-3d div img{width:34px;height:34px;object-fit:contain;flex-shrink:0}
+  .abil-3d div:active{background:#F5F8FF}
+  .abil-3dtop{display:grid;grid-template-columns:1fr 1fr;gap:22px 8px;padding:16px 10px 14px}
+  .abil-3dtop div{position:relative;height:58px;border-radius:14px;background:#fff;display:flex;align-items:flex-end;justify-content:center;padding:0 4px 11px;font-size:12.5px;line-height:16px;font-weight:510;letter-spacing:-.2px;color:#1B1F2A;text-align:center;white-space:nowrap;cursor:pointer}
+  .abil-3dtop div img{position:absolute;left:50%;top:-16px;transform:translateX(-50%);width:42px;height:42px;object-fit:contain}
+  .abil-3dtop div:active{background:#F5F8FF}
+  .abil div img{width:34px;height:34px;object-fit:contain}
+  .abil-pill{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 6px;padding:0 8px 14px}
+  .abil-pill div{height:34px;border-radius:17px;background:#fff;box-shadow:0 0 0 .5px rgba(0,0,0,.06);display:flex;align-items:center;gap:5px;padding:0 10px 0 8px;font-size:12.5px;letter-spacing:-.1px;color:var(--text);white-space:nowrap;cursor:pointer}
+  .abil-pill div svg{width:15px;height:15px;flex-shrink:0;color:var(--b)}
+  .abil-pill div:active{background:var(--btn-bg)}
+  .feed{display:flex;gap:8px;padding:0 8px}
+  .col{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+  .card{border-radius:12px;position:relative;cursor:pointer}
+  .pc{background:#fff}
+  .pc .img{position:relative;height:172px;background:#F2F3F5;overflow:hidden;border-radius:12px 12px 0 0}
+  .pc .img img{width:100%;height:100%;object-fit:cover;display:block}
+  .chip{position:absolute;left:6px;top:6px;height:21px;display:flex;align-items:center;gap:4px;padding:0 7px 0 6px;border-radius:7px;background:rgba(255,255,255,.92);font-size:11px;font-weight:510;color:#111;z-index:2}
+  .chip svg{width:12px;height:12px}
+  .ask{position:absolute;right:6px;bottom:6px;width:30px;height:30px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 .5px var(--line);z-index:3}
+  .ask svg{width:18px;height:18px}
+  .pc .body{padding:9px 10px 10px;display:flex;flex-direction:column;gap:5px;border-radius:0 0 12px 12px}
+  .ttl{font-size:14px;line-height:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .evtag{align-self:flex-start;height:17px;display:inline-flex;align-items:center;gap:3px;padding:0 5px 0 0;border-radius:4px;overflow:hidden;border:.5px solid var(--tag-line);background:var(--tag-bg);color:var(--tag);font-size:11px;font-weight:510;white-space:nowrap}
+  .evtag svg{width:17px;height:17px;flex-shrink:0;margin:-.5px 0 -.5px -.5px}
+  .price{display:flex;align-items:baseline;gap:5px}
+  .price b{font-size:18px;font-weight:650;color:var(--ink);letter-spacing:-.3px}
+  .price s{font-size:12px;color:rgba(0,0,0,.28)}
+  .why{font-size:13px;line-height:18px;color:var(--b-tx)}
+  .sup{align-self:flex-start;display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--sub);background:#F4F5F7;border-radius:6px;padding:2px 6px}
+  .sup img{width:12px;height:12px;border-radius:3px}
+  .btn{height:34px;border-radius:9px;background:var(--btn-bg);color:var(--b);font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:3px}
+  /* query cards · base (your lavender) */
+  .uq{background:linear-gradient(165deg,#EFF0FA 0%,#F1EFFB 100%);box-shadow:inset 0 0 0 .5px rgba(90,80,200,.10);padding:12px;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+  .uq .quote{width:22px;height:22px;color:rgba(0,0,0,.14);margin:0 0 -4px -2px}
+  .uq .q{font-size:17px;line-height:23px;color:#24194D;letter-spacing:-.2px}
+  .uq .q b{font-weight:600}
+  .utile{display:flex;gap:9px;align-items:center;background:rgba(255,255,255,.72);border-radius:12px;padding:7px}
+  .utile img{width:50px;height:50px;border-radius:8px;object-fit:cover;flex-shrink:0}
+  .utile .nm{font-size:12px;line-height:16px;color:#24194D;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .utile .pr{font-size:14.5px;color:#24194D;margin-top:2px}
+  .upair{position:relative;display:flex;gap:4px;background:rgba(255,255,255,.72);border-radius:10px;padding:5px}
+  .upair img{flex:1;min-width:0;aspect-ratio:1/1;border-radius:7px;object-fit:cover;display:block}
+  .vsb{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:32px;height:16px;border-radius:75px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center;font:900 italic 11px/14px "Roboto Condensed","Roboto",var(--sf);color:var(--b)}
+  .uq .qbtn{height:34px;border-radius:9px;background:rgba(255,255,255,.8);color:var(--b);font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center}
+  .dock{position:absolute;left:14px;right:14px;bottom:92px;z-index:6;background:#fff;border-radius:26px;box-shadow:0 4px 20px rgba(0,0,0,.08),0 0 0 .5px rgba(0,0,0,.05);display:flex;align-items:center;gap:10px;padding:6px 12px 6px 14px;height:52px}
+  /* feed fades out under the composer instead of showing through the gap above the tab bar */
+  .dockfade{position:absolute;left:0;right:0;bottom:82px;height:104px;z-index:5;pointer-events:none;background:linear-gradient(to bottom,var(--pg0,rgba(250,251,253,0)) 0,var(--pg,#FAFBFD) 58%)}
+  .dock .ph{flex:1;font-size:16px;color:#A0A3AD}
+  .dock>svg{width:24px;height:24px}
+  /* Migoo app tab bar (same spec as commerce-tab demo-0805: 82px, no labels, 27px solid icons) */
+  .tabbar{position:absolute;left:0;right:0;bottom:0;height:82px;background:#fff;border-top:1px solid var(--line);z-index:7;display:flex;align-items:flex-start;padding-top:10px}
+  .tabbar.in{position:static;flex-shrink:0}
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;color:#D6D9E6;cursor:pointer}
+  .tab.on{color:#081021}
+  .tab svg.tabfill{width:27px;height:27px}
+  .tab img.logo{width:27px;height:27px;border-radius:7px;object-fit:contain;filter:grayscale(1) opacity(.55)}
+  .tab.on img.logo{filter:none}
+  .homei{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:140px;height:5px;border-radius:3px;background:#0B1014;z-index:28}
+  .toast{position:absolute;left:50%;top:64px;transform:translate(-50%,-8px);background:rgba(20,22,30,.92);color:#fff;font-size:13px;padding:9px 14px;border-radius:12px;opacity:0;pointer-events:none;transition:all .2s;z-index:40;white-space:nowrap}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+
+  /* =========== AI version · everything in one blue =========== */
+  .ai .uq{background:linear-gradient(165deg,#EEF3FF 0%,#F3F6FF 100%);box-shadow:inset 0 0 0 .5px var(--b-14)}
+  .ai .uq .quote{color:var(--b-22)}
+  .ai .uq .q,.ai .utile .nm,.ai .utile .pr{color:var(--navy)}
+  .ais{display:inline-block;width:13px;height:13px;vertical-align:-1.5px;margin-right:3px;flex-shrink:0}
+  .ais svg{width:13px;height:13px;display:block}
+  /* deal tag in blue (full unification) */
+  .tagblue{--tag:var(--b);--tag-bg:#EEF4FF;--tag-line:rgba(31,107,255,.38)}
+
+  /* TITLE */
+  .t1 .ttl,.t2 .ttl{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .ttl mark{background:none;color:inherit}
+  .t1 .ttl mark{background:linear-gradient(transparent 56%,var(--b-22) 56%);font-weight:510;padding:0 1px;border-radius:2px}
+  .t2 .ttl mark{color:var(--b);font-weight:590}
+  .attrs{display:none;gap:4px;flex-wrap:wrap;max-height:18px;overflow:hidden}
+  .t3 .attrs{display:flex}
+  .attrs>span{flex-shrink:0;height:18px;display:inline-flex;align-items:center;padding:0 6px;border-radius:5px;font-size:11px;color:var(--b-tx);background:var(--b-08)}
+  .attrs>span:first-child{padding-left:4px}
+  .attrs .ais{width:11px;height:11px;margin-right:2px;vertical-align:0}
+  .attrs .ais svg{width:11px;height:11px}
+
+  /* REASON */
+  .why em{font-style:normal}
+  .r1 .why,.r2 .why{color:rgba(0,0,0,.62)}
+  .r1 .why em,.r2 .why em,.r3 .bub em{font-weight:590;color:var(--b)}
+  .why em.deal,.bub em.deal{font-weight:650}
+  .h-bold .why em.deal,.h-bold .bub em.deal{color:var(--b)}
+  .h-mark .why em.deal,.h-mark .bub em.deal{color:rgba(0,0,0,.86);font-weight:590;background:linear-gradient(transparent 54%,var(--b-22) 54%);padding:0 1px;border-radius:2px}
+  .h-pill .why em.deal,.h-pill .bub em.deal{color:var(--b-tx);font-weight:590;background:var(--btn-bg);border-radius:4px;padding:1px 5px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  .h-red .why em.deal,.h-red .bub em.deal{color:#E8482A}
+  .r2 .why{position:relative;padding:6px 8px 6px 10px;border-radius:8px;font-size:12.5px;line-height:17px;background:linear-gradient(90deg,var(--b-08),var(--b-04))}
+  .r2 .why::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:2px;border-radius:1px;background:var(--b)}
+  .bub{display:none;position:absolute;right:42px;bottom:7px;max-width:calc(100% - 52px);padding:5px 9px;border-radius:12px 12px 3px 12px;z-index:3;
+       background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(10px) saturate(1.4);backdrop-filter:blur(10px) saturate(1.4);box-shadow:0 2px 10px rgba(0,0,0,.10);
+       font-size:11.5px;line-height:15px;color:rgba(0,0,0,.78)}
+  .r3 .bub{display:block}
+  .r3 .why{display:none}
+  .r3 .ask{box-shadow:0 0 0 1.5px var(--b),0 2px 8px var(--b-22)}
+  .w{opacity:0;animation:word .3s ease-out forwards;animation-delay:var(--wd,0ms)}
+  @keyframes word{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:none}}
+
+  /* ATMOSPHERE */
+  .b1 .pc::after{content:"";position:absolute;inset:0;border-radius:12px;padding:1.2px;pointer-events:none;z-index:4;
+    background:linear-gradient(135deg,var(--b) 0%,var(--b-soft) 14%,rgba(111,165,255,0) 38%,rgba(31,107,255,0) 72%,rgba(31,107,255,.32) 100%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+  .b2 .pc{box-shadow:0 8px 22px var(--b-14),0 0 0 .5px var(--b-14)}
+  .b2 .pc .body{background:linear-gradient(180deg,#fff 0%,#F3F7FF 100%)}
+  .b3 .pc .img::after{content:"";position:absolute;top:-10%;bottom:-10%;width:55%;left:-80%;transform:skewX(-18deg);z-index:1;pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.55) 50%,transparent);animation:sheen 6.5s ease-in-out infinite;animation-delay:var(--sd,0s)}
+  @keyframes sheen{0%,62%{left:-80%}100%{left:140%}}
+  .spark{display:none;position:absolute;right:7px;top:7px;width:20px;height:20px;border-radius:50%;z-index:2;align-items:center;justify-content:center;background:rgba(255,255,255,.88);box-shadow:0 1px 4px rgba(0,0,0,.10)}
+  .spark .ais{margin:0;vertical-align:0}
+  .spark svg{animation:twk 2.8s ease-in-out infinite}
+  .b3 .spark{display:flex}
+  @keyframes twk{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(.72) rotate(30deg)}}
+
+  /* ASK POPOVER */
+  .pop{display:none;position:absolute;left:6px;right:6px;bottom:42px;z-index:5;flex-direction:column;gap:5px;align-items:flex-end}
+  .pc.open .pop{display:flex}
+  .pop span{max-width:100%;padding:6px 10px;border-radius:13px 13px 4px 13px;font-size:12px;line-height:16px;color:var(--b-tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    background:rgba(255,255,255,.94);box-shadow:0 2px 10px rgba(0,0,0,.14);opacity:0;transform:translateY(6px);animation:popin .28s ease-out forwards}
+  .pop span:nth-child(2){animation-delay:.06s}.pop span:nth-child(3){animation-delay:.12s}
+  @keyframes popin{to{opacity:1;transform:none}}
+  .pc.open .img::before{content:"";position:absolute;inset:0;background:rgba(10,20,40,.22);z-index:2}
+  .pc.open .bub{display:none}
+
+  /* =========== O1 · whole-page polish (AI phone only) =========== */
+  .phone.o1{--pg:#F3F5FA;--pg0:rgba(243,245,250,0);background:linear-gradient(180deg,#FFFFFF 0,#FFFFFF 120px,#F3F5FA 330px)}
+  .o1 .hero .sub{color:rgba(0,0,0,.42)}
+  .o1 .abil-3d,.o1 .abil-3dtop{padding-left:8px;padding-right:8px}
+  .o1 .abil-3d div,.o1 .abil-3dtop div{border-radius:12px;box-shadow:0 0 0 .5px rgba(20,40,90,.05),0 4px 14px rgba(30,60,130,.07)}
+  .o1 .pc{box-shadow:0 0 0 .5px rgba(20,40,90,.05)}
+  .o1 .pc.tall .img{height:216px}
+
+  /* =========== COMPOSER · focus state (logic ported from commerce-tab demo-0805) =========== */
+  .kbd{position:absolute;left:0;right:0;bottom:0;height:291px;z-index:31;background:#D1D4DA;padding:8px 3px 0;transform:translateY(100%);transition:transform .26s cubic-bezier(.32,.72,0,1)}
+  .kbd.show{transform:translateY(0)}
+  .kbd .krow{display:flex;justify-content:center;gap:6px;margin-bottom:11px}
+  .kbd .k{flex:1;max-width:33px;height:42px;background:#fff;border-radius:5px;box-shadow:0 1px 0 rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;font-size:22px;color:#000;cursor:pointer;user-select:none}
+  .kbd .k.wide{max-width:44px;background:#ADB3BC}
+  .kbd .k.space{max-width:172px;font-size:16px}
+  .kbd .k.go{max-width:62px;background:#ADB3BC;font-size:16px}
+  .kbd .krow.last{padding:0 4px}
+  .kbd .khome{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:rgba(0,0,0,.4)}
+  .cfocus{position:absolute;inset:0;z-index:30;display:none}
+  .cfocus.show{display:block}
+  .cf-scrim{position:absolute;inset:0;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+  .cf-dock{position:absolute;left:0;right:0;bottom:291px;padding:0 12px 10px}
+  .cf-dock.fade{padding-top:44px;background:linear-gradient(to bottom,rgba(255,255,255,0) 0,#fff 44px)}
+  .cf-chips{display:flex;gap:8px;overflow-x:auto;padding:0 2px 10px;scrollbar-width:none}
+  .cf-chips::-webkit-scrollbar{display:none}
+  .cf-chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:var(--text);background:#fff;border:1px solid rgba(0,0,0,.09);border-radius:12px;padding:9px 13px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .cf-chip .ci{display:flex;color:rgba(0,0,0,.4)}
+  .cf-chip .ci svg,.cf-tag .ci svg{width:14px;height:14px}
+  .cf-sugs{padding:0 8px 10px}
+  .cf-sug{display:flex;align-items:center;gap:12px;padding:9px 6px;cursor:pointer;font-size:15px;color:var(--text);letter-spacing:-.2px}
+  .cf-sug .st{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cf-sug .sa{flex-shrink:0;display:flex;color:rgba(0,0,0,.4)}
+  .cf-tag{display:inline-flex;align-items:center;gap:6px;margin-bottom:10px;background:var(--b-08);color:var(--b);border-radius:9px;padding:5px 7px 5px 9px;font-size:12.5px;font-weight:600;letter-spacing:-.1px}
+  .cf-tag .ci{display:flex}
+  .cf-tag .tx{display:flex;align-items:center;cursor:pointer;opacity:.75;margin-left:1px}
+  .cf-tag .tx svg{width:13px;height:13px}
+  .cf-input{background:#fff;border-radius:20px;padding:14px 14px 10px;box-shadow:0 2px 14px rgba(8,16,33,.10),0 0 0 .5px rgba(0,0,0,.05)}
+  .cf-quote{display:flex;align-items:center;gap:9px;padding:6px 8px 6px 6px;background:#F3F4F6;border-radius:13px;margin-bottom:11px}
+  .cf-quote img,.cf-qatt .qit img{width:34px;height:34px;border-radius:8px;object-fit:cover;background:#fff;flex-shrink:0}
+  .cf-quote .qi,.cf-qatt .qit .qi{flex:1;min-width:0}
+  .qb{font-size:12px;font-weight:600;color:var(--text);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .qn{font-size:11.5px;color:rgba(0,0,0,.4);line-height:1.3;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .qx{width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:rgba(0,0,0,.4)}
+  .cf-qatt{display:flex;gap:8px;margin-bottom:11px;overflow-x:auto;scrollbar-width:none}
+  .cf-qatt::-webkit-scrollbar{display:none}
+  .cf-qatt .qit{flex:0 0 auto;display:flex;align-items:center;gap:8px;background:#F3F4F6;border-radius:13px;padding:6px 6px 6px 6px;max-width:235px}
+  .cf-qatt .qit .qx{width:20px;height:20px}
+  .cf-qatt .qit .qx svg{width:12px;height:12px}
+  .cf-qatt .qit .qn{max-width:150px}
+  .cf-text{font-size:16.5px;line-height:1.35;color:var(--text);min-height:22px;letter-spacing:-.2px;word-break:break-word}
+  .cf-text.ph{color:rgba(0,0,0,.4)}
+  .cf-text .caret{display:inline-block;width:2px;height:18px;background:var(--b);vertical-align:-3px;margin-left:1px;animation:cfblink 1.1s step-end infinite}
+  .cf-text .caret.lead{margin-left:0;margin-right:3px}
+  @keyframes cfblink{50%{opacity:0}}
+  .cf-row{display:flex;align-items:center;margin-top:12px}
+  .cf-row .sp3{flex:1}
+  .cf-row .ic{width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+  .cf-row .ic svg{width:24px;height:24px}
+  .cf-send{width:34px;height:34px;border-radius:50%;background:var(--b);display:flex;align-items:center;justify-content:center;margin-left:6px;cursor:pointer;transition:opacity .15s}
+  .cf-send.off{opacity:.35}
+  /* chat = tab 1, full page (ported from demo-0805) */
+  .chatv{position:absolute;inset:0;z-index:24;background:#fff;display:none;flex-direction:column}
+  .chatv.show{display:flex}
+  .chead{flex-shrink:0;position:relative;padding:54px 16px 12px;text-align:center;background:#fff}
+  .chead .ct{font-size:17px;font-weight:600;color:#081021;letter-spacing:-.3px;line-height:21px}
+  .chead .cs{font-size:10.5px;color:#999;margin-top:1px}
+  .chead .cdoc{position:absolute;right:14px;top:52px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .cbody{flex:1;min-height:0;overflow-y:auto;padding:6px 16px 24px;scrollbar-width:none}
+  .cbody::-webkit-scrollbar{display:none}
+  .cts{text-align:center;font-size:12px;color:#999;padding:12px 0 8px}
+  .mu{display:flex;flex-direction:column;align-items:flex-end;padding:5px 0}
+  .uref{display:flex;align-items:center;gap:7px;max-width:78%;margin-bottom:5px;background:#F3F4F6;border-radius:11px;padding:5px 9px 5px 5px}
+  .uref img{width:26px;height:26px;border-radius:6px;object-fit:cover;background:#fff;flex-shrink:0}
+  .uref span{font-size:11.5px;color:rgba(0,0,0,.65);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .uatt{display:flex;gap:5px;justify-content:flex-end;max-width:78%;margin-bottom:6px}
+  .uatt img{width:52px;height:52px;border-radius:8px;object-fit:cover;background:#fff;box-shadow:0 0 0 .5px rgba(0,0,0,.08)}
+  .mu .b{background:var(--b);color:#fff;border-radius:20px;padding:10px 15px;font-size:15.5px;line-height:1.4;max-width:74%;letter-spacing:-.2px}
+  .ma{padding:5px 0;display:flex}
+  .ma .b{background:#F2F3F7;border-radius:20px;padding:13px 15px;max-width:88%;font-size:15.5px;line-height:1.45;color:var(--text);letter-spacing:-.2px}
+  .ma .b code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;color:#33507A;background:none}
+  .ma .btag{display:flex;align-items:center;gap:6px;margin-bottom:7px;font-size:11.5px;color:rgba(0,0,0,.4);letter-spacing:-.1px}
+  .ma .b.tping{display:flex;gap:4.5px;align-items:center;padding:16px}
+  .ma .b.tping i{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.4);animation:tpb 1.3s ease-in-out infinite}
+  .ma .b.tping i:nth-child(2){animation-delay:.16s}.ma .b.tping i:nth-child(3){animation-delay:.32s}
+  @keyframes tpb{0%,60%,100%{opacity:.26;transform:translateY(0)}30%{opacity:.95;transform:translateY(-3px)}}
+  .tcur{display:inline-block;width:7px;height:14px;border-radius:1.5px;background:rgba(0,0,0,.4);vertical-align:-2px;margin-left:2px;animation:cfblink .9s step-end infinite}
+  .crich{animation:crin .34s cubic-bezier(.32,.72,0,1) both}
+  @keyframes crin{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+  .plist{margin-top:11px;display:flex;flex-direction:column;gap:8px}
+  .prow2{display:flex;align-items:center;gap:11px;background:#fff;border-radius:12px;padding:9px 11px 9px 9px}
+  .prow2[data-p]{cursor:pointer}
+  .prow2 img{width:56px;height:56px;border-radius:9px;object-fit:cover;background:#F3F4F6;flex-shrink:0}
+  .prow2 .pn{font-size:13.5px;line-height:1.3;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .prow2 .pp{font-size:15px;font-weight:700;color:#081021;margin-top:3px}
+  .cdock{flex-shrink:0;padding:8px 16px 10px;background:#fff}
+  .cask{height:46px;border-radius:23px;background:#F3F4F6;display:flex;align-items:center;gap:12px;padding:0 14px 0 16px;font-size:15px;color:rgba(0,0,0,.4)}
+  .cask .sp2{flex:1}
+  .cask svg{width:22px;height:22px}
+  /* product page · half ↔ full sheet (ported from commerce-tab demo-0805) */
+  .pdp-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:25}
+  .pdp-backdrop.show{opacity:1;pointer-events:auto}
+  .pdp-overlay{position:absolute;left:0;right:0;bottom:0;top:10%;background:#fff;display:flex;flex-direction:column;overflow:hidden;border-radius:18px 18px 44px 44px;transform:translateY(102%);
+    transition:transform .38s cubic-bezier(.32,.72,0,1),top .32s cubic-bezier(.32,.72,0,1),border-radius .3s ease;z-index:26;box-shadow:0 -10px 34px rgba(0,0,0,.16)}
+  .pdp-overlay.open{transform:translateY(0)}
+  .pdp-overlay.full{top:0;border-radius:44px}
+  .pdp-overlay.dragging{transition:none}
+  .sheet-grabber{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.92);box-shadow:0 0 4px rgba(0,0,0,.35);z-index:25;cursor:grab;touch-action:none}
+  .pdp-body{flex:1;min-height:0;overflow-y:auto;background:#fff;scrollbar-width:none}
+  .pdp-body::-webkit-scrollbar{display:none}
+  .pdp-hero{position:relative;width:100%;aspect-ratio:1/1;flex-shrink:0;touch-action:none;background:#F2F3F5}
+  .pdp-hero>img{width:100%;height:100%;object-fit:cover;display:block}
+  .pdp-hero .indicator{position:absolute;right:12px;bottom:12px;background:rgba(0,0,0,.5);color:#fff;font-size:12px;padding:3px 9px;border-radius:100px}
+  .pdp-close,.pdp-watch{position:absolute;top:71px;z-index:20;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.12);cursor:pointer}
+  .pdp-close{left:16px}.pdp-watch{right:16px}
+  .pdp-atpill{position:absolute;left:12px;bottom:12px;z-index:20;height:26px;display:flex;align-items:center;gap:5px;padding:0 9px 0 8px;border-radius:13px;background:rgba(255,255,255,.94);box-shadow:0 1px 4px rgba(0,0,0,.12);font-size:12px;font-weight:510;color:var(--text);cursor:pointer}
+  .pdp-atpill svg{color:rgba(0,0,0,.4)}
+  .pdp-atpill .chv{color:rgba(0,0,0,.4)}
+  .pdp-pad{padding:0 16px}
+  .pdp-price{font-size:24px;font-weight:700;color:#000;line-height:1.4}
+  .pdp-price s{font-size:14px;font-weight:400;color:rgba(0,0,0,.28);margin-left:6px}
+  .pdp-subnote{font-size:12px;color:rgba(0,0,0,.65);margin-top:2px}
+  .pdp-title{font-size:16px;font-weight:510;color:var(--text);line-height:1.4;margin-top:12px}
+  .pdp-pad .why{margin-top:8px;font-size:14px;line-height:20px;color:rgba(0,0,0,.62)}
+  .pdp-pad .why em{font-style:normal;font-weight:650;color:var(--b)}
+  .ai-bullets{margin:12px 16px 0;padding:12px 8px 12px 29px;border-radius:12px;background:linear-gradient(90deg,var(--b-08),var(--b-04))}
+  .ai-bullets li{font-size:14px;line-height:1.4;color:var(--text)}
+  .section-divider{height:6px;background:#F9FAFB;width:100%}
+  .var-group{padding:0 16px;margin-top:16px}
+  .var-label{font-size:12px;font-weight:510;color:rgba(0,0,0,.65);display:inline-flex;align-items:center;gap:2px;margin-bottom:8px}
+  .vchips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-right:16px}
+  .vchips::-webkit-scrollbar{display:none}
+  .vchip{flex-shrink:0;white-space:nowrap;height:32px;padding:0 8px;min-width:56px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;color:var(--text);background:#F3F4F6}
+  .vchip.sel{background:#fff;border:1px solid var(--text);font-weight:510}
+  .offers{padding:4px 0}
+  .offer-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+  .offer-left{display:flex;gap:8px;align-items:center}
+  .offer-logo{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:#fff;border:.5px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .offer-logo img{max-width:26px;max-height:24px;object-fit:contain;display:block}
+  .offer-price{font-size:14px;font-weight:590;color:var(--text);display:flex;align-items:center;gap:6px}
+  .offer-price i{font-style:normal;font-size:11px;font-weight:590;color:var(--b);background:var(--btn-bg);border-radius:4px;padding:1px 5px}
+  .offer-sub{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:12px;color:rgba(0,0,0,.65)}
+  .offer-sub .vbar{width:.5px;height:12px;background:#BDBDBD}
+  .offer-sub .rating{display:inline-flex;align-items:center;gap:4px}
+  .buy-btn{width:56px;height:32px;border-radius:8px;background:rgba(255,255,255,.87);border:1px solid rgba(0,0,0,.09);font-size:14px;font-weight:510;color:#000;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+  .offer-line{height:.5px;background:rgba(0,0,0,.09);margin:0 30px}
+  .reviews{padding:16px 0;display:flex;flex-direction:column;gap:16px}
+  .rev-head{padding:0 16px;display:flex;align-items:center;gap:4px}
+  .rev-head .t{font-size:16px;font-weight:510;color:#111;letter-spacing:-.38px}
+  .rev-item{padding:0 16px;display:flex;flex-direction:column;gap:8px}
+  .rev-name{font-size:12px;font-weight:510;color:#111}
+  .rev-stars{display:flex;align-items:center;gap:4px;margin-top:6px}
+  .rev-stars .src{font-size:14px;color:#999}
+  .rev-stars .vbar{width:.5px;height:12px;background:rgba(0,0,0,.09)}
+  .rev-text{font-size:14px;line-height:1.4;color:var(--text)}
+  .rev-media{display:flex;gap:8px}
+  .rev-media .m{width:108px;height:108px;border-radius:8px;object-fit:cover;flex-shrink:0}
+  .rev-line{height:.5px;background:rgba(0,0,0,.09);margin:0 16px}
+  .details{padding:22px 16px 8px}
+  .details h3{font-size:15px;font-weight:600;color:#081021;margin-bottom:14px}
+  .spec-row{display:flex;padding:10px 0}
+  .spec-row .k{width:120px;font-size:14px;color:rgba(0,0,0,.65);flex-shrink:0}
+  .spec-row .v{font-size:14px;color:var(--text);line-height:1.4}
+  .details .desc{font-size:14px;line-height:1.5;color:var(--text);margin-top:16px}
+  .pdp-dock{flex-shrink:0;background:#fff;box-shadow:inset 0 .5px 0 var(--line);display:flex;align-items:center;padding:8px 16px 20px}
+  .ask-migoo{width:64px;height:48px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex-shrink:0;cursor:pointer}
+  .ask-migoo .ask-logo{width:24px;height:24px;display:block}
+  .ask-migoo svg{width:24px;height:24px}
+  .ask-migoo span{font-size:12px;color:rgba(0,0,0,.65);white-space:nowrap}
+  .buy-main{flex:1;height:48px;border-radius:12px;background:var(--b);color:#fff;font-size:16px;font-weight:510;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;margin-left:6px}
+  .home-indicator{height:20px;flex-shrink:0;background:#fff}
+  /* ---- PDP · AI modules (right phone only) ---- */
+  /* Track Price Drops: 90-day line + one-tap alert */
+  .pk{margin:12px 16px 0;padding:12px 12px 12px;border-radius:12px;background:#fff;box-shadow:0 0 0 .5px var(--b-22),0 4px 14px rgba(30,60,130,.05)}
+  .pk-h{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:rgba(0,0,0,.45);min-height:18px}
+  .pk-h b{font-weight:510;color:rgba(0,0,0,.65)}
+  .pk-adv{display:flex;align-items:center;gap:7px;font-size:13px;line-height:18px;color:rgba(0,0,0,.72)}
+  .pk-adv i{font-style:normal;flex-shrink:0;height:18px;display:inline-flex;align-items:center;padding:0 6px;border-radius:5px;font-size:11px;font-weight:600;background:var(--b);color:#fff}
+  .pk-adv i.wait{background:#fff;color:var(--b);box-shadow:inset 0 0 0 1px var(--b)}
+  .pk-c{position:relative;height:56px;margin:22px 4px 18px}
+  .pk-c svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .pk-dot{position:absolute;width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 0 1.5px var(--b-soft);transform:translate(-50%,-50%)}
+  .pk-dot.now{width:9px;height:9px;background:var(--b);box-shadow:0 0 0 3px var(--b-22)}
+  .pk-l{position:absolute;font-size:11px;line-height:13px;color:rgba(0,0,0,.45);white-space:nowrap;transform:translateX(-50%)}
+  .pk-l.now{transform:none;right:-4px;font-size:12px;font-weight:600;color:var(--b)}
+  .pk-l.tg{transform:none;color:var(--b-tx)}
+  .pk-x{display:flex;justify-content:space-between;font-size:11px;color:rgba(0,0,0,.36);margin:0 0 10px}
+  .pk-btn{height:36px;border-radius:10px;background:var(--btn-bg);color:var(--b);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+  .pk-btn svg,.pk-st svg{width:15px;height:15px;flex-shrink:0}
+  .pk-btn u{text-decoration:none;font-weight:400;opacity:.75}
+  .pk-btn.pri{background:var(--b);color:#fff}
+  .pk-st{min-height:36px;border-radius:10px;background:var(--btn-bg);display:flex;align-items:center;gap:7px;padding:0 10px 0 11px;font-size:13px;color:var(--navy)}
+  .pk-st svg{color:var(--b)}
+  .pk-st b{font-weight:600}
+  .pk-st span.f{flex:1;min-width:0}
+  .pk-chg{font-size:13px;font-weight:600;color:var(--b);cursor:pointer}
+  /* Compare Prices: the store list with a conclusion and the landed price */
+  .sc-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:14px 16px 2px;font-size:14px;color:rgba(0,0,0,.62);white-space:nowrap}
+  .sc-h em{font-style:normal;font-weight:650;color:var(--b)}
+  .sc-h span:last-child{font-size:12px;color:rgba(0,0,0,.4)}
+  .offer-price small{font-size:12px;font-weight:400;color:rgba(0,0,0,.45)}
+  .buy-btn.pri{background:var(--b);border-color:var(--b);color:#fff}
+  /* Compare Products: rows that prefill the composer with both items */
+  .cw{padding:16px 16px 14px}
+  .cw-h{font-size:16px;font-weight:510;color:#111;letter-spacing:-.38px;margin-bottom:10px}
+  .cw-i{display:flex;align-items:center;gap:11px;padding:8px 0;cursor:pointer}
+  .cw-i+.cw-i{border-top:.5px solid rgba(0,0,0,.07)}
+  .cw-i img{width:56px;height:56px;border-radius:9px;object-fit:cover;background:#F3F4F6;flex-shrink:0}
+  .cw-i .ci{flex:1;min-width:0}
+  .cw-i .ct{font-size:11px;color:rgba(0,0,0,.4);margin-bottom:1px}
+  .cw-i .cn{font-size:13.5px;line-height:18px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cw-i .cd{font-size:12.5px;line-height:17px;color:rgba(0,0,0,.62);margin-top:1px}
+  .cw-i .cd b{font-weight:600;color:var(--text)}
+  .cw-go{flex-shrink:0;height:30px;padding:0 11px;border-radius:15px;background:var(--btn-bg);color:var(--b);font-size:13px;font-weight:600;display:flex;align-items:center}
+  .ask-migoo.on span{color:var(--b);font-weight:600}
+  .ask-migoo.wide{width:72px}
+  /* ---- PDP bottom bar options ---- */
+  .pdp-dock.dk{gap:8px;padding:8px 12px 20px}
+  .dk-ask{flex:1;min-width:0;height:48px;border-radius:24px;background:#F5F8FF;box-shadow:inset 0 0 0 1px var(--b-14);display:flex;align-items:center;gap:8px;padding:0 12px 0 10px;font-size:15px;color:rgba(0,0,0,.42);white-space:nowrap;cursor:pointer}
+  .dk-ask img{width:26px;height:26px;flex-shrink:0;mix-blend-mode:multiply}
+  .dk-bell{flex-shrink:0;width:48px;height:48px;border-radius:50%;background:#F3F4F6;color:#54545C;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .dk-bell svg{width:21px;height:21px}
+  .dk-bell.on{background:var(--btn-bg);color:var(--b)}
+  .buy-main.two{flex:none;margin-left:0;padding:0 16px;flex-direction:column;gap:0;line-height:1.15}
+  .buy-main.two b{font-size:15.5px;font-weight:600;white-space:nowrap}
+  .buy-main.two span{font-size:11px;opacity:.82;white-space:nowrap}
+  .pdp-dock.dk3{flex-wrap:wrap}
+  /* in this layout Buy is the long one: the input shrinks to its text, Buy takes the rest */
+  .dk3 .dk-ask{flex:0 0 149px;padding:0 8px;gap:6px;font-size:14px}
+  .dk3 .dk-ask img{width:22px;height:22px}
+  .dk3 .buy-main{margin-left:0;font-size:15px;gap:4px;white-space:nowrap}
+  .dk-chips{flex:0 0 calc(100% + 24px);margin:0 -12px;padding:2px 12px 8px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+  .dk-chips::-webkit-scrollbar{display:none}
+  .dk-chip{flex:0 0 auto;height:32px;border-radius:16px;background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.09);display:flex;align-items:center;padding:0 12px;font-size:13px;color:var(--text);white-space:nowrap;cursor:pointer}
+  .dk-ava{flex-shrink:0;width:48px;height:48px;border-radius:50%;background:#fff;box-shadow:0 2px 9px rgba(8,16,33,.14);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .dk-ava img{width:30px;height:30px}
+  .dk-track{flex-shrink:0;height:48px;border-radius:12px;background:var(--btn-bg);color:var(--b);font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px;padding:0 13px;white-space:nowrap;cursor:pointer}
+  .dk-track svg{width:17px;height:17px}
+  .pdp-dock.dk4 .buy-main.two{flex:1}
+  /* two rows: the AI input gets its own row, the transaction row sits under it */
+  .pdp-dock.dk2r{flex-direction:column;align-items:stretch;gap:8px;padding-top:10px}
+  .dk-row{display:flex;align-items:center;gap:8px}
+  .dk2r .dk-ask{height:44px;border-radius:22px}
+  .dk-ask span{flex:1;min-width:0}
+  .dk-ask svg{width:20px;height:20px;flex-shrink:0;opacity:.42}
+  .dk2r .buy-main{margin-left:0}
+  .dk2r>.buy-main{flex:none}
+  .dk2r .dk-bell{width:44px;height:44px}
+  /* Track price as one of the Ask suggestions */
+  .dk-sug{font-style:normal;flex-shrink:0;height:30px;border-radius:15px;background:#fff;box-shadow:inset 0 0 0 1px var(--b-22);color:var(--b);font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px;padding:0 11px 0 9px;margin-right:-5px}
+  .dk-sug.on{background:var(--btn-bg);box-shadow:none}
+  .dk-ask .dk-sug svg,.dk-chip svg{width:14px;height:14px;opacity:1;color:var(--b)}
+  .dk-chip svg{margin-right:5px}
+  .dk-chip.on{color:var(--b);font-weight:600;box-shadow:inset 0 0 0 1px var(--b-22);background:var(--btn-bg)}
+  .dk-rollw{display:block;height:20px;overflow:hidden}
+  .dk-roll{display:flex;flex-direction:column;transition:transform .45s cubic-bezier(.32,.72,0,1)}
+  .dk-roll i{font-style:normal;height:20px;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .seg[data-g="pd"]{flex-wrap:wrap}
+  .seg[data-g="pd"] span{flex:1 0 30%}
+  .seg[data-g="pw"]{flex-wrap:wrap}
+  .seg[data-g="pw"] span{flex:1 0 40%}
+  /* Compare · question card: recalls the undecided pair and hands it to the conversation */
+  .cq{margin:14px 16px;padding:13px 13px 13px;border-radius:14px;background:linear-gradient(165deg,#EEF3FF 0%,#F3F6FF 100%);box-shadow:inset 0 0 0 .5px var(--b-14);cursor:pointer}
+  .cq-e{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--b-tx)}
+  .cq-q{font-size:16px;line-height:22px;color:var(--navy);letter-spacing:-.2px;margin:5px 0 11px}
+  .cq-q b{font-weight:600}
+  .cq-p{position:relative;display:flex;gap:10px}
+  .cq-t:first-child{padding-right:14px}
+  .cq-t+.cq-t{padding-left:14px}
+  .cq-t{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.78);border-radius:11px;padding:6px}
+  .cq-t img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0}
+  .cq-t div{min-width:0}
+  .cq-t .n{font-size:12px;line-height:16px;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cq-t .p{font-size:13.5px;font-weight:600;color:var(--navy)}
+  /* Compare · the answer in place */
+  .cv{padding:16px 16px 14px}
+  .cv-h{font-size:13px;line-height:18px;color:rgba(0,0,0,.5)}
+  .cv-h b{font-weight:510;color:rgba(0,0,0,.72)}
+  .cv-say{font-size:16px;line-height:22px;color:#111;letter-spacing:-.2px;margin:6px 0 2px}
+  .cv-say b{font-weight:600}
+  .cv-f{margin-top:10px;font-size:13.5px;font-weight:600;color:var(--b);cursor:pointer}
+  .ctb{width:100%;border-collapse:collapse;margin-top:10px;background:#fff;border-radius:10px;font-size:13px;line-height:17px;overflow:hidden}
+  .cv .ctb{box-shadow:0 0 0 .5px rgba(0,0,0,.09)}
+  .ctb td{padding:8px 9px;border-bottom:.5px solid rgba(0,0,0,.06);color:var(--text);vertical-align:top}
+  .ctb tr:last-child td{border-bottom:none}
+  .ctb td.k{color:rgba(0,0,0,.4);width:66px;font-size:12px}
+  .ctb tr.hd td{font-weight:600;font-size:12.5px}
+  .ctb tr.hd img{display:block;width:30px;height:30px;border-radius:7px;object-fit:cover;margin-bottom:5px}
+  .ctb .w{font-weight:600;color:var(--b)}
+  /* panel: open-a-product shortcuts */
+  .opn{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .opn span{padding:5px 10px;border-radius:8px;background:#F1F2F5;font-size:12.5px;color:#374151;cursor:pointer}
+  .opn span:hover{background:#E6E8EE}
+  .dock{cursor:pointer}
+  [class^="abil"]>div{cursor:pointer}
+
+  /* ---------- panel ---------- */
+  /* options sit to the right of the phone and stay in view while the page scrolls */
+  .panel{flex:0 0 320px;background:#fff;border-radius:16px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.08);font-size:13px;color:#374151;align-self:flex-start;margin-top:38px;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto;scrollbar-width:thin}
+  .panel h4{font-size:14px;font-weight:600;color:#081021}
+  .grp{padding:11px 0;border-top:1px solid var(--line)}
+  .grp:first-of-type{border-top:none;padding-top:10px}
+  .grp .gt{font-weight:600;color:#081021;margin-bottom:7px}
+  .seg{display:flex;background:#F1F2F5;border-radius:9px;padding:2px}
+  .seg span{flex:1;text-align:center;padding:5px 0;border-radius:7px;cursor:pointer;color:#6B7280;font-size:12.5px;white-space:nowrap}
+  .seg span.on{background:#fff;color:#081021;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+  .desc{font-size:12px;line-height:17px;color:#6B7280;margin-top:7px}
+  .sw8{display:flex;gap:6px;margin-top:8px}
+  .sw8 i{flex:1;height:22px;border-radius:6px}
+  .reco{margin-top:4px;height:34px;border-radius:9px;background:#EEF4FF;color:#1F6BFF;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="aig" x1="0" y1="0" x2="16" y2="16" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1F6BFF"/><stop offset="1" stop-color="#6FA5FF"/></linearGradient></defs></svg>
+
+<div class="head">
+  <h1>商品卡的 AI 感 · 统一成一个蓝</h1>
+  <p>手机里都可以点：顶部入口、query 卡、商品卡、商品图右下角的提问入口、底部输入框。右侧面板切换各处的方案。</p>
+</div>
+
+<div class="stage">
+  <div class="fw"><span class="flab on">AI 商品卡 · 统一蓝</span><div id="p1"></div></div>
+  <div class="panel">
+    <h4>颜色规则</h4>
+    <div class="grp">
+      <div class="desc" style="margin-top:0">全页一个色相。深蓝做文字和按钮，浅蓝做底和高亮，最浅做 query 卡底。</div>
+      <div class="sw8"><i style="background:#1F6BFF"></i><i style="background:#6FA5FF"></i><i style="background:rgba(31,107,255,.22)"></i><i style="background:#EEF4FF"></i><i style="background:#F3F6FF;box-shadow:inset 0 0 0 .5px rgba(31,107,255,.2)"></i></div>
+    </div>
+    <div class="grp"><div class="gt">顶部入口</div>
+      <div class="seg" data-g="s"><span data-v="s6">3D 图标·上下</span><span data-v="s5" class="on">3D 图标·左右</span></div>
+      <div class="desc" id="ds"></div></div>
+    <div class="grp"><div class="gt">便宜点怎么高亮</div>
+      <div class="seg" data-g="c"><span data-v="h-bold" class="on">蓝字加粗</span><span data-v="h-mark">荧光标记</span></div>
+      <div class="desc" id="dc"></div></div>
+    <div class="grp" style="border-top:6px solid #F1F2F5;margin-top:6px;padding-top:14px"><div class="gt" style="font-size:14px">商品页 · AI 能力</div>
+      <div class="desc" style="margin-top:0">点下面任一件直接打开商品页；切换开关时商品页不会关。</div>
+      <div class="opn"><span data-open="chair">椅子 · 未设提醒</span><span data-open="bag">包 · 已命中目标价</span><span data-open="samba">Samba · 有可比的</span><span data-open="dress">白裙 · 还在降</span></div></div>
+    <div class="grp"><div class="gt">Track · 一键提醒的默认价</div>
+      <div class="seg" data-g="pa"><span data-v="pa0" class="on">90 天最低</span><span data-v="pa1">现价九折</span></div>
+      <div class="desc" id="dpa"></div></div>
+    <div class="grp"><div class="gt">Compare · 和别的商品比</div>
+      <div class="seg" data-g="pw"><span data-v="pw0">不出</span><span data-v="pw4" class="on">问句卡</span><span data-v="pw3">AI 对比结论</span><span data-v="pw5">只给推荐句</span></div>
+      <div class="desc" id="dpw"></div></div>
+    <div class="grp"><div class="gt">底栏 A · Track 是独立按钮</div>
+      <div class="seg" data-g="pd"><span data-v="pd0">原样 Set</span><span data-v="pd4">双按钮</span><span data-v="pd5">两行 · AI 一行</span></div>
+      <div class="gt" style="margin-top:12px">底栏 B · Track 是 Ask 里的一条推荐</div>
+      <div class="seg" data-g="pd"><span data-v="pd9">框内一枚推荐</span><span data-v="pd3" class="on">上方一行推荐</span></div>
+      <div class="desc" id="dpd"></div></div>
+
+  </div>
+</div>
+
+<script>
+const IMG={
+'assets/brand-amazon.png':'./img/001.png',
+'assets/brand-ebay.svg':'./img/002.svg',
+'assets/brand-walmart.png':'./img/003.png',
+'assets/figma/bag.png':'./img/004.jpg',
+'assets/figma/chair-a.png':'./img/005.jpg',
+'assets/figma/chair-b.png':'./img/006.jpg',
+'assets/figma/chair.png':'./img/007.jpg',
+'assets/figma/dress.png':'./img/008.jpg',
+'assets/figma/orange-set.png':'./img/009.jpg',
+'assets/figma/skirt.png':'./img/010.jpg',
+'assets/figma/sneaker.png':'./img/011.jpg',
+'assets/figma/vac-a.png':'./img/012.jpg',
+'assets/figma/vac-b.png':'./img/013.jpg',
+'assets/icon3d-bags.png':'./img/014.png',
+'assets/icon3d-calendar.png':'./img/015.png',
+'assets/icon3d-coin.png':'./img/016.png',
+'assets/icon3d-search.png':'./img/017.png',
+'assets/migoo-logo.png':'./img/018.png',
+'assets/prod-sneaker.jpg':'./img/019.jpg',
+'assets/prod-sneaker2.jpg':'./img/020.jpg',
+'assets/prod-stroller-doona.jpg':'./img/021.jpg'
+};
+const F='assets/figma/', A='assets/';
+const AIS=`<span class="ais"><svg viewBox="0 0 16 16"><path d="M8 .8l1.9 5.3 5.3 1.9-5.3 1.9L8 15.2l-1.9-5.3L.8 8l5.3-1.9z" fill="url(#aig)"/></svg></span>`;
+const I={
+  bolt:`<svg viewBox="0 0 16 16" fill="none"><path d="M4 0H16V16H4A4 4 0 0 1 0 12V4A4 4 0 0 1 4 0Z" fill="currentColor"/><path d="M3.5 5l3.2 3.2 2-2L12.5 10" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.3 10.4h3.4V7" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  heart:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 20.5s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 8a4.3 4.3 0 0 1 7.5 2.5c0 5.4-7.5 10-7.5 10z" stroke="#111" stroke-width="2" stroke-linejoin="round"/></svg>`,
+  clock:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#111" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#111" stroke-width="2" stroke-linecap="round"/></svg>`,
+  ask:`<svg viewBox="0 0 24 24" fill="none"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 3.5V6.5z" stroke="#1F6BFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M15.5 6.2l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z" fill="#1F6BFF"/></svg>`,
+  quote:`<svg class="quote" viewBox="0 0 16 16"><path d="M3 12.5V9.3C3 6.6 4.4 4.6 7 3.6l.6 1.2C6.2 5.5 5.5 6.5 5.4 7.8H7v4.7H3zm6 0V9.3c0-2.7 1.4-4.7 4-5.7l.6 1.2c-1.4.7-2.1 1.7-2.2 3H13v4.7H9z" fill="currentColor"/></svg>`,
+  plus:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#111" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  mic:`<svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" stroke="#111" stroke-width="1.8"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" stroke="#111" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+};
+const CHIPS=[
+  ['Compare Products & Prices','🛍️',`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M7 20h10M5 8h14M5 8l-2.3 5.5a2.6 2.6 0 0 0 4.6 0L5 8zM19 8l-2.3 5.5a2.6 2.6 0 0 0 4.6 0L19 8z"/></svg>`],
+  ['Track Price Drops','📉',`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8M21 12v5h-5"/></svg>`],
+  ['Find Gifts','🎁',`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5h15V20h-15zM3 7.5h18v4H3zM12 7.5V20M12 7.5c-1.4-3.2-5-3.6-5-1.4 0 1.4 2.4 1.4 5 1.4zm0 0c1.4-3.2 5-3.6 5-1.4 0 1.4-2.4 1.4-5 1.4z"/></svg>`],
+  ['Shop by Occasion','🎉',`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16M12 13l.9 1.9 2.1.3-1.5 1.5.4 2.1-1.9-1-1.9 1 .4-2.1-1.5-1.5 2.1-.3z"/></svg>`],
+];
+const ICON3D=['bags','coin','search','calendar'].map(n=>`<img src="${IMG['assets/icon3d-'+n+'.png']}" alt="">`);
+function abil(mode){
+  if(mode==='s5') return `<div class="abil-3d">${CHIPS.map(([t],i)=>`<div><span>${t}</span>${ICON3D[i]}</div>`).join('')}</div>`;
+  if(mode==='s6') return `<div class="abil-3dtop">${CHIPS.map(([t],i)=>`<div>${ICON3D[i]}<span>${t}</span></div>`).join('')}</div>`;
+  if(mode==='s1') return `<div class="abil-panel">${CHIPS.map(([t,,svg])=>`<div>${svg}<span>${t}</span></div>`).join('')}</div>`;
+  if(mode==='s4') return `<div class="abil-cards">${CHIPS.map(([t,,svg])=>`<div><i>${svg}</i><span>${t}</span></div>`).join('')}</div>`;
+  if(mode==='s2') return `<div class="abil-pill">${CHIPS.map(([t,,svg])=>`<div>${svg}${t}</div>`).join('')}</div>`;
+  return `<div class="abil">${CHIPS.map(([t],i)=>`<div>${ICON3D[i]}${t}</div>`).join('')}</div>`;
+}
+const P={
+  chair:{img:IMG['assets/figma/chair.png'],tag:'Cheapest in 30 days',price:'8.18',
+    title:'Kantor Jinjing Dining Chair, Cream Boucle · Oak Legs', ai:[['Dining Chair, ',0],['Cream Boucle',1],[' · Oak Legs',0]],
+    why:[['For your upcoming ',0],['warm-weather trip',1]], deal:[['Cheapest in 30 days',2],[', for your warm-weather trip',0]], attrs:['Boucle','Oak legs','Stackable'],
+    ask:['Is $8.18 a good price for this?','Will it suit a small patio?','Find similar under $20']},
+  bag:{img:IMG['assets/figma/bag.png'],chipClock:'Tracking Price',price:'8.18',buy:true,
+    title:'MATEYOYO Shoulder Bag, Pebbled Leather · Black', ai:[['MATEYOYO Shoulder Bag, ',0],['Pebbled Leather',1]],
+    why:[['$1.82 cheaper',1],[' than your $10 target',0]], deal:[['$1.82 cheaper',2],[' than your $10 target',0]], whyBase:'cheaper than your $10 target', attrs:['Leather','Zip top','Fits 13" laptop'],
+    ask:['Will it drop further?','Is the leather real?','Buy it for me at $8.18']},
+  samba:{img:IMG['assets/figma/sneaker.png'],tag:'Cheapest of all suppliers',price:'8.18',sup:'Walmart',
+    title:'Adidas Samba OG, Cream White / Core Black', ai:[['Adidas Samba OG, ',0],['Cream White',1]],
+    deal:[['Cheapest of 3 stores',2],[', $1.32 under the next',0]],
+    attrs:['Leather','Gum sole','True to size'],
+    ask:['Is this the real Samba OG?','Which size should I get?','Watch for a lower price']},
+};
+Object.assign(P,{
+  dress:{img:IMG['assets/figma/dress.png'],price:'14.90',was:'26.00',tall:true,
+    title:'Puff-Sleeve Maxi Dress, White Cotton', ai:[['Puff-Sleeve Maxi Dress, ',0],['White Cotton',1]],
+    why:[['Price still ',0],['falling',1]], deal:[['Lowest in 60 days',2],[', and still falling',0]], attrs:['Cotton','Puff sleeve','Maxi'],
+    ask:['Should I wait for a lower price?','Is the fabric see-through?','Find similar under $15']},
+  skirt:{img:IMG['assets/figma/skirt.png'],price:'11.40',was:'19.00',sup:'Walmart',
+    title:'Lovito Floral Maxi Skirt, High Waist', ai:[['Lovito Floral Maxi Skirt, ',0],['High Waist',1]],
+    deal:[['Cheapest of 3 stores',2],[', $2.10 under the next',0]], attrs:['High waist','Floral','Maxi'],
+    ask:['Is $11.40 a good price?','Which size should I get?','Watch for a lower price']},
+});
+const plain=segs=>segs.map(s=>s[0]).join('');
+let wi=0;
+const words=(segs)=>segs.map(([t,k])=>{if(CFG.c==='h-pill'&&!k)t=t.replace(/^,\s*/,' ');const inner=t.split(/(\s+)/).map(x=>/^\s*$/.test(x)?x:`<span class="w" style="--wd:${(wi++)*45}ms">${x}</span>`).join('');return k===2?`<em class="deal">${inner}</em>`:k?`<em>${inner}</em>`:inner;}).join('');
+
+function pc(id,ai){
+  const o=P[id];
+  const chip=o.chipClock?`<span class="chip">${I.clock}${o.chipClock}</span>`:'';
+  const merged = ai && CFG.e==='e1';
+  const tag=(o.tag && !merged)?`<span class="evtag">${I.bolt}${o.tag}</span>`:'';
+  const whySeg = merged ? o.deal : o.why;
+  const tail=`${o.sup?`<div class="sup"><img src="${IMG['assets/brand-walmart.png']}" alt="">From ${o.sup}</div>`:''}${o.buy?`<div class="btn">Buy Now</div>`:''}`;
+  if(!ai){
+    return `<div class="card pc" data-p="${id}"><div class="img"><img src="${o.img}" alt="">${chip}<span class="ask">${I.ask}</span></div>
+      <div class="body"><div class="ttl">${o.title}</div>${tag}<div class="price"><b>$${o.price}</b><s>$33.00</s></div>${o.why?`<div class="why">${o.whyBase||plain(o.why)}</div>`:''}${tail}</div></div>`;
+  }
+  const tAI=CFG.t==='t1'||CFG.t==='t2';
+  const title=`<div class="ttl">${tAI?(CFG.o==='o1'?'':AIS)+o.ai.map(([t,k])=>k?`<mark>${t}</mark>`:t).join(''):o.title}</div>`;
+  const attrs=`<div class="attrs">${o.attrs.map((a,i)=>`<span>${i===0?AIS:''}${a}</span>`).join('')}</div>`;
+  wi=0;
+  const why=!whySeg?'':(CFG.r==='r0'?`<div class="why">${merged?plain(whySeg):(o.whyBase||plain(whySeg))}</div>`:`<div class="why">${AIS}${words(whySeg)}</div>`);
+  wi=0;
+  const bub=whySeg?`<div class="bub">${words(whySeg)}</div>`:'';
+  return `<div class="card pc${o.tall?' tall':''}" data-p="${id}" style="--sd:${(Math.random()*4).toFixed(1)}s"><div class="img"><img src="${o.img}" alt="">${chip}<span class="spark">${AIS}</span>${bub}<span class="ask">${I.ask}</span></div>
+    <div class="body">${title}${attrs}${tag}<div class="price"><b>$${o.price}</b><s>$${o.was||'33.00'}</s></div>${why}${tail}</div></div>`;
+}
+const uq=(q,body,key)=>`<div class="card uq" data-q="${key}">${I.quote}<div class="q">${q}</div>${body||''}</div>`;
+const tile=(img,nm,pr)=>`<div class="utile"><img src="${img}" alt=""><div><div class="nm">${nm}</div><div class="pr">$${pr}</div></div></div>`;
+
+let CFG={t:'t1',r:'r1',b:'b1',c:'h-bold',s:'s5',e:'e1',o:'o1',pt:'pt1',pa:'pa0',ps:'ps0',pw:'pw4',pd:'pd3'};
+function phone(ai){
+  const Q={
+    vac:uq('Which robot vacuum is better for pet hair?',`<div class="upair"><img src="${IMG['assets/figma/vac-a.png']}" alt=""><img src="${IMG['assets/figma/vac-b.png']}" alt=""><span class="vsb">VS</span></div>`,'vac'),
+    dining:uq('Which dining chairs fit my small space and $150 budget?','','dining'),
+    doona:uq('Doona is at a <b>90-day low</b>. Should I buy now or wait?',tile(IMG['assets/prod-stroller-doona.jpg'],'Doona Car Seat & Stroller',469),'doona'),
+    af1:uq('I keep checking these AF1s. <b>Tell me when the price drops.</b>',tile(IMG['assets/prod-sneaker.jpg'],'Nike Air Force 1 \'07, White',469),'af1'),
+    alert:uq('Tell me when the Nike 249 red <b>drops to $400</b>',tile(IMG['assets/prod-sneaker.jpg'],'Nike 249 best sneaker with water-resistant upper',469),'alert')};
+  const polished=ai&&CFG.o==='o1';
+  const L=polished?[pc('chair',ai),pc('samba',ai),Q.vac,pc('skirt',ai),Q.dining]:[pc('chair',ai),Q.vac,pc('samba',ai),Q.dining];
+  const R=polished?[Q.doona,pc('bag',ai),Q.af1,pc('dress',ai),Q.alert]:[Q.doona,pc('bag',ai),Q.af1,Q.alert];
+  return `<div class="phone ${ai?`ai ${CFG.o} ${CFG.t} ${CFG.r} ${CFG.b} ${CFG.c} ${CFG.c==='h-red'?'':'tagblue'}`:''}">
+    <div class="sb"><span>9:41</span><span>▮▮▮ ◔ ▭</span></div>
+    <div class="scroll">
+      <div class="nav">${I.heart}${I.clock}</div>
+      <div class="hero"><h3>Best Price for All Purchases</h3><div class="sub"><span>Free AI shopping</span><i></i><span>No subscription needed</span></div></div>
+      ${abil(ai?CFG.s:'s0')}
+      <div class="feed"><div class="col">${L.join('')}</div><div class="col">${R.join('')}</div></div>
+    </div>
+    <div class="dockfade"></div>
+    <div class="dock">${I.plus}<div class="ph">Anything on your mind?</div>${I.mic}</div>
+    ${fbar('shop')}<div class="homei"></div>
+    <div class="chatv"></div><div class="pdp-backdrop"></div><div class="pdp-overlay"></div>
+    <div class="cfocus"></div><div class="kbd">${kbdHTML()}</div>
+    <div class="toast"></div>
+  </div>`;
+}
+/* ============================================================
+   Composer logic — ported from commerce-tab demo-0805.
+   One composer, three ways in:
+     top entry (capability) → removable tag + that capability's sentences above, placeholder asks the missing piece
+     product (✦ on the card / Ask Migoo on the product page) → product quoted + sentences about this item
+     query card → the whole sentence + the card's products already in the box, nothing above
+   Tapping a sentence only types it in. Nothing is sent until the user taps send.
+   ============================================================ */
+const KROWS=[['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['⇧','Z','X','C','V','B','N','M','⌫']];
+const kbdHTML=()=>`${KROWS.map((r,i)=>`<div class="krow${i===2?' last':''}">${r.map(k=>`<div class="k${(k==='⇧'||k==='⌫')?' wide':''}" data-k="${k}">${k}</div>`).join('')}</div>`).join('')}
+  <div class="krow last"><div class="k wide" style="max-width:44px;font-size:15px">123</div><div class="k" style="max-width:38px;font-size:17px">☺</div><div class="k space" data-k=" ">space</div><div class="k go" data-k="go">Go</div></div><div class="khome"></div>`;
+const IC_X=`<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+const IC_INS=`<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M4.5 4.5l7 7M11.5 7.4v4.1H7.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_UP=`<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 12.6V3.6M4 7.6L8 3.6l4 4" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_BACK=`<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const esc=t=>String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+/* same order as the four top entries */
+const CAPS=[
+  {t:'Compare Products & Prices',ph:'Which ones?',qs:['Compare the Philips and Xiaomi robot vacuums','AirPods Pro vs Sony XM5 for a long flight','Which of my liked bags is the best value?']},
+  {t:'Track Price Drops',ph:'Which item?',qs:['Tell me when the Doona drops below $420','Watch the Samba OG for a price drop','Alert me on any 20%-off deal in my likes']},
+  {t:'Find Gifts',ph:'Who’s it for?',qs:['A gift for my mom, under $50','Birthday gift for a 6-year-old who’s into dinosaurs','Housewarming gift that isn’t a candle']},
+  {t:'Shop by Occasion',ph:'What’s coming up?',qs:['Outfit for a summer wedding, under $200','What to pack for my October Tokyo trip','Get me ready for a beach weekend']},
+];
+/* query cards: the sentence the user would say + the products shown on the card */
+const QD={
+  vac:{q:'Which robot vacuum is better for pet hair?',att:[{img:IMG['assets/figma/vac-a.png'],b:'Philips',n:'DB300 Robot Vacuum'},{img:IMG['assets/figma/vac-b.png'],b:'Xiaomi',n:'Robot Vacuum S20'}]},
+  dining:{q:'Which dining chairs fit my small space and $150 budget?',att:[]},
+  doona:{q:'Doona is at a 90-day low. Should I buy now or wait?',att:[{img:IMG['assets/prod-stroller-doona.jpg'],b:'Doona',n:'Car Seat & Stroller'}]},
+  af1:{q:'I keep checking these AF1s. Tell me when the price drops.',att:[{img:IMG['assets/prod-sneaker.jpg'],b:'Nike',n:'Air Force 1 ’07, White'}]},
+  alert:{q:'Tell me when the Nike 249 red drops to $400',att:[{img:IMG['assets/prod-sneaker.jpg'],b:'Nike',n:'249 · water-resistant upper'}]},
+};
+const quoteOf=id=>{const o=P[id],i=o.title.indexOf(', ');return {img:o.img,b:i>0?o.title.slice(0,i):o.title,n:i>0?o.title.slice(i+2):''};};
+let CF={ph:null,v:'',prod:null,cap:null,q:null,att:[]};
+function toast(ph,msg){const t=ph.querySelector('.toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),1700);}
+function cfRender(){
+  const t=CF.ph&&CF.ph.querySelector('.cf-text'); if(!t) return;
+  const c=CF.cap!=null?CAPS[CF.cap]:null;
+  t.className='cf-text'+(CF.v?'':' ph');
+  t.innerHTML=CF.v?`${esc(CF.v)}<span class="caret"></span>`:`<span class="caret lead"></span>${CF.prod?(CF.watch?'When should I tell you?':'Ask about this…'):(c?c.ph:'Anything on your mind?')}`;
+  CF.ph.querySelector('.cf-send').classList.toggle('off',!CF.v);
+}
+function openFocus(ph,o={}){
+  CF={ph,v:o.v||'',prod:o.prod||null,cap:o.cap!=null?o.cap:null,q:o.q||null,att:o.att||[],watch:!!o.watch,cmp:!!o.cmp};
+  const c=CF.cap!=null?CAPS[CF.cap]:null, p=CF.prod?quoteOf(CF.prod):null;
+  const sug=list=>`<div class="cf-sugs">${list.map(x=>`<div class="cf-sug"${x.cmp?' data-cmp="1"':''} data-t="${esc(x.v||x)}"><span class="st">${x.t||x}</span><span class="sa">${IC_INS}</span></div>`).join('')}</div>`;
+  const top=CF.q?'':c?sug(c.qs):p?sug(CF.watch?watchChips(CF.prod):[(ph.classList.contains('ai')&&TRACK_AS_SUG())?trackSay(CF.prod):{t:'Remind me when…',v:'Remind me when '},...((CFG.pw==='pw5'&&topCand(CF.prod))?[{t:`Compare with the ${topCand(CF.prod).s} I looked at`,v:cmpSay(CF.prod),cmp:1}]:[]),...P[CF.prod].ask])
+    :`<div class="cf-chips">${CAPS.map((x,i)=>`<span class="cf-chip" data-cap="${i}"><span class="ci">${CHIPS[i][2]}</span>${x.t}</span>`).join('')}</div>`;
+  ph.querySelector('.cfocus').innerHTML=`
+    <div class="cf-scrim"></div>
+    <div class="cf-dock${(c||p)&&!CF.q?' fade':''}">${top}
+      <div class="cf-input">
+        ${CF.att.length?`<div class="cf-qatt">${CF.att.map((a,i)=>`<div class="qit"><img src="${a.img}" alt=""><div class="qi"><div class="qb">${a.b}</div><div class="qn">${a.n}</div></div><span class="qx" data-att="${i}">${IC_X}</span></div>`).join('')}</div>`:''}
+        ${c?`<div class="cf-tag"><span class="ci">${CHIPS[CF.cap][2]}</span>${c.t}<span class="tx" data-drop="cap">${IC_X}</span></div>`:''}
+        ${p?`<div class="cf-quote"><img src="${p.img}" alt=""><div class="qi"><div class="qb">${p.b}</div><div class="qn">${p.n}</div></div><span class="qx" data-drop="prod">${IC_X}</span></div>`:''}
+        <div class="cf-text ph"></div>
+        <div class="cf-row"><span class="ic">${I.plus}</span><span class="sp3"></span><span class="ic">${I.mic}</span><span class="cf-send off">${IC_UP}</span></div>
+      </div>
+    </div>`;
+  ph.querySelector('.cfocus').classList.add('show');
+  ph.querySelector('.kbd').classList.add('show');
+  cfRender();
+}
+function closeFocus(){ if(!CF.ph) return; CF.ph.querySelector('.cfocus').classList.remove('show'); CF.ph.querySelector('.kbd').classList.remove('show'); }
+const TAB={tasks:`<svg class="tabfill" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.27726C1.5 5.11417 4.06419 2.54999 7.22727 2.54999H16.7727C19.9358 2.54999 22.5 5.11418 22.5 8.27726V15.7227C22.5 18.8858 19.9358 21.45 16.7727 21.45H7.22727C4.06419 21.45 1.5 18.8858 1.5 15.7227V8.27726Z" fill="currentColor"/><path d="M7.6 12.3l3 3 5.8-6.1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,agents:`<svg class="tabfill" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.27726C1.5 5.11417 4.06419 2.54999 7.22727 2.54999H16.7727C19.9358 2.54999 22.5 5.11418 22.5 8.27726V15.7227C22.5 18.8858 19.9358 21.45 16.7727 21.45H7.22727C4.06419 21.45 1.5 18.8858 1.5 15.7227V8.27726Z" fill="currentColor"/><path d="M15.7158 8.16773C16.2302 7.84549 16.9096 8.00031 17.2324 8.51441C17.5548 9.02873 17.3987 9.70804 16.8848 10.031L13.9863 11.8494L16.8848 13.6677C17.3987 13.9907 17.5548 14.67 17.2324 15.1843C16.9096 15.6986 16.2303 15.8534 15.7158 15.531L12.4766 13.4988C11.2607 12.7355 11.2606 10.9632 12.4766 10.2L15.7158 8.16773ZM8.59961 8.54956C9.207 8.54963 9.6991 9.0418 9.69922 9.64917V14.0496C9.69901 14.6569 9.20694 15.1491 8.59961 15.1492C7.99232 15.1491 7.50021 14.6568 7.5 14.0496V9.64917C7.50012 9.04183 7.99227 8.54968 8.59961 8.54956Z" fill="white"/></svg>`,shop:`<svg class="tabfill" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 1.5A4.5 4.5 0 007.5 6v1.05H5.31a1.8 1.8 0 00-1.79 1.62l-1 10A2.5 2.5 0 005.01 21.45h13.98a2.5 2.5 0 002.49-2.78l-1-10a1.8 1.8 0 00-1.79-1.62H16.5V6A4.5 4.5 0 0012 1.5zm-2.5 5.55V6a2.5 2.5 0 015 0v1.05h-5z" fill="currentColor"/></svg>`,me:`<svg class="tabfill" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.6364 14H10.3636C6.29681 14 3 16.9305 3 20.5455C3 21.3488 3.65193 22 4.45525 22C11.0836 22 15.5353 22 19.5458 22C20.3492 22 21 21.3488 21 20.5455C21 16.9305 17.7032 14 13.6364 14Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 7C6.5 3.96243 8.96243 1.5 12 1.5C15.0376 1.5 17.5 3.96243 17.5 7C17.5 10.0376 15.0376 12.5 12 12.5C8.96243 12.5 6.5 10.0376 6.5 7Z" fill="currentColor"/></svg>`,doc:`<svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="5" y="3.5" width="14" height="17" rx="2.6" stroke="#1C1C1E" stroke-width="1.6"/><path d="M8.6 8.4h6.8M8.6 12h6.8M8.6 15.6h4" stroke="#1C1C1E" stroke-width="1.6" stroke-linecap="round"/></svg>`,bell:`<svg width="10" height="10.5" viewBox="0 0 20 20" fill="none"><path d="M10 2.6a4.9 4.9 0 00-4.9 4.9c0 4-1.4 5.2-1.4 5.2h12.6s-1.4-1.2-1.4-5.2A4.9 4.9 0 0010 2.6zM8.4 15.6a1.8 1.8 0 003.2 0" fill="currentColor"/></svg>`};
+const fbar=a=>`<div class="tabbar${a==='migoo'?' in':''}">
+  <div class="tab${a==='migoo'?' on':''}" data-tab="migoo"><img class="logo" src="${IMG['assets/migoo-logo.png']}" alt=""></div>
+  <div class="tab" data-tab="Tasks">${TAB.tasks}</div><div class="tab" data-tab="Agents">${TAB.agents}</div>
+  <div class="tab${a==='shop'?' on':''}" data-tab="shop">${TAB.shop}</div><div class="tab" data-tab="Me">${TAB.me}</div></div>`;
+/* ---------- after send: jump to tab 1 (the Migoo chat), same timing as demo-0805 ----------
+   the sentence appears first → 2s thinking → the answer types out → product rows fade in.
+   The Shop tab brings the feed back. */
+const row=(img,n,pr,id)=>`<div class="prow2"${id?` data-p="${id}"`:''}><img src="${img}" alt=""><div><div class="pn">${n}</div><div class="pp">$${pr}</div></div></div>`;
+const prow=id=>row(P[id].img,P[id].title,P[id].price,id);
+const plist=rows=>rows.length?`<div class="plist">${rows.join('')}</div>`:'';
+const bubbleA=html=>`<div class="ma"><div class="b">${html}</div></div>`;
+const bubbleU=(t,atts)=>`<div class="mu">${atts.length===1?`<div class="uref"><img src="${atts[0].img}" alt=""><span>${atts[0].b} ${atts[0].n}</span></div>`:atts.length?`<div class="uatt">${atts.map(a=>`<img src="${a.img}" alt="">`).join('')}</div>`:''}<span class="b">${esc(t)}</span></div>`;
+const AT='Auto-task created';
+const QREPLY={
+  vac:()=>[{t:`For pet hair, <b>the Xiaomi</b>. Stronger suction, and a rubber brush that hair doesn’t wrap around. The Philips is cheaper and fine if it’s mostly hard floors.`,
+            rich:plist([row(IMG['assets/figma/vac-b.png'],'Xiaomi Robot Vacuum S20','189'),row(IMG['assets/figma/vac-a.png'],'Philips DB300 Robot Vacuum','149')])}],
+  dining:()=>[{t:`Three that fit a small dining nook and keep a pair under $150:`,
+            rich:plist([prow('chair'),row(IMG['assets/figma/chair-a.png'],'Sunny Life Dining Chair, Cream · Walnut Legs','42.00'),row(IMG['assets/figma/chair-b.png'],'Curved-Back Dining Chair, Oat Linen','58.00')])}],
+  doona:()=>[{t:`Buy now. <code>$469</code> is the lowest I’ve seen in 90 days, and this model usually climbs back within two weeks.`,
+            rich:plist([row(IMG['assets/prod-stroller-doona.jpg'],'Doona Car Seat & Stroller','469')])},
+           {t:`If you’d rather wait, say so and I’ll tell you if it goes lower.`}],
+  af1:()=>[{tag:AT,t:`Done. I’ll tell you when the Air Force 1 ’07 drops below <code>$469</code>. I check a few times a day, and I’ll only say it once.`}],
+  alert:()=>[{tag:AT,t:`Done. I’ll only ping you at <code>$400</code>. It’s <code>$469</code> today, so it may sit a while. Tell me another number any time.`}],
+};
+function replyFor(v,ctx){
+  const low=v.toLowerCase();
+  if(ctx.q&&v===QD[ctx.q].q) return QREPLY[ctx.q]();                 /* card sentence sent unchanged → the card's own script */
+  if(ctx.cmp&&ctx.cmp[1].tb){const [a,b]=ctx.cmp; return [{t:b.say,rich:ctbHTML(a,b)+plist([row(a.img,`${a.b}, ${a.n}`,a.pr,a.pid),row(b.img,`${b.b}, ${b.n}`,b.pr,b.pid)])}];}
+  if(ctx.cmp){const [a,b]=ctx.cmp, d=b.pr-a.pr;
+    return [{t:`Side by side: the ${a.b} is <code>$${a.pr}</code>, the ${b.b} is <code>$${b.pr}</code>. ${d>0?`The first is <b>$${money(d)} cheaper</b>`:`The second is <b>$${money(-d)} cheaper</b>`}.${b.diff?` What sets the other one apart: ${b.diff.split(' · ')[1]}.`:''}`,
+      rich:plist([row(a.img,`${a.b}, ${a.n}`,a.pr,a.pid),row(b.img,`${b.b}, ${b.n}`,b.pr,b.pid)])}];}
+  if(ctx.prod){
+    const o=P[ctx.prod], nm=quoteOf(ctx.prod).b, others=Object.keys(P).filter(k=>k!==ctx.prod).slice(0,2).map(prow);
+    if(/remind me|tell me (when|if)|watch/.test(low)) return [{tag:AT,t:`Done. I’ll watch the ${nm} and tell you the moment that happens. I’ll only say it once.`}];
+    if(/similar|more like/.test(low)) return [{t:`In the same lane as the ${nm}, two worth a look:`,rich:plist(others)}];
+    if(/price|drop|cheaper|lower/.test(low)&&o.deal){const d=plain(o.deal);return [{t:`It’s <code>$${o.price}</code> right now: ${d[0].toLowerCase()+d.slice(1)}. I can watch it and tell you if it goes lower.`}];}
+    return [{t:`On it. Here’s my read on “${esc(v)}” for the ${nm}:`,rich:plist(others)}];
+  }
+  if(/gift/.test(low)) return [{t:`Two that are safe without being boring, both at their lowest this month:`,rich:plist([prow('bag'),prow('dress')])}];
+  if(/compare| vs /.test(low)) return [{t:`Point me at any two and I’ll line up price and specs. The pair you were looking at:`,rich:plist([row(IMG['assets/figma/vac-b.png'],'Xiaomi Robot Vacuum S20','189'),row(IMG['assets/figma/vac-a.png'],'Philips DB300 Robot Vacuum','149')])}];
+  if(/tell me when|alert|watch|drop/.test(low)) return [{tag:AT,t:`Done. I’ll watch it and tell you when that happens. I’ll only say it once.`}];
+  return [{t:`On it. From what you’ve told me before, here’s where I’d start:`,rich:plist([prow('chair'),prow('samba')])}];
+}
+function chatShell(ph,body){
+  const el=ph.querySelector('.chatv');
+  el.innerHTML=`<div class="chead"><div class="ct">Migoo</div><div class="cs">Generated by AI</div><span class="cdoc">${TAB.doc}</span></div>
+    <div class="cbody">${body}</div>
+    <div class="cdock"><div class="cask"><span class="sp2">Anything on your mind?</span>${I.mic}${I.plus}</div></div>${fbar('migoo')}`;
+  el.classList.add('show');
+}
+let flowT=[];
+function flowStop(){flowT.forEach(clearTimeout);flowT=[];}
+const TYPE_CPS=78;
+function typeHTML(el,html,body,done){
+  const cuts=[];
+  for(let i=0;i<html.length;){const c=html[i];
+    if(c==='<'){const j=html.indexOf('>',i);i=j<0?html.length:j+1;}
+    else if(c==='&'){const j=html.indexOf(';',i);i=(j>0&&j-i<8)?j+1:i+1;cuts.push(i);}
+    else{i++;cuts.push(i);}}
+  const total=cuts.length, t0=performance.now(), end=()=>{body.scrollTop=body.scrollHeight;};
+  const step=()=>{const n=Math.min(total,Math.floor((performance.now()-t0)/1000*TYPE_CPS));
+    if(n>=total){el.innerHTML=html;end();done&&done();return;}
+    el.innerHTML=html.slice(0,n?cuts[n-1]:0)+'<span class="tcur"></span>';end();flowT.push(setTimeout(step,16));};
+  step();
+}
+function chatFlow(ph,userHTML,segs){
+  flowStop();
+  chatShell(ph,userHTML+`<div class="ma ctyping"><div class="b tping"><i></i><i></i><i></i></div></div>`);
+  const body=ph.querySelector('.cbody');
+  const runSeg=i=>{
+    const s=segs[i], el=document.createElement('div'); el.className='ma';
+    el.innerHTML='<div class="b">'+(s.tag?`<div class="btag">${TAB.bell}<span>${s.tag}</span></div>`:'')+'<span class="bt"></span></div>';
+    body.appendChild(el);
+    typeHTML(el.querySelector('.bt'),s.t,body,()=>{
+      if(s.rich){const r=document.createElement('div');r.className='crich';r.innerHTML=s.rich;el.querySelector('.b').appendChild(r);body.scrollTop=body.scrollHeight;}
+      if(i+1<segs.length) flowT.push(setTimeout(()=>runSeg(i+1),620));
+    });
+  };
+  flowT.push(setTimeout(()=>{body.querySelector('.ctyping')?.remove();runSeg(0);},2000));
+}
+function cfSend(){                                      /* the user taps send → jump to tab 1 */
+  if(!CF.v) return;
+  const ph=CF.ph, v=CF.v, atts=CF.prod?[quoteOf(CF.prod)]:CF.att, ctx={prod:CF.prod,q:CF.q,cmp:CF.cmp&&atts.length===2?atts:null};
+  const tm=CF.prod&&v.match(/below \$([\d.]+)/i); if(tm) ALERTS[CF.prod]={target:+tm[1]};   /* said out loud = the alert exists */
+  closeFocus(); closePDP(ph);
+  setTimeout(()=>chatFlow(ph,bubbleU(v,atts),replyFor(v,ctx)),120);
+}
+/* Shop → Migoo tab: the chat's resting state */
+function openAssistant(ph){
+  flowStop();
+  chatShell(ph,`<div class="cts">Today</div>`+
+    bubbleA(`Morning. Two things you were watching moved overnight: the MATEYOYO bag is now under your $10 target, and the Doona is at its lowest in 90 days.`+plist([prow('bag'),row(IMG['assets/prod-stroller-doona.jpg'],'Doona Car Seat & Stroller','469')])));
+}
+function closeChat(ph){flowStop();ph.querySelector('.chatv').classList.remove('show');}
+/* ---------- product page (structure ported from demo-0805) ---------- */
+const PI={
+  close:`<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 4l10 10M14 4L4 14" stroke="#081021" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  chevR:`<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5 8 6l-3.5 3.5" stroke="rgba(0,0,0,0.4)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  chevHead:`<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3.5 10.5 8 6 12.5" stroke="#111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  star:`<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 .8l1.6 3.3 3.6.5-2.6 2.5.6 3.6L6 9.5 2.8 11.2l.6-3.6L.8 5.1l3.6-.5z" fill="#FFB100"/></svg>`,
+  heart:on=>`<svg width="17" height="16" viewBox="0 0 20 18" fill="none"><path d="M10 17S1 11.6 1 5.9C1 3 3.2 1 5.7 1 7.5 1 9.1 2 10 3.5 10.9 2 12.5 1 14.3 1 16.8 1 19 3 19 5.9 19 11.6 10 17 10 17z" fill="${on?'#081021':'none'}" stroke="${on?'#081021':'#54545C'}" stroke-width="1.7" stroke-linejoin="round"/></svg>`,
+  bell:`<svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2.6a4.9 4.9 0 00-4.9 4.9c0 4-1.4 5.2-1.4 5.2h12.6s-1.4-1.2-1.4-5.2A4.9 4.9 0 0010 2.6z" stroke="#54545C" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.4 15.6a1.8 1.8 0 003.2 0" stroke="#54545C" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+  ur:`<span style="font-size:13px;line-height:1">↗</span>`,
+};
+const BRAND={Walmart:'brand-walmart.png',Amazon:'brand-amazon.png',Ebay:'brand-ebay.svg'};
+/* offers are sorted cheapest first; the first one is the price shown on the card */
+const PDPD={
+  chair:{gallery:8,sub:'Authenticated · Free Shipping',
+    bullets:['Boucle seat and curved back, soft to the touch and easy to wipe clean','Solid oak legs with floor protectors, holds up to 260 lb','Stackable, so two extra seats take no floor space'],
+    variants:[{label:'Color: Cream',options:[{t:'Cream',sel:1},{t:'Sand'},{t:'Charcoal'}]},{label:'Set: Single',options:[{t:'Single',sel:1},{t:'Set of 2'},{t:'Set of 4'}]}],
+    offers:[{price:'8.18',src:'Amazon',rating:'4.6'},{price:'9.40',src:'Walmart',rating:'4.5'}],
+    reviews:[{name:'Maya T',src:'Amazon',full:5,text:'Sturdier than it looks and the boucle hasn’t pilled after two months of daily use.',media:1},{name:'Chris L',src:'Walmart',full:4,text:'Took ten minutes to put together. Seat is a little firm, which I like.'}],
+    details:[['Seat height','18 in'],['Material','Boucle, solid oak'],['Weight limit','260 lb'],['Assembly','4 screws, tool included']],
+    desc:'A compact dining chair with a curved boucle back and oak legs, sized for small tables.'},
+  bag:{gallery:6,sub:'Authenticated · Free Shipping',task:'below $10',
+    bullets:['Pebbled leather that hides scratches and softens with wear','Zip top with one inner pocket, fits a 13" laptop flat','Shoulder drop of 9.5", sits under the arm without slipping'],
+    variants:[{label:'Color: Black',options:[{t:'Black',sel:1},{t:'Tan'},{t:'Olive'}]}],
+    offers:[{price:'8.18',src:'Amazon',rating:'4.4'},{price:'8.90',src:'Ebay',rating:'4.3'}],
+    reviews:[{name:'Dana K',src:'Amazon',full:5,text:'Looks far more expensive than it is. The zip runs smoothly and the strap doesn’t dig in.',media:1},{name:'Priya S',src:'Ebay',full:4,text:'Good everyday bag. Smelled of leather for the first few days.'}],
+    details:[['Size','13 × 9 × 4 in'],['Material','Pebbled leather'],['Closure','Zip top'],['Strap drop','9.5 in']],
+    desc:'A soft shoulder bag in pebbled leather, big enough for a laptop and little else.'},
+  samba:{gallery:9,sub:'Authenticated · Free Shipping',wear:true,
+    bullets:['Full-grain leather upper with the suede T-toe overlay','Gum rubber outsole, grippy on wet pavement','Runs true to size; go half a size up for wide feet'],
+    variants:[{label:'Color: Cream White',options:[{t:'Cream White',sel:1},{t:'Core Black'},{t:'Green'}]},{label:'Size: US 9',options:[{t:'US 8'},{t:'US 9',sel:1},{t:'US 10'},{t:'US 11'}]}],
+    offers:[{price:'8.18',src:'Walmart',rating:'4.7'},{price:'9.50',src:'Amazon',rating:'4.6'},{price:'9.90',src:'Ebay',rating:'4.5'}],
+    reviews:[{name:'Leo P',src:'Walmart',full:5,text:'True to size and comfortable out of the box. The gum sole looks even better in person.',media:1},{name:'Nina R',src:'Amazon',full:4,text:'Leather creases quickly but that’s the look. Great price.'}],
+    details:[['Upper','Leather, suede overlay'],['Outsole','Gum rubber'],['Fit','True to size'],['Weight','~340 g (US 9)']],
+    desc:'The indoor-football classic in cream leather with a gum sole.'},
+  dress:{gallery:7,sub:'Authenticated · Free Shipping',wear:true,
+    bullets:['Lined cotton poplin, not see-through in daylight','Puff sleeves with elastic cuffs that stay put','Tiered skirt hits the ankle at 5 ft 5 in'],
+    variants:[{label:'Color: White',options:[{t:'White',sel:1},{t:'Sage'},{t:'Black'}]},{label:'Size: M',options:[{t:'S'},{t:'M',sel:1},{t:'L'},{t:'XL'}]}],
+    offers:[{price:'14.90',src:'Amazon',rating:'4.5'},{price:'16.50',src:'Walmart',rating:'4.4'}],
+    reviews:[{name:'Ava M',src:'Amazon',full:5,text:'Fully lined, which I didn’t expect at this price. Washed twice with no shrinking.',media:1},{name:'Sam W',src:'Walmart',full:4,text:'Runs slightly long. Lovely with a belt.'}],
+    details:[['Fabric','100% cotton poplin, lined'],['Length','Maxi, 52 in'],['Sleeve','Puff, elastic cuff'],['Care','Machine wash cold']],
+    desc:'A white cotton maxi dress with puff sleeves and a tiered skirt.'},
+  skirt:{gallery:6,sub:'Authenticated · Free Shipping',wear:true,
+    bullets:['High waist with a hidden side zip and a tie belt','Printed crepe that drapes without clinging','Fully lined to the knee'],
+    variants:[{label:'Print: Navy Floral',options:[{t:'Navy Floral',sel:1},{t:'Black Floral'}]},{label:'Size: M',options:[{t:'S'},{t:'M',sel:1},{t:'L'}]}],
+    offers:[{price:'11.40',src:'Walmart',rating:'4.5'},{price:'13.50',src:'Amazon',rating:'4.4'},{price:'14.20',src:'Ebay',rating:'4.3'}],
+    reviews:[{name:'Jo H',src:'Walmart',full:5,text:'The print is richer than the photos and the waist sits exactly where it should.',media:1},{name:'Rin O',src:'Amazon',full:4,text:'Nice weight to the fabric. I took the belt off.'}],
+    details:[['Fabric','Polyester crepe, lined'],['Length','Maxi, 36 in'],['Waist','High rise, side zip'],['Care','Machine wash cold']],
+    desc:'A high-waist floral maxi skirt with a tie belt.'},
+};
+const SAVED=new Set(['bag']);
+const watchChips=id=>[`Tell me if it drops below $${(P[id].price*0.9).toFixed(2)}`,`Tell me when it’s back in stock`,...(PDPD[id].wear?[`Tell me when my size is in`]:[]),`Tell me if a new colour drops`];
+const starsH=n=>PI.star.repeat(n);
+/* ---- data for the AI modules: 13 weekly points ≈ 90 days, landed-price shipping, comparison candidates ---- */
+Object.entries({
+  chair:{hist:[10.9,11.2,10.8,10.4,9.9,7.6,8.4,9.6,9.8,9.4,9.0,8.6,8.18],adv:['buy','Only $0.58 above its 90-day low.'],
+    cmp:[{img:IMG['assets/figma/chair-a.png'],b:'Sunny Life Dining Chair',n:'Cream · Walnut Legs',pr:'12.40',diff:'<b>$4.22 more</b> · wider seat, armrests',viewed:'2 days ago'},
+         {img:IMG['assets/figma/chair-b.png'],b:'Quilted Dining Chair',n:'Charcoal · Gold Tips',pr:'9.90',diff:'<b>$1.72 more</b> · wipe-clean faux leather'}]},
+  bag:{hist:[12.4,12.4,12.0,11.8,11.9,11.2,10.8,10.9,10.2,9.8,9.4,8.9,8.18],adv:['buy','It hasn’t been lower in 90 days.'],cmp:[]},
+  samba:{hist:[9.8,9.6,9.9,9.7,9.5,9.6,9.4,9.5,9.2,9.4,9.0,8.6,8.18],adv:['buy','It hasn’t been lower in 90 days.'],
+    cmp:[{img:IMG['assets/prod-sneaker2.jpg'],b:'Nike Air Force 1 Low',n:'Ale Brown',pr:'11.90',diff:'<b>$3.72 more</b> · thicker sole, runs large',viewed:'yesterday'}]},
+  dress:{hist:[22,21.5,21.8,20.9,19.8,19.9,19.2,18.6,17.9,17.2,16.4,15.6,14.9],adv:['wait','It has dropped every week for a month.'],
+    cmp:[{id:'skirt',diff:'<b>$3.50 less</b> · skirt only, needs a top',viewed:'3 days ago'},
+         {img:IMG['assets/figma/orange-set.png'],b:'Zanzea Linen Co-ord Set',n:'Orange · Sleeveless',pr:'13.20',diff:'<b>$1.70 less</b> · two pieces, linen blend'}]},
+  skirt:{hist:[13.2,13.6,12.9,10.9,11.8,12.6,13.0,12.8,12.4,12.0,11.9,11.6,11.4],adv:['buy','Only $0.50 above its 90-day low.'],
+    cmp:[{id:'dress',diff:'<b>$3.50 more</b> · one piece, fully lined',viewed:'3 days ago'},
+         {img:IMG['assets/figma/orange-set.png'],b:'Zanzea Linen Co-ord Set',n:'Orange · Sleeveless',pr:'13.20',diff:'<b>$1.80 more</b> · two pieces, linen blend'}]},
+}).forEach(([k,v])=>Object.assign(PDPD[k],v));
+PDPD.samba.offers[2].ship=2.99; PDPD.skirt.offers[2].ship=2.99;
+/* price alerts set on this page. The bag starts with one that has already hit. */
+const ALERTS={bag:{target:10,hit:true,setAt:7}};
+const money=v=>(+v).toFixed(2).replace(/\.00$/,'');
+const BELL=on=>`<svg viewBox="0 0 20 20" fill="none"><path d="M10 2.6a4.9 4.9 0 00-4.9 4.9c0 4-1.4 5.2-1.4 5.2h12.6s-1.4-1.2-1.4-5.2A4.9 4.9 0 0010 2.6z" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.4 15.6a1.8 1.8 0 003.2 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>`;
+/* default target: the 90-day low when there is one below today's price, otherwise 10% under */
+const targetFor=id=>{const now=+P[id].price, lo=Math.min(...PDPD[id].hist);
+  return (CFG.pa==='pa0'&&lo<now*0.985)?{v:lo,note:'90-day low'}:{v:now*0.9,note:'10% below now'};};
+const cand=c=>c.id?{...c,...quoteOf(c.id),pr:P[c.id].price,pid:c.id}:c;
+function trendHTML(id){
+  const o=P[id], d=PDPD[id], h=d.hist, lo=Math.min(...h), hi=Math.max(...h), al=ALERTS[id], n=h.length-1;
+  const W=320,H=56,pad=5, X=i=>i/n*W, Y=v=>pad+(hi-v)/(hi-lo)*(H-2*pad);
+  const pts=h.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`), line='M'+pts.join(' L');
+  const li=h.indexOf(lo), lowNow=li===n, pc=i=>(X(i)/W*100).toFixed(1)+'%';
+  const tg=al&&al.target>=lo&&al.target<=hi?Y(al.target):null, t=targetFor(id);
+  const head=CFG.pt==='pt2'
+    ? `<div class="pk-adv"><i class="${d.adv[0]==='wait'?'wait':''}">${d.adv[0]==='wait'?'Worth waiting':'Buy now'}</i>${d.adv[1]}</div>`
+    : `<div class="pk-h"><b>Price · last 90 days</b><span>Low $${money(lo)} · High $${money(hi)}</span></div>`;
+  const act=al
+    ? `<div class="pk-st">${BELL(true)}<span class="f">${al.hit?`<b>Your $${money(al.target)} target hit</b> · $${money(al.target-o.price)} below`:`<b>Watching</b> · I’ll tell you at $${money(al.target)}`}</span><span class="pk-chg">Change</span></div>`
+    : `<div class="pk-btn${CFG.pt==='pt2'&&d.adv[0]==='wait'?' pri':''}" data-t="${t.v.toFixed(2)}">${BELL(false)}Alert me at $${t.v.toFixed(2)} <u>· ${t.note}</u></div>`;
+  return `<div class="pk">${head}
+    <div class="pk-c"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><defs><linearGradient id="pkg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1F6BFF" stop-opacity=".16"/><stop offset="1" stop-color="#1F6BFF" stop-opacity="0"/></linearGradient></defs>
+        <path d="${line} L${W},${H} L0,${H} Z" fill="url(#pkg)"/><path d="${line}" fill="none" stroke="#1F6BFF" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+        ${tg!=null?`<path d="M0,${tg.toFixed(1)} L${W},${tg.toFixed(1)}" stroke="#1A56D6" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`:''}</svg>
+      ${lowNow?'':`<span class="pk-dot" style="left:${pc(li)};top:${Y(lo).toFixed(1)}px"></span><span class="pk-l" style="left:${pc(li)};top:${(Y(lo)+7).toFixed(1)}px">$${money(lo)}</span>`}
+      ${tg!=null?`<span class="pk-l tg" style="left:0;top:${(tg-16).toFixed(1)}px">Your target $${money(al.target)}</span>`:''}
+      <span class="pk-dot now" style="left:100%;top:${Y(+o.price).toFixed(1)}px"></span><span class="pk-l now" style="top:${(Y(+o.price)+(tg!=null&&Math.abs(tg-(Y(+o.price)-15))<12?8:-22)).toFixed(1)}px">$${o.price}</span></div>
+    <div class="pk-x"><span>90 days ago</span><span>Today</span></div>${act}</div>`;
+}
+function offersHTML(id,ai){
+  const d=PDPD[id], concl=ai&&CFG.ps==='ps1';
+  const rows=d.offers.map(x=>({...x,total:+x.price+(x.ship||0)})), best=rows[0].total;
+  return `${concl?`<div class="sc-h"><span>${AIS}<em>${rows.length>1?`Cheapest of ${rows.length} stores`:'One store has it'}</em></span><span>Checked 2 min ago</span></div>`:''}
+    <div class="offers">${rows.map((x,i)=>(i?'<div class="offer-line"></div>':'')+`<div class="offer-row"><div class="offer-left"><div class="offer-logo"><img src="${IMG['assets/'+BRAND[x.src]]}" alt="${x.src}"></div>
+      <div><div class="offer-price">$${concl?x.total.toFixed(2):x.price}${i===0&&rows.length>1?'<i>Lowest</i>':concl?`<small>+$${money(x.total-best)}</small>`:''}</div>
+        <div class="offer-sub">${concl?`<span>${x.ship?`$${x.price} + $${x.ship} shipping`:'Free shipping'}</span><span class="vbar"></span>`:''}<span class="rating">${PI.star} <span>${x.rating}</span></span><span class="vbar"></span><span>${concl?x.src:`View in ${x.src}`} ${PI.ur}</span></div></div></div>
+      <div class="buy-btn${concl&&i===0?' pri':''}">Buy</div></div>`).join('')}</div>`;
+}
+/* what the AI knows to compare against: the first candidate (something you viewed, else its own pick) */
+Object.assign(PDPD.chair.cmp[0],{s:'Sunny Life chair',say:'This one is the better value. You save <b>$4.22</b> and give up the armrests.',
+  tb:[['Price','$8.18','$12.40',0],['Seat','Boucle, no arms','Wider, with armrests',1],['Stackable','Yes','No',0],['Best for','Small tables','Long dinners']]});
+Object.assign(PDPD.samba.cmp[0],{s:'Air Force 1',say:'The Samba is the better buy today: <b>$3.72 less</b>, and at its lowest price in 90 days.',
+  tb:[['Price','$8.18','$11.90',0],['Sole','Slim gum sole','Thick cupsole'],['Fit','True to size','Runs large',0],['Best for','Everyday wear','A chunkier look']]});
+Object.assign(PDPD.dress.cmp[0],{s:'Lovito skirt',say:'They do different jobs. The dress is a whole outfit; the skirt is <b>$3.50 less</b> but needs a top.',
+  tb:[['Price','$14.90','$11.40',1],['Pieces','One piece','Skirt only',0],['Lining','Fully lined','Lined to the knee',0],['Best for','Summer events','Mixing with what you own']]});
+Object.assign(PDPD.skirt.cmp[0],{s:'white maxi dress',say:'They do different jobs. The skirt is <b>$3.50 less</b> but needs a top; the dress is a whole outfit.',
+  tb:[['Price','$11.40','$14.90',0],['Pieces','Skirt only','One piece',1],['Lining','Lined to the knee','Fully lined',1],['Best for','Mixing with what you own','Summer events']]});
+const topCand=id=>{const c=(PDPD[id].cmp||[])[0]; return c?cand(c):null;};
+const selfAtt=id=>({...quoteOf(id),pr:P[id].price,pid:id});
+const cmpSay=id=>`Which is better value, this or the ${topCand(id).s} I looked at?`;
+const ctbHTML=(a,b)=>`<table class="ctb"><tr class="hd"><td class="k"></td><td><img src="${a.img}" alt="">This one</td><td><img src="${b.img}" alt="">${b.s[0].toUpperCase()+b.s.slice(1)}</td></tr>
+  ${b.tb.map(([k,x,y,w])=>`<tr><td class="k">${k}</td><td>${w===0?`<span class="w">${x}</span>`:x}</td><td>${w===1?`<span class="w">${y}</span>`:y}</td></tr>`).join('')}</table>`;
+function compareHTML(id){
+  const c=topCand(id); if(!c||CFG.pw==='pw0'||CFG.pw==='pw5') return '';
+  const a=selfAtt(id);
+  if(CFG.pw==='pw4') return `<div class="cq" data-cmpq="1"><div class="cq-e">STILL DECIDING?</div>
+      <div class="cq-q">Which is better value, this or the <b>${c.s}</b> I looked at?</div>
+      <div class="cq-p">${[a,c].map(x=>`<div class="cq-t"><img src="${x.img}" alt=""><div><div class="n">${x.b}</div><div class="p">$${x.pr}</div></div></div>`).join('')}<span class="vsb">VS</span></div></div>
+    <div class="section-divider"></div>`;
+  wi=0;
+  return `<div class="cv"><div class="cv-h">${AIS}Compared with the <b>${c.s}</b> you viewed ${c.viewed||''}</div>
+      <div class="cv-say">${c.say.split(/(<b>.*?<\/b>)/).map(t=>t.startsWith('<b>')?`<b>${words([[t.slice(3,-4),0]])}</b>`:words([[t,0]])).join('')}</div>
+      ${ctbHTML(a,c)}<div class="cv-f" data-cmpq="1">Ask a follow-up ›</div></div><div class="section-divider"></div>`;
+}
+/* the sentence a Track suggestion types into the composer */
+const trackSay=id=>`Tell me if it drops below $${targetFor(id).v.toFixed(2)}`;
+const ROLL=[['Tell me when the price drops','track'],['Is this a good price?'],['Compare with similar','Compare this with ']];
+setInterval(()=>document.querySelectorAll('.dk-roll').forEach(el=>{const i=(+el.dataset.i+1)%ROLL.length;el.dataset.i=i;el.style.transform=`translateY(-${i*20}px)`;}),2600);
+const TRACK_AS_SUG=()=>['pd3','pd7','pd8','pd9'].includes(CFG.pd);
+/* bottom bar of the product page. pd0 = demo-0805 as is; pd1–pd4 only on the AI phone */
+function dockHTML(id,ai){
+  const o=P[id], d=PDPD[id], al=ALERTS[id], v=ai?CFG.pd:'pd0', src=d.offers[0].src;
+  const logo=`<img src="${IMG['assets/migoo-logo.png']}" alt="">`;
+  const buyFull=`<div class="buy-main">Buy at ${src} · $${o.price} ${PI.ur}</div>`;
+  const buyTwo=`<div class="buy-main two"><b>Buy · $${o.price}</b><span>at ${src} ${PI.ur}</span></div>`;
+  const ask=`<div class="dk-ask" data-act="ask">${logo}Ask about this…</div>`;
+  const bell=`<div class="dk-bell${al?' on':''}" data-act="set">${BELL(!!al)}</div>`;
+  const askWide=`<div class="dk-ask" data-act="ask">${logo}<span>Ask about this…</span>${I.mic}</div>`;
+  const track=`<div class="dk-track" data-act="set">${BELL(!!al)}${al?`At $${money(al.target)}`:'Track price'}</div>`;
+  if(v==='pd5') return `<div class="pdp-dock dk dk2r"><div class="dk-row">${askWide}${bell}</div>${buyFull}</div>`;
+  if(v==='pd6') return `<div class="pdp-dock dk dk2r"><div class="dk-row">${askWide}</div><div class="dk-row">${track}${buyFull}</div></div>`;
+  if(v==='pd2') return `<div class="pdp-dock dk">${ask}${bell}${buyTwo}</div>`;
+  /* B · Track price is not a button of its own: it is one of the sentences the Ask input suggests */
+  const tsug=al?`At $${money(al.target)}`:'Track price';
+  if(v==='pd7') return `<div class="pdp-dock dk dk2r"><div class="dk-row">${askWide}</div>${buyFull}</div>`;
+  if(v==='pd8') return `<div class="pdp-dock dk dk2r"><div class="dk-row"><div class="dk-ask" data-roll="1">${logo}<span class="dk-rollw"><span class="dk-roll" data-i="0">${ROLL.map(r=>`<i>${r[0]}</i>`).join('')}</span></span>${I.mic}</div></div>${buyFull}</div>`;
+  if(v==='pd9') return `<div class="pdp-dock dk dk2r"><div class="dk-row"><div class="dk-ask" data-act="ask">${logo}<span>Ask about this…</span><em class="dk-sug${al?' on':''}" data-track="1">${BELL(!!al)}${tsug}</em></div></div>${buyFull}</div>`;
+  if(v==='pd3') return `<div class="pdp-dock dk dk3"><div class="dk-chips"><span class="dk-chip${al?' on':''}" data-track="1">${BELL(!!al)}${tsug}</span>${[['Is this a good price?'],(CFG.pw==='pw5'&&topCand(id))?[`Compare with the ${topCand(id).s}`,'',1]:['Compare with…','Compare this with '],[o.ask[1]]].map(([t,val,q])=>q?`<span class="dk-chip" data-cmpq="1">${t}</span>`:`<span class="dk-chip" data-t="${esc(val||t)}">${t}</span>`).join('')}</div>${ask}${buyFull}</div>`;
+  if(v==='pd4') return `<div class="pdp-dock dk dk4"><div class="dk-ava" data-act="ask">${logo}</div><div class="dk-track" data-act="set">${BELL(!!al)}${al?`At $${money(al.target)}`:'Track price'}</div>${buyTwo}</div>`;
+  return `<div class="pdp-dock">
+      <div class="ask-migoo" data-act="ask"><img class="ask-logo" src="${IMG['assets/migoo-logo.png']}" alt=""><span>Ask Migoo</span></div>
+      ${v==='pd1'
+        ? `<div class="ask-migoo wide${al?' on':''}" data-act="set" style="color:${al?'var(--b)':'#54545C'}">${BELL(!!al)}<span>${al?`At $${money(al.target)}`:'Track price'}</span></div>`
+        : `<div class="ask-migoo" data-act="set">${PI.bell}<span>Set</span></div>`}
+      ${buyFull}</div>`;
+}
+function pdpHTML(id,ai){
+  const o=P[id], d=PDPD[id], why=(o.deal||o.why||[]).map(([t,k])=>k===2?`<em>${t}</em>`:t).join('');
+  return `<div class="pdp-body">
+      <div class="pdp-hero"><div class="sheet-grabber"></div>
+        <div class="pdp-close">${PI.close}</div>
+        <div class="pdp-watch">${PI.heart(SAVED.has(id))}</div>
+        <img src="${o.img}" alt=""><div class="indicator">1/${d.gallery}</div></div>
+      <div style="height:16px"></div>
+      <div class="pdp-pad"><div class="pdp-price">$${o.price}<s>$${o.was||'33.00'}</s></div><div class="pdp-subnote">${d.sub}</div>
+        <div class="pdp-title">${o.title}</div>${why?`<div class="why">${AIS}${why}</div>`:''}</div>
+      ${ai&&CFG.pt!=='pt0'?trendHTML(id):''}
+      <ul class="ai-bullets">${d.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>
+      <div style="height:16px"></div>
+      ${d.variants.map(v=>`<div class="var-group"><div class="var-label">${v.label} ${PI.chevR}</div><div class="vchips">${v.options.map(x=>`<div class="vchip${x.sel?' sel':''}">${x.t}</div>`).join('')}</div></div>`).join('')}
+      <div style="height:16px"></div><div class="section-divider"></div>
+      ${offersHTML(id,ai)}
+      <div class="section-divider"></div>
+      ${ai?compareHTML(id):''}
+      <div class="reviews"><div class="rev-head"><span class="t">What People are Saying</span>${PI.chevHead}</div>
+        ${d.reviews.map((r,i)=>(i?'<div class="rev-line"></div>':'')+`<div class="rev-item"><div><div class="rev-name">${r.name}</div><div class="rev-stars">${starsH(r.full)}<span class="vbar"></span><span class="src">${r.src}</span></div></div>
+          <div class="rev-text">${r.text}</div>${r.media?`<div class="rev-media"><img class="m" src="${o.img}" alt=""></div>`:''}</div>`).join('')}</div>
+      <div class="section-divider"></div>
+      <div class="details"><h3>Details</h3>${d.details.map(([k,v])=>`<div class="spec-row"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('')}<p class="desc">${d.desc}</p></div>
+    </div>
+    ${dockHTML(id,ai)}
+<div class="home-indicator"></div>`;
+}
+let sheetDrag=null;
+function wirePDP(ph,ov){
+  /* half → full: drag the hero up, or just start scrolling */
+  ['.sheet-grabber','.pdp-hero'].forEach(sel=>ov.querySelector(sel).addEventListener('pointerdown',e=>{
+    if(e.target.closest('.pdp-close,.pdp-watch,.pdp-atpill')) return;
+    sheetDrag={ov,ph,y:e.clientY,halfTop:Math.round(ph.clientHeight*.10),full:ov.classList.contains('full')};
+    ov.classList.add('dragging');
+    window.addEventListener('pointermove',sheetMove); window.addEventListener('pointerup',sheetUp);
+  }));
+  const body=ov.querySelector('.pdp-body');
+  body.addEventListener('scroll',()=>{if(!ov.classList.contains('full')&&body.scrollTop>6) ov.classList.add('full');},{passive:true});
+}
+function openPDP(ph,id,keep){
+  if(!PDPD[id]) return;
+  const ov=ph.querySelector('.pdp-overlay'); ov.dataset.id=id; ov.innerHTML=pdpHTML(id,ph.classList.contains('ai'));
+  ph.querySelector('.pdp-backdrop').classList.add('show');
+  wirePDP(ph,ov);
+  if(keep){ov.classList.add('dragging','open');ov.classList.toggle('full',keep.full);ov.querySelector('.pdp-body').scrollTop=keep.y;setTimeout(()=>ov.classList.remove('dragging'),30);}
+  else{ov.classList.remove('full');setTimeout(()=>ov.classList.add('open'),20);}
+}
+/* re-render the open product page in place (after an alert is set, or a panel switch) */
+const pdpState=ph=>{const ov=ph&&ph.querySelector('.pdp-overlay');return ov&&ov.classList.contains('open')?{id:ov.dataset.id,full:ov.classList.contains('full'),y:ov.querySelector('.pdp-body').scrollTop}:null;};
+function refreshPDP(ph){const k=pdpState(ph); if(k) openPDP(ph,k.id,k);}
+function sheetMove(e){
+  if(!sheetDrag) return; const {ov,y,halfTop,full}=sheetDrag, top=Math.max(0,(full?0:halfTop)+e.clientY-y);
+  if(top<=halfTop){ov.style.top=top+'px';ov.style.transform='translateY(0)';}
+  else{ov.style.top=halfTop+'px';ov.style.transform=`translateY(${top-halfTop}px)`;}
+}
+function sheetUp(e){
+  if(!sheetDrag) return; const {ov,ph,y,full}=sheetDrag, dy=e.clientY-y;
+  ov.classList.remove('dragging'); ov.style.top=''; ov.style.transform='';
+  if(!full){ if(dy<-40) ov.classList.add('full'); else if(dy>70) closePDP(ph); } else if(dy>60) ov.classList.remove('full');
+  sheetDrag=null; window.removeEventListener('pointermove',sheetMove); window.removeEventListener('pointerup',sheetUp);
+}
+function closePDP(ph){ph.querySelector('.pdp-overlay').classList.remove('open','full');ph.querySelector('.pdp-backdrop').classList.remove('show');}
+document.addEventListener('click',e=>{
+  const ph=e.target.closest('.phone'); if(!ph) return;
+  const on=sel=>e.target.closest(sel);
+  let x;
+  /* inside the composer */
+  if(x=on('.kbd .k')){const k=x.dataset.k; if(!k||!CF.ph) return; if(k==='go') return cfSend(); CF.v=k==='⌫'?CF.v.slice(0,-1):k==='⇧'?CF.v:CF.v+(k===' '?' ':k.toLowerCase()); return cfRender();}
+  if(on('.cf-scrim')) return closeFocus();
+  if(x=on('.cf-sug[data-cmp]')) return openFocus(ph,{v:x.dataset.t,att:[selfAtt(CF.prod),topCand(CF.prod)],cmp:true});   /* a comparison needs both items in the box */
+  if(x=on('.cf-sug')){CF.v=x.dataset.t; return cfRender();}                              /* sentence → typed in, not sent */
+  if(x=on('.cf-chip')) return openFocus(ph,{cap:+x.dataset.cap});
+  if(x=on('[data-drop]')) return openFocus(ph,{v:CF.v});                                  /* drop the tag / the quote, keep what was typed */
+  if(x=on('.qit .qx')) return openFocus(ph,{v:CF.v,q:CF.q,cmp:CF.cmp,att:CF.att.filter((_,i)=>i!==+x.dataset.att)});
+  if(on('.cf-send')) return cfSend();
+  if(on('.cfocus')) return;
+  /* chat / product page */
+  if(x=on('.tab')){const t=x.dataset.tab; if(x.classList.contains('on')) return;
+    return t==='migoo'?openAssistant(ph):t==='shop'?closeChat(ph):toast(ph,`→ ${t} tab (out of demo scope)`);}
+  if(on('.pdp-close')||on('.pdp-backdrop')) return closePDP(ph);
+  if(x=on('.pdp-overlay')){const id=x.dataset.id; let y;
+    if(on('[data-track]')) return ALERTS[id]?openFocus(ph,{prod:id,watch:true}):openFocus(ph,{prod:id,v:trackSay(id)});   /* suggestion → typed in; already set → change it */
+    if(y=on('[data-roll]')){const r=ROLL[+y.querySelector('.dk-roll').dataset.i]; return openFocus(ph,{prod:id,v:r[1]==='track'?trackSay(id):(r[1]||r[0])});}
+    if(y=on('.dk-chip[data-t]')) return openFocus(ph,{prod:id,v:y.dataset.t});                         /* a sentence: typed in, not sent */
+    if(y=on('[data-act]')) return openFocus(ph,{prod:id,watch:y.dataset.act==='set'});       /* Ask and Set are the same composer; Set only swaps the sentences */
+    if(y=on('.pdp-watch')){const sv=!SAVED.has(id); sv?SAVED.add(id):SAVED.delete(id); y.innerHTML=PI.heart(sv); return toast(ph,sv?'Saved to Likes':'Removed from Likes');}
+    if(on('.pdp-atpill')) return toast(ph,`Auto-task · tell me if it drops ${PDPD[id].task}`);
+    if(y=on('.pk-btn')){ALERTS[id]={target:+y.dataset.t,setAt:PDPD[id].hist.length-1}; refreshPDP(ph); return toast(ph,`Price alert set · $${y.dataset.t}`);}      /* one tap, no composer */
+    if(on('.pk-chg')) return openFocus(ph,{prod:id,watch:true});
+    if(on('[data-cmpq]')) return openFocus(ph,{v:cmpSay(id),att:[selfAtt(id),topCand(id)],cmp:true});          /* both items go into the box; the verdict is given in the chat */
+    if(y=on('.cw-i')){const c=(PDPD[id].cmp||[]).filter(c=>CFG.pw==='pw2'||c.viewed).map(cand)[+y.dataset.i];
+      return openFocus(ph,{v:'Compare these two',att:[{...quoteOf(id),pr:P[id].price,pid:id},c],cmp:true});}
+    if(on('.buy-main')||on('.buy-btn')) return toast(ph,'In-app checkout (out of demo scope)');
+    return;}
+  if(x=on('.prow2[data-p]')) return openPDP(ph,x.dataset.p);
+  if(on('.cdoc')) return toast(ph,'Chat history (out of demo scope)');
+  if(on('.chatv')) return;
+  if(on('.pc .btn')) return toast(ph,'Buy Now · goes to checkout');
+  /* the page */
+  if(x=on('[class^="abil"]>div')) return openFocus(ph,{cap:[...x.parentNode.children].indexOf(x)});
+  if(on('.dock')) return openFocus(ph);
+  if(on('.qbtn')) return toast(ph,'Price alert set · $400');
+  if(x=on('.uq')){const d=QD[x.dataset.q]; return d&&openFocus(ph,{v:d.q,q:x.dataset.q,att:d.att});}
+  if(x=on('.pc .ask')) return openFocus(ph,{prod:x.closest('.pc').dataset.p});
+  if(x=on('.pc')) return openPDP(ph,x.dataset.p);
+});
+const DS={s5:'你的 3D 图标，两行两列。字在左、图标在右，白卡不加渐变，颜色只来自图标。',s6:'你的 3D 图标，两行两列。沿用你横滑那版的样子：图标从白卡顶上冒出来，字在下面。更有分量，也更占高。',s0:'现状。第四个入口被切在屏幕外，要横滑才看得到。',s2:'白底小胶囊。占高最少，但太弱，像标签不像入口。',s4:'四张独立白卡，图标在很浅的蓝色圆底里。没有渐变和投影。',s1:'四个入口收进一张白色圆角卡，细线分成 2×2，蓝色细线图标加常规字。分量来自整块白底。'};
+const DC={'h-bold':'便宜的点用品牌蓝加粗，后半句灰字。最简单，全页零例外。','h-mark':'便宜的点用蓝色荧光笔划出，和标题的重点是同一种手法：AI 划过的地方就是重点。','h-pill':'便宜的点放进一个浅蓝小标，嵌在句子里。最显眼，接近原来的标签。','h-red':'上一版的红字。放在句子里像报错，和整页的蓝也不搭，仅供对比。'};
+const DE={e0:'标签一层、理由一层，两层都在讲「为什么」。',e1:'去掉标签，一句理由讲完。便宜的点固定在句首，是整句唯一的高亮；后半句是和你的关系。卡片矮一行。'};
+function mount(){
+  const sc=document.querySelector('#p1 .scroll');const y=sc?sc.scrollTop:0;
+  const keep=pdpState(document.querySelector('#p1 .phone'));
+  document.getElementById('p1').innerHTML=phone(true);
+  if(keep) openPDP(document.querySelector('#p1 .phone'),keep.id,keep);
+  for(const k of ['pa','pw','pd']) document.getElementById('d'+k).textContent=DP[CFG[k]];
+  document.querySelector('#p1 .scroll').scrollTop=y;
+  document.getElementById('dc').textContent=DC[CFG.c];
+  const ft=Math.round(document.querySelector('#p1 .feed').getBoundingClientRect().top-document.querySelector('#p1 .phone').getBoundingClientRect().top+document.querySelector('#p1 .scroll').scrollTop);
+  document.getElementById('ds').textContent=DS[CFG.s]+' 商品流起点：距屏幕顶 '+ft+'px。';
+  document.querySelectorAll('.seg').forEach(s=>s.querySelectorAll('span').forEach(x=>x.classList.toggle('on',x.dataset.v===CFG[s.dataset.g])));
+}
+const DP={
+  pt0:'不出走势。低价理由只剩标题下那一句，没有看得见的证据。',
+  pt1:'价格下方一条 90 天走势线，标出最低点和现在。只陈述事实，不替用户判断。',
+  pt2:'走势上方多一枚结论：Buy now / Worth waiting，加一句理由。结论是「等」时，提醒按钮变成主按钮（看白裙）。预测错了要担责。',
+  pa0:'目标价默认填 90 天最低，有据可依。现价已经是 90 天最低时（包、Samba、白裙）没有更低的可填，自动退回九折。',
+  pa1:'目标价一律是现价打九折。简单统一，但这个数没有来历，用户不知道它现不现实。',
+  ps0:'0805 原样：各店标价加一个 Lowest 标。',
+  ps1:'列表顶上一句结论，每行换成含运费的到手价并写出差额，最低一行的 Buy 变主按钮（看 Samba：eBay 标价 $9.90，加运费 $12.89）。',
+  pw0:'不出。跨商品比较只能自己去输入框说。',
+  pw4:'评价上方一张问句卡：眉题只说状态（STILL DECIDING?），问句是用户自己会说的话，下面是两件商品。整卡点击 = 两件商品 + 这句话进输入框，结论和对比表在会话里给。和电商流里的 query 卡是同一种语言。',
+  pw3:'AI 直接把结论写在页面上：一句判断 + 一张只列关键差异的对比表，赢的一格标蓝。最省事，但结论错了没有回旋余地，也更容易把人带去另一件商品。',
+  pw5:'页面上不放模块。只把底栏那枚「Compare with…」换成点名的一句（Compare with the Sunny Life chair），点开输入框的推荐里也有这句。最轻，和 Track 的处理方式一致。',
+  pd0:'0805 原样：Ask Migoo、Set 两个图标加一个通栏 Buy。',
+  pd1:'上一版：Set 改叫 Track price，设了提醒后变实心并显示目标价。两个 AI 入口仍是「图标 + 小字」，和普通电商的客服 / 收藏看不出区别。',
+  pd2:'把 Ask 做成一条输入框：和电商 tab 底部那条是同一个东西，进了商品页只是范围收窄到这件商品。提醒收成一个铃铛（设了变蓝实心）。Buy 变窄，店名降成第二行。',
+  pd3:'输入框上方一行可横滑的推荐，Track price 排第一、带铃铛，其余是普通问句。点了键入输入框不发送。推荐露得最多。下面一行输入框收到刚好放下占位句的宽度（149px），其余给 Buy（212px，约六成）。',
+  pd7:'底栏只有输入框和 Buy。Track 只在点开输入框后出现，是上方第一条推荐句。最干净，但不点开就看不到盯价这件事。',
+  pd8:'输入框里的占位句轮播三句：盯降价 / 这个价好不好 / 和同类比。点的时候显示哪句，就把哪句键入输入框。不多占高度，但常驻位置有字在动，而且点下去之前不确定会带哪句。',
+  pd9:'输入框尾部放一枚推荐：Track price。点它把「Tell me if it drops below $X」键入输入框，发出去才算设好；设好后这一枚变成「At $X」，点了是改。点输入框其他地方是正常提问。',
+  pd5:'两行。上面一行全是 AI：输入框 + 铃铛（设了变蓝实心）；下面一行只有通栏 Buy。分工最干净，但铃铛没有文字，第一次看不知道是盯价。',
+  pd6:'两行。输入框独占上面一行；下面一行是 Track price（设了显示目标价）和 Buy，正好是「再等等」和「现在买」两个选择并排。底栏高 130px，比单行高 54px。',
+  pd4:'Ask 收成头像，Track price 升成和 Buy 并排的文字按钮，设了之后显示目标价。强调的是「盯价」，不是「问」。',
+};
+document.addEventListener('click',e=>{const x=e.target.closest('[data-open]'); if(!x) return;
+  const ph=document.querySelector('#p1 .phone'); closeFocus(); ph.querySelector('.chatv').classList.remove('show'); openPDP(ph,x.dataset.open);
+  ph.scrollIntoView({behavior:'smooth',block:'center'});});
+function setAll(t,r,b,c){CFG={...CFG,t,r,b,c:c||CFG.c};mount();}
+document.querySelectorAll('.seg').forEach(s=>s.addEventListener('click',e=>{const x=e.target.closest('span[data-v]');if(!x)return;CFG[s.dataset.g]=x.dataset.v;mount();}));
+mount();
+</script>
+</body>
+</html>
