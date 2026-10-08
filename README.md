@@ -6,11 +6,11 @@
 - **通用顶部（所有方案共用）**：状态栏、♡ 🕒、标题「Best Price for All Purchases」取 `migoo-e1/` 按 Figma `is9trzMDqn534NT8w5GLqF` 节点 `1907-128620` 还原的 CSS/markup；**卖点行**三项各带 14px 线性图标（badge-percent / tag / shield-check，Lucide 线稿）、1px 竖线分隔，13.5px `#B5B9BD`；**金刚区**按该节点 10-02 更新稿：2×2，卡 173.5×80、行距 10 列距 14，只有标题（14/400，可多行竖直居中）+ yao.ge 原 3D 图标 48px 靠右，右下晕色（橙 / 黄 / 紫 / 蓝），四格就是他原来的 Compare Products & Prices / Track Price Drops / Find Gifts / Shop by Occasion。原面板的「顶部入口」开关（s5/s6）移除，第一组改成说明。
 - **通用底部**：渐变 dock（透明→白）+ 48 高输入条 + 82 高 tab 栏（Migoo / Tasks / Agents / Shop / Me），会话页用同一套。
 - **商品流是 yao.ge 原版「统一蓝」**的商品卡与问句卡（便宜点高亮开关没动），起点在金刚区下 46px、左右边距 16（Figma）。问句卡 10-02 晚调整：五张各一种样式——对比图（robot vacuum）、商品条（Doona）、三图带价（dining chairs，三把椅子 $129/$89/$149，新）、大图（Taylor Swift's hat，新）、纯问句（gift for mom）；去掉了与 Doona 同款的 AF1 / Nike 249 两张；左右列交错不同高（L：椅子·对比图·裙子·大图·Samba，R：Doona·包·三图·白裙·纯问句）。新卡点开进输入框带相应引用，发送后有各自剧本。
-- **商品页、Track、Compare、底栏 A/B 全部照旧**；E1 的 PDP 没有并入。只在商品页主图右上、♡ 左边加了一枚**金币钮 = Money Saver**入口（E1 PDP 里的红包入口，按要求换成金币）：点了和金刚区 Track Price Drops 走同一条链路——唤起输入框，带「Money Saver」能力标签 + 该商品引用，占位句「How do you want to save on this?」，上方三句建议：找更低价 / 优惠券与返现 / 到价提醒（Tell me if it drops below $X）；发送后进会话，提醒句照常落 ALERTS。
+- **商品页、Track、Compare、底栏 A/B 全部照旧**；E1 的 PDP 没有并入。只在商品页主图右上、♡ 左边加了一枚**优惠券钮 = Money Saver**入口（面板「省钱入口 · 主图右上」可显示 / 隐藏，`ms1/ms0`）（E1 PDP 里的红包入口，按要求换成金币）：点了和金刚区 Track Price Drops 走同一条链路——唤起输入框，带「Money Saver」能力标签 + 该商品引用，占位句「How do you want to save on this?」，上方三句建议：找更低价 / 优惠券与返现 / 到价提醒（Tell me if it drops below $X）；发送后进会话，提醒句照常落 ALERTS。
 - **商品页卖点模块**（面板「卖点模块」）：`pm1` 合一·紧凑（默认）= 理由句 + 90 天走势 + 推荐理由装进同一个蓝框，走势去掉白卡与表头、提醒收成一行文字、理由只留两条，整块约 289px，比分开的三段矮约 90px；`pm0` 分开 = yao.ge 原样；`pm2` 折叠 = 同一个蓝框里三行（价格 / Migoo 卖点 / 商品对比），收起只留一句结论（理由句 / 关键词串 / 对比结论首句），点右侧箭头展开走势、理由、对比卡，展开状态切开关不丢，没有可比项的商品只有两行，收起总高约 166px；三行展开时正文都逐字淡入（价格行的走势标注与提醒句、卖点行的理由、对比行的结论句，沿用 Compare 的 .w 关键帧，每词 32ms）。
 - **商品页底栏 C**（面板「底栏 C」`pdc`）：E1 商品页的底栏——左 Ask Migoo 头像、右通栏 Buy；头像上方白色气泡，进页 1s 后才渐显，然后单条轮播（Shop with Migoo → 该商品的三句问题，3.2s 一条），页面滚动时隐藏、停下 1s 后渐显继续；点第一条开输入框，点其它条把那句键入输入框。
 - **评论区推荐问句**：「What People are Saying」标题下一行可横滑的问句 chip（✦ Is it worth the price? / Any common complaints? / How does it compare to similar ones? / Does it hold up over time?），同 E1 PDP；点一句键入带引用的输入框，不发送。
-- **商品页标题关键词**：商品卡标题里标记的词（Cream Boucle / Pebbled Leather / …，即 `P[id].ai` 里 k=1 的片段）在商品页标题里同样标出并带 ✦，面板「标题关键词」切两种标法：`pk1` 蓝色虚线下划（同 E1 商品页）/ `pk2` 荧光标记（同商品卡）；点关键词进带引用的输入框（「Tell me more about the …」）。
+- **商品页标题**（10-08 按 Figma 1907-128279「商品信息区」834:8058 改，全局生效）：完整商品名 `P[id].title`，SF Pro Medium 16、line-height normal、rgba(0,0,0,.87)、两行截断省略。商品卡标题里标记的词（`P[id].ai` 里 k=1 的片段）在全名里同样标出并带 ✦，面板「标题关键词」三档：`pk1` 蓝色虚线下划（同 E1 商品页）/ `pk2` 荧光标记（同商品卡）/ `pk0` 纯文字两行（不标词、无链接无 ✦）；点关键词进带引用的输入框（「Tell me more about the …」）。合一 / 折叠模块里的提醒行在三档下都带虚线 + ✦ 提示可点。
 - 金刚区四格进输入框带能力标签（yao.ge 原 CAPS 与建议句）；♡ 🕒 给 toast。
 - **图片全部内嵌为 data URL**，`index.html` 单文件在任何地方（双击、文件预览、单独上传）都能显示；`img/` 只是 `index.orig.html` 还在用。
 
@@ -29,16 +29,18 @@
 - ⑤–⑨ 五种为「活动主视觉」式方案（学元宝 / 豆包 / 千问的顶部），各自是一个独立模块文件（`top-styles/ht5–ht9.js`，契约见 `top-styles/CONTRACT.md`：`HT_MODS.htN = {name, desc, css, html, init, play}`，css 以 `.phone.htN` 作用域、html 用 `{{IMG:…}}` 占位、init 返回 cleanup），由合并脚本读入并在页面里注册到面板「顶部样式」；它们替换 `.hdr` 为 90px 高的 `.hdr.hmod` 画布，可向上溢出到顶栏行左侧，但不盖 ♡🕒。每个模块都经过「设计者自测 → 评审 → 修复复测」。
 - 以上样式均为绝对定位叠在顶部留白里，金刚区顶部保持 y 204；`prefers-reduced-motion: reduce` 时星轨不呼吸、光点不走，放大镜不扫描、识别框静态显示；页面打开中切换该系统设置也即时响应。
 
+- **便宜点怎么高亮**三档：蓝字加粗（原样）/ 荧光标记 / 整句点亮（`h-all`：商品卡推荐理由整句品牌蓝，便宜的点 650、其余 590；只作用于电商 tab 商品卡）。
+
 ## 右侧面板
-顶部一个「电商 tab / 商品页」切换，按当前层只显示相关选项：电商 tab 层 = 便宜点怎么高亮 + 商品页快捷入口；商品页层 = 换一件看、卖点模块、标题关键词、Track、Compare、底栏 A/B。点商品卡进商品页自动切到商品页层，关掉自动切回；也可手动点顶部切换。原来的「颜色规则」「顶部区域 · 通用」说明已删。
+顶部一个「电商 tab / 商品页」切换，按当前层只显示相关选项：电商 tab 层 = 顶部样式 + 便宜点怎么高亮；商品页层 = 省钱入口、卖点模块、标题关键词、Compare、底栏 A/B/C（10-08 删掉了「商品页 · 点开看」「换一件看」两组商品快捷入口，进商品页只走点商品卡）。点商品卡进商品页自动切到商品页层，关掉自动切回；也可手动点顶部切换。原来的「颜色规则」「顶部区域 · 通用」说明已删。
 
 ## 商品页细节（对齐 E1 PDP · Figma 1907-128279）
 在 `.pdp-overlay` 作用域内按 E1 PDP（`migoo-pdp-full`）的值统一：两侧边距 24；主图按钮深灰 #585858 圆钮（× 左 24、入口右 64、♡ 右 24）与右下页码胶囊；价格 24/28 700、meta 12/16 #585858、标题 17/20 常规；AI 色改为 E1 的 #1f3fd1（✦、关键词、结论句、走势线），卖点卡 / 折叠卡底色 #f1f6ff、理由 14.5/20 带圆点；规格 chip 33 高圆角 8 #f6f8fa、选中白底描边；各店报价行 12/24 内距、价 14.5 600、第二行「★ 4.7 · View in X ↗」、Buy 56×32 描边钮；评论标题「Reviews From X ›」+ 右侧 ★ 分数、名字 11.5/600、正文 14.5/20 三行、图 108；详情表键列 131、14/18、行距 18；底栏 16/24/20、Ask 头像 26 + 11.5 字、Buy #017aff 16/600。新增的功能（折叠 / 关键词 / Money Saver / 底栏 C 气泡 / 评论问句）全部保留。
 
-## 商品页默认选项
-卖点模块 = 折叠（pm2）；标题关键词 = 虚线下划 + ✦（pk1）；Track 默认价 = 90 天最低（pa0）；Compare = AI 对比结论（pw3）；底栏 = 底栏 C · Ask 上方气泡轮播（pdc）。
+## 商品页默认选项（10-08）
+省钱入口 = 隐藏（ms0）；卖点模块 = 合一 · 紧凑（pm1）；标题关键词 = 纯文字两行（pk0）；Compare = AI 对比结论（pw3）；底栏 = 底栏 C · Ask 上方气泡轮播（pdc）。「Track · 一键提醒的默认价」这组开关已从面板删除（内部固定 90 天最低 pa0）。
 
 ## 文件
 - `index.html` 单文件（1.5MB，含全部图片）
 - `index.orig.html` yao.ge 原版 + `img/`，便于 diff
-- 生成脚本在会话 scratchpad `bp/merge_bp.py`（依赖 `migoo-e1/template.html`、`e1-data.json`），小改直接改 `index.html` 即可。Figma MCP 当天已到 Starter 套餐调用上限，10-02 的更新稿是按用户截图量的（比例 393/406），±1–2px。预览 `http://localhost:8123/migoo-best-price-demo/`（launch.json 的 migoo-proto）。
+- 10-08 起生成脚本所在的临时目录已被清理，**直接改 `index.html`**（Python 定点替换 + `new Function` 语法自检）。Figma MCP 当天已到 Starter 套餐调用上限，10-02 的更新稿是按用户截图量的（比例 393/406），±1–2px。预览 `http://localhost:8123/migoo-best-price-demo/`（launch.json 的 migoo-proto）。

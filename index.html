@@ -143,6 +143,8 @@
   .r1 .why em,.r2 .why em,.r3 .bub em{font-weight:590;color:var(--b)}
   .why em.deal,.bub em.deal{font-weight:650}
   .h-bold .why em.deal,.h-bold .bub em.deal{color:var(--b)}
+  .h-all .feed .why,.h-all .feed .why em,.h-all .feed .bub{color:var(--b);font-weight:590}
+  .h-all .feed .why em.deal,.h-all .feed .bub em.deal{color:var(--b);font-weight:650}
   .h-mark .why em.deal,.h-mark .bub em.deal{color:rgba(0,0,0,.86);font-weight:590;background:linear-gradient(transparent 54%,var(--b-22) 54%);padding:0 1px;border-radius:2px}
   .h-pill .why em.deal,.h-pill .bub em.deal{color:var(--b-tx);font-weight:590;background:var(--btn-bg);border-radius:4px;padding:1px 5px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
   .h-red .why em.deal,.h-red .bub em.deal{color:#E8482A}
@@ -335,6 +337,7 @@
   .pdp-title .kw .ais{width:12px;height:12px;margin:0 0 0 2px;vertical-align:-1px}
   .pdp-title.pk1 .kw{text-decoration:underline dashed;text-decoration-color:var(--b);text-decoration-thickness:1px;text-underline-offset:3px}
   .pdp-title.pk2 .kw{background:linear-gradient(transparent 56%,var(--b-22) 56%);font-weight:590;padding:0 1px;border-radius:2px}
+  .ai-one.pk0 .pk-btn .kw{text-decoration:underline dashed;text-decoration-color:var(--b);text-decoration-thickness:1px;text-underline-offset:3px}
   .pdp-pad .why{margin-top:8px;font-size:14px;line-height:20px;color:rgba(0,0,0,.62)}
   .pdp-pad .why em{font-style:normal;font-weight:650;color:var(--b)}
   .ai-bullets{margin:12px 16px 0;padding:12px 8px 12px 29px;border-radius:12px;background:linear-gradient(90deg,var(--b-08),var(--b-04))}
@@ -575,7 +578,8 @@
   .pdp-overlay .pdp-price{font-size:24px;line-height:28px;font-weight:700;color:#000}
   .pdp-overlay .pdp-price s{font-size:14px;color:rgba(0,0,0,.28)}
   .pdp-overlay .pdp-subnote{margin-top:5px;font-size:12px;line-height:16px;color:#585858}
-  .pdp-overlay .pdp-title{margin-top:12px;font-size:17px;line-height:20px;font-weight:400;color:#1e1e1e;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .pdp-overlay .pdp-title{margin-top:12px;font-size:16px;line-height:normal;font-weight:510;color:rgba(0,0,0,.87);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;word-break:break-word}
+  .pdp-overlay .pdp-title .kw .ais{vertical-align:-1px}
   .pdp-overlay .pdp-pad .why{margin-top:9px;font-size:14.5px;line-height:20px;color:#1f2230}
   /* 卖点模块（分开 / 合一 / 折叠）：E1 的浅蓝卡 #f1f6ff，圆角 12，标题下 9px；理由 14.5/20 #1f2230，圆点 • */
   .pdp-overlay .ai-bullets,.pdp-overlay .ai-one{margin:9px 24px 0;border-radius:12px;background:var(--tint)}
@@ -745,24 +749,18 @@
       <div class="seg" data-g="ht"><span data-v="ht0" class="on">原样</span><span data-v="ht1">① 星图</span><span data-v="ht2">② 便签</span><span data-v="ht3">③ 星轨</span><span data-v="ht4">④ 放大镜</span></div>
       <div class="desc" id="dht"></div></div>
     <div class="grp" data-ctx="tab"><div class="gt">便宜点怎么高亮</div>
-      <div class="seg" data-g="c"><span data-v="h-bold" class="on">蓝字加粗</span><span data-v="h-mark">荧光标记</span></div>
+      <div class="seg" data-g="c"><span data-v="h-bold" class="on">蓝字加粗</span><span data-v="h-mark">荧光标记</span><span data-v="h-all">整句点亮</span></div>
       <div class="desc" id="dc"></div></div>
-    <div class="grp" data-ctx="tab"><div class="gt">商品页 · 点开看</div>
-      <div class="desc" style="margin-top:0">点手机里的商品卡，或下面任一件，直接打开商品页；面板随之切到商品页的选项。</div>
-      <div class="opn"><span data-open="chair">椅子 · 未设提醒</span><span data-open="bag">包 · 已命中目标价</span><span data-open="samba">Samba · 有可比的</span><span data-open="dress">白裙 · 还在降</span></div></div>
     <!-- 商品页 -->
-    <div class="grp" data-ctx="pdp"><div class="gt">换一件看</div>
-      <div class="desc" style="margin-top:0">切换下面的开关时商品页不会关。</div>
-      <div class="opn"><span data-open="chair">椅子 · 未设提醒</span><span data-open="bag">包 · 已命中目标价</span><span data-open="samba">Samba · 有可比的</span><span data-open="dress">白裙 · 还在降</span></div></div>
+    <div class="grp" data-ctx="pdp"><div class="gt">省钱入口 · 主图右上</div>
+      <div class="seg" data-g="ms"><span data-v="ms1" class="on">显示</span><span data-v="ms0">隐藏</span></div>
+      <div class="desc" id="dms"></div></div>
     <div class="grp" data-ctx="pdp"><div class="gt">卖点模块 · 理由 + 走势 + 推荐理由</div>
       <div class="seg" data-g="pm"><span data-v="pm0">分开</span><span data-v="pm1" class="on">合一 · 紧凑</span><span data-v="pm2">折叠</span></div>
       <div class="desc" id="dpm"></div></div>
     <div class="grp" data-ctx="pdp"><div class="gt">标题关键词 · 和商品卡标记同一个词</div>
-      <div class="seg" data-g="pk"><span data-v="pk1" class="on">虚线下划 + ✦</span><span data-v="pk2">荧光标记 + ✦</span></div>
+      <div class="seg" data-g="pk"><span data-v="pk1" class="on">虚线下划 + ✦</span><span data-v="pk2">荧光标记 + ✦</span><span data-v="pk0">纯文字两行</span></div>
       <div class="desc" id="dpk"></div></div>
-    <div class="grp" data-ctx="pdp"><div class="gt">Track · 一键提醒的默认价</div>
-      <div class="seg" data-g="pa"><span data-v="pa0" class="on">90 天最低</span><span data-v="pa1">现价九折</span></div>
-      <div class="desc" id="dpa"></div></div>
     <div class="grp" data-ctx="pdp"><div class="gt">Compare · 和别的商品比</div>
       <div class="seg" data-g="pw"><span data-v="pw0">不出</span><span data-v="pw4" class="on">问句卡</span><span data-v="pw3">AI 对比结论</span><span data-v="pw5">只给推荐句</span></div>
       <div class="desc" id="dpw"></div></div>
@@ -883,7 +881,7 @@ function pc(id,ai){
 const uq=(q,body,key)=>`<div class="card uq" data-q="${key}">${I.quote}<div class="q">${q}</div>${body||''}</div>`;
 const tile=(img,nm,pr)=>`<div class="utile"><img src="${img}" alt=""><div><div class="nm">${nm}</div><div class="pr">$${pr}</div></div></div>`;
 
-let CFG={ht:'ht0',t:'t1',r:'r1',b:'b1',c:'h-bold',e:'e1',o:'o1',pt:'pt1',pk:'pk1',pm:'pm2',pa:'pa0',ps:'ps0',pw:'pw3',pd:'pdc'};
+let CFG={ms:'ms0',ht:'ht0',t:'t1',r:'r1',b:'b1',c:'h-bold',e:'e1',o:'o1',pt:'pt1',pk:'pk0',pm:'pm1',pa:'pa0',ps:'ps0',pw:'pw3',pd:'pdc'};
 /* ===== 通用顶部（按 Figma 还原）：状态栏 / ♡🕒 / 标题 + 卖点 ===== */
 const SBAR=`<div class="sb"><span>9:41</span> <span class="ic"> <svg width="19" height="12" viewBox="0 0 19 12" aria-hidden="true"><rect x="0" y="8" width="3.4" height="4" rx="1" fill="#0A0A0A"/><rect x="5.2" y="5.5" width="3.4" height="6.5" rx="1" fill="#0A0A0A"/><rect x="10.4" y="3" width="3.4" height="9" rx="1" fill="#0A0A0A"/><rect x="15.6" y="0" width="3.4" height="12" rx="1" fill="#0A0A0A"/></svg> <svg width="17" height="12" viewBox="0 0 17 12" aria-hidden="true"><path fill="#0A0A0A" fill-rule="evenodd" d="M8.5 2.4c2.5 0 4.8.9 6.6 2.5a.5.5 0 0 0 .7 0l.9-.9a.5.5 0 0 0 0-.7A11.3 11.3 0 0 0 8.5 0 11.3 11.3 0 0 0 .8 3.3a.5.5 0 0 0 0 .7l.9.9a.5.5 0 0 0 .7 0A9.8 9.8 0 0 1 8.5 2.4Zm0 3.6c1.5 0 2.9.5 4 1.5a.5.5 0 0 0 .7 0l.9-.9a.5.5 0 0 0 0-.7A7.9 7.9 0 0 0 8.5 3.6a7.9 7.9 0 0 0-5.6 2.3.5.5 0 0 0 0 .7l.9.9a.5.5 0 0 0 .7 0 5.9 5.9 0 0 1 4-1.5Zm2.3 3.1a.5.5 0 0 1 0 .7l-1.9 1.9a.5.5 0 0 1-.8 0L6.2 9.8a.5.5 0 0 1 0-.7 3.4 3.4 0 0 1 4.6 0Z"/></svg> <svg width="28" height="13" viewBox="0 0 28 13" aria-hidden="true"><rect x=".5" y=".5" width="24" height="12" rx="3.5" stroke="#0A0A0A" stroke-opacity=".4" fill="none"/><rect x="2" y="2" width="21" height="9" rx="2" fill="#0A0A0A"/><path d="M26 4.5v4a2 2 0 0 0 0-4Z" fill="#0A0A0A" fill-opacity=".4"/></svg> </span> </div>`;
 const TOPBAR=`<div class="topbar"> <svg viewBox="0 0 24 24" fill="none" role="button" aria-label="Likes" data-nav="likes"><path d="M12 20.3 4.9 13.2a4.3 4.3 0 0 1 6.1-6.1l1 1 1-1a4.3 4.3 0 0 1 6.1 6.1L12 20.3Z" stroke="#0A0A0A" stroke-width="1.9" stroke-linejoin="round"/></svg> <svg viewBox="0 0 24 24" fill="none" role="button" aria-label="Auto-tasks" data-nav="tasks"><circle cx="12" cy="12" r="8.6" stroke="#0A0A0A" stroke-width="1.9"/><path d="M12 7.5V12l3 2" stroke="#0A0A0A" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg> </div>`;
@@ -2012,7 +2010,7 @@ function trendHTML(id){
     : `<div class="pk-h"><b>Price · last 90 days</b><span>Low $${money(lo)} · High $${money(hi)}</span></div>`;
   const act=al
     ? `<div class="pk-st">${BELL(true)}<span class="f">${al.hit?`<b>Your $${money(al.target)} target hit</b> · $${money(al.target-o.price)} below`:`<b>Watching</b> · I’ll tell you at $${money(al.target)}`}</span><span class="pk-chg">Change</span></div>`
-    : `<div class="pk-btn${CFG.pt==='pt2'&&d.adv[0]==='wait'?' pri':''}" data-t="${t.v.toFixed(2)}">${BELL(false)}${CFG.pm==='pm1'?`<span class="kw">Alert me at $${t.v.toFixed(2)} <u>· ${t.note}</u>${AIS}</span>`:`Alert me at $${t.v.toFixed(2)} <u>· ${t.note}</u>`}</div>`;
+    : `<div class="pk-btn${CFG.pt==='pt2'&&d.adv[0]==='wait'?' pri':''}" data-t="${t.v.toFixed(2)}">${BELL(false)}${(CFG.pm==='pm1'||CFG.pm==='pm2')?`<span class="kw">Alert me at $${t.v.toFixed(2)} <u>· ${t.note}</u>${AIS}</span>`:`Alert me at $${t.v.toFixed(2)} <u>· ${t.note}</u>`}</div>`;
   return `<div class="pk">${head}
     <div class="pk-c"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><defs><linearGradient id="pkg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1F6BFF" stop-opacity=".16"/><stop offset="1" stop-color="#1F6BFF" stop-opacity="0"/></linearGradient></defs>
         <path d="${line} L${W},${H} L0,${H} Z" fill="url(#pkg)"/><path d="${line}" fill="none" stroke="#1F6BFF" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
@@ -2129,7 +2127,7 @@ function accHTML(id,why){
   const row=(k,sum,body)=>`<div class="acc-i${ACC_OPEN.has(k)?' open':''}" data-acc="${k}"><div class="acc-h"><span class="acc-s">${AIS}${sum}</span><span class="acc-c">${CHEV}</span></div><div class="acc-b">${body}</div></div>`;
   const cmpBody=c?compareHTML(id).replace('<div class="section-divider"></div>',''):'';
   const cmpSum=c?(c.say||'').split('. ')[0].replace(/\.?$/,'.'):'';
-  return `<div class="ai-one acc">
+  return `<div class="ai-one acc ${CFG.pk}">
     ${row('price',why||`<em>$${o.price}</em> today`,CFG.pt!=='pt0'?wordify(trendHTML(id)):'')}
     ${row('hl',`<b>Migoo highlights</b> · ${o.attrs.join(' · ')}`,wordify(`<ul class="ai-bullets">${d.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`))}
     ${c&&cmpBody?row('cmp',cmpSum,cmpBody):''}
@@ -2150,17 +2148,23 @@ function fpInit(ov){
 }
 /* 评论区的推荐问句（通用四条） */
 const REVIEW_QS=['Is it worth the price?','Any common complaints?','How does it compare to similar ones?','Does it hold up over time?'];
+/* 标题 = 完整商品名（P.title，Figma 商品信息区），商品卡标记的那个词（P.ai 里 k=1 的片段）在全名里同样标出；pk0 为纯文字 */
+function pdpTitleHTML(o){
+  const seg=(o.ai||[]).find(([t,k])=>k===1), kw=seg&&seg[0], full=esc(o.title);
+  if(CFG.pk==='pk0'||!kw||!full.includes(esc(kw))) return full;
+  return full.replace(esc(kw),`<span class="kw" data-kw="${esc(kw)}">${esc(kw)}${AIS}</span>`);
+}
 function pdpHTML(id,ai){
   const o=P[id], d=PDPD[id], why=(o.deal||o.why||[]).map(([t,k])=>k===2?`<em>${t}</em>`:t).join(''), one=ai&&CFG.pm==='pm1', acc=ai&&CFG.pm==='pm2';
   return `<div class="pdp-body">
       <div class="pdp-hero"><div class="sheet-grabber"></div>
         <div class="pdp-close">${PI.close}</div>
         <div class="pdp-watch">${PI.heart(SAVED.has(id))}</div>
-        <div class="pdp-coin" title="Savings assistant">${COIN}</div>
+        ${CFG.ms!=='ms0'?`<div class="pdp-coin" title="Money Saver">${COIN}</div>`:''}
         <img src="${o.img}" alt=""><div class="indicator">1/${d.gallery}</div></div>
       <div style="height:16px"></div>
       <div class="pdp-pad"><div class="pdp-price">$${o.price}<s>$${o.was||'33.00'}</s></div><div class="pdp-subnote">${d.sub}</div>
-        <div class="pdp-title ${CFG.pk}">${o.ai?o.ai.map(([t,k])=>k?`<span class="kw" data-kw="${esc(t)}">${t}${AIS}</span>`:t).join(''):o.title}</div>${why&&!one&&!acc?`<div class="why">${AIS}${why}</div>`:''}</div>
+        <div class="pdp-title ${CFG.pk}">${pdpTitleHTML(o)}</div>${why&&!one&&!acc?`<div class="why">${AIS}${why}</div>`:''}</div>
       ${acc?accHTML(id,why):one?`<div class="ai-one ${CFG.pk}">${why?`<div class="why">${AIS}${why}</div>`:''}${ai&&CFG.pt!=='pt0'?trendHTML(id):''}<ul class="ai-bullets">${d.bullets.slice(0,2).map(b=>`<li>${b}</li>`).join('')}</ul></div>`
            :`${ai&&CFG.pt!=='pt0'?trendHTML(id):''}<ul class="ai-bullets">${d.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`}
       <div style="height:16px"></div>
@@ -2284,14 +2288,14 @@ document.addEventListener('click',e=>{
 });
 const DS_UNUSED={s5:'你的 3D 图标，两行两列。字在左、图标在右，白卡不加渐变，颜色只来自图标。',s6:'你的 3D 图标，两行两列。沿用你横滑那版的样子：图标从白卡顶上冒出来，字在下面。更有分量，也更占高。',s0:'现状。第四个入口被切在屏幕外，要横滑才看得到。',s2:'白底小胶囊。占高最少，但太弱，像标签不像入口。',s4:'四张独立白卡，图标在很浅的蓝色圆底里。没有渐变和投影。',s1:'四个入口收进一张白色圆角卡，细线分成 2×2，蓝色细线图标加常规字。分量来自整块白底。'};
 const DT={ht3:'样式三 · 星轨：标题后一条 1.2px 蓝紫→淡粉的渐变线，从左下沿左侧留白上行、顶部横过、沿右侧下行，不压字形也不进 ♡🕒 点击区；线上三枚 24px 磨砂节点（礼物 / 商品 / 价签，价签轻微呼吸高亮 = AI 正在匹配），一枚「✦ Finding deals for you」胶囊贴在线的左上端；一颗信号光点沿线 7s 一圈慢行。点节点进对应能力的输入框（Find Gifts / Compare / Track），点胶囊只有按压反馈。系统「减少动态效果」时不呼吸、光点不走。',ht4:'样式四 · 放大镜：左上一枚 64px 淡紫玻璃放大镜，镜片里是一张抽象商品插图（粉彩等轴包裹 + 浮起的价签），四角识别框 + 一道扫描光；旁边一枚「✦ Dining chair · Cream bouclé」识别标签，用短线和识别点连到镜片，不盖标题、卖点和 ♡🕒。切到该样式或点镜片：扫描光慢慢扫过，识别框短暂提亮后稳定。点标签：带椅子引用的输入框，预填「Find similar under $20」。系统「减少动态效果」时只显示静态识别框。',ht0:'按 Figma 还原的原样：标题 + 带图标的卖点行。',ht1:'样式一 · 星图：标题上方留白里四枚 26px 磨砂玻璃小节点（购物袋 / 降价趋势 / 礼物 / 日历 = 比价 / 降价 / 送礼 / 场景），从左排到页面中部、略微错落、各自微旋；四条 1.2px 蓝紫渐变贝塞尔线沿标题左侧留白向下，汇聚到「Best Price」下方一颗 4px 淡紫光点，不碰字形和 ♡ 🕒。点标题或节点：节点依次亮起，光点沿线汇聚，约 2.3s 后静止。',ht2:'样式二 · 便签：「Best Price」后方一张约 126×38 的浅金便签（奶油黄→浅杏渐变、极淡投影），逆时针 4°，文字不转、不盖住 for All Purchases；右上 14px 折角，折角上方一枚淡紫细线闪光。背景加一层很淡的暖色。点标题或便签：便签抬起 3px、折角微展，闪光提亮一次，约 2s 后复位。'};
-const DC={'h-bold':'便宜的点用品牌蓝加粗，后半句灰字。最简单，全页零例外。','h-mark':'便宜的点用蓝色荧光笔划出，和标题的重点是同一种手法：AI 划过的地方就是重点。','h-pill':'便宜的点放进一个浅蓝小标，嵌在句子里。最显眼，接近原来的标签。','h-red':'上一版的红字。放在句子里像报错，和整页的蓝也不搭，仅供对比。'};
+const DC={'h-all':'整句点亮：推荐理由整句都用品牌蓝（便宜的点 650、其余 590），不再只亮前半句；只作用于电商 tab 的商品卡，商品页不变。','h-bold':'便宜的点用品牌蓝加粗，后半句灰字。最简单，全页零例外。','h-mark':'便宜的点用蓝色荧光笔划出，和标题的重点是同一种手法：AI 划过的地方就是重点。','h-pill':'便宜的点放进一个浅蓝小标，嵌在句子里。最显眼，接近原来的标签。','h-red':'上一版的红字。放在句子里像报错，和整页的蓝也不搭，仅供对比。'};
 const DE={e0:'标签一层、理由一层，两层都在讲「为什么」。',e1:'去掉标签，一句理由讲完。便宜的点固定在句首，是整句唯一的高亮；后半句是和你的关系。卡片矮一行。'};
 function mount(){
   const sc=document.querySelector('#p1 .scroll');const y=sc?sc.scrollTop:0;
   const keep=pdpState(document.querySelector('#p1 .phone'));
   document.getElementById('p1').innerHTML=phone(true);
   if(keep) openPDP(document.querySelector('#p1 .phone'),keep.id,keep);
-  for(const k of ['pk','pm','pa','pw','pd']) document.getElementById('d'+k).textContent=DP[CFG[k]];
+  for(const k of ['ms','pk','pm','pw','pd']) document.getElementById('d'+k).textContent=DP[CFG[k]];
   document.querySelector('#p1 .scroll').scrollTop=y;
   document.getElementById('dc').textContent=DC[CFG.c];
   document.getElementById('dht').textContent=DT[CFG.ht];
@@ -2310,7 +2314,10 @@ const DP={
   pm0:'分开：标题下一句理由，走势一张白卡，推荐理由三条一个蓝框。三块各占一段，信息最全。',
   pm1:'合一：理由句、90 天走势、推荐理由装进同一个蓝框。走势去掉表头和白卡，提醒收成一行带下划线和 ✦ 的文字（点了把「Tell me if it drops below $X」键入输入框，发送才设好，和底栏 Track 一致），理由只留两条；整块矮约 90px。',
   pm2:'折叠：同一个蓝框里三行——价格（理由句）、Migoo 卖点（关键词串）、商品对比（结论句），收起只留一句结论，点右侧箭头展开走势 / 理由 / 对比；没有可比项的商品只有两行。',
-  pk1:'标题里的关键词（和电商 tab 商品卡标记的是同一个词）用蓝色虚线下划，词尾一枚 ✦，与 E1 商品页一致；点关键词进带引用的输入框。',
+  ms1:'主图右上、♡ 左边的优惠券钮 = Money Saver 入口：点了唤起带本商品引用的输入框，上方三句省钱建议（找更低价 / 优惠券与返现 / 到价提醒）。',
+  ms0:'隐藏省钱入口：主图右上只剩 ♡；省钱相关只能从底栏 Ask / 走势图的提醒行进入。',
+  pk0:'纯文字：完整商品名两行（按 Figma 商品信息区：SF Pro Medium 16、87% 黑，超出两行省略），不标关键词、没有链接和 ✦；合一 / 折叠里的提醒行仍带虚线提示可点。',
+  pk1:'标题是完整商品名（Figma：16/Medium、两行省略），其中和电商 tab 商品卡标记相同的那个词用蓝色虚线下划，词尾一枚 ✦；点关键词进带引用的输入框。',
   pk2:'关键词用和电商 tab 商品卡一样的荧光标记，词尾一枚 ✦，两层是同一个手法。',
   pa0:'目标价默认填 90 天最低，有据可依。现价已经是 90 天最低时（包、Samba、白裙）没有更低的可填，自动退回九折。',
   pa1:'目标价一律是现价打九折。简单统一，但这个数没有来历，用户不知道它现不现实。',
